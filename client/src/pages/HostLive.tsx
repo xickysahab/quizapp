@@ -197,29 +197,34 @@ const HostLive: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {(summaryData.collective?.optionsText || ['Option A', 'Option B', 'Option C', 'Option D']).map((optText: string, idx: number) => {
+                  {[
+                    {
+                      letter: 'A',
+                      text: 'You need the learnings of Sahajta urgently.',
+                      alert: 'RED ALERT',
+                      colors: { bg: 'bg-[#FDF8F8]', border: 'border-[#FADFDF]', text: 'text-[#5C3232]', mutedText: 'text-[#A67575]', barBg: 'bg-[#FCECEC]', barFill: 'bg-[#D67474]', badge: 'bg-white text-[#C25959] border-[#FADFDF]', alertBadge: 'bg-[#D67474] text-white' }
+                    },
+                    {
+                      letter: 'B',
+                      text: 'You are able to being fully Sahaj.',
+                      alert: 'GREEN ALERT',
+                      colors: { bg: 'bg-[#F5FBFA]', border: 'border-[#D9EFEB]', text: 'text-[#2D544E]', mutedText: 'text-[#739993]', barBg: 'bg-[#EAF6F4]', barFill: 'bg-[#6FB0A6]', badge: 'bg-white text-[#56948A] border-[#D9EFEB]', alertBadge: 'bg-[#6FB0A6] text-white' }
+                    },
+                    {
+                      letter: 'C',
+                      text: 'There is some confusion, but you are moving closer to Sahajta.',
+                      alert: 'YELLOW ALERT',
+                      colors: { bg: 'bg-[#FDFDF7]', border: 'border-[#F1ECCD]', text: 'text-[#594B24]', mutedText: 'text-[#A69968]', barBg: 'bg-[#F8F5E6]', barFill: 'bg-[#D4C366]', badge: 'bg-white text-[#B5A449] border-[#F1ECCD]', alertBadge: 'bg-[#D4C366] text-white' }
+                    },
+                    {
+                      letter: 'D',
+                      text: 'There are many inner complications. Sahajta is here to help you.',
+                      alert: 'ORANGE ALERT',
+                      colors: { bg: 'bg-[#FDF9F6]', border: 'border-[#F5E3D5]', text: 'text-[#5E3F26]', mutedText: 'text-[#A88568]', barBg: 'bg-[#F9EDE4]', barFill: 'bg-[#DB9F6B]', badge: 'bg-white text-[#C2824A] border-[#F5E3D5]', alertBadge: 'bg-[#DB9F6B] text-white' }
+                    }
+                  ].map((opt, idx) => {
                     const pct = summaryData.collective?.percentages?.[idx] || 0;
                     const count = summaryData.collective?.optionCounts?.[idx] || 0;
-                    const maxPercentage = Math.max(...(summaryData.collective?.percentages || [0]));
-                    const isHighest = pct === maxPercentage && maxPercentage > 0;
-                    
-                    const colorTheme = isHighest ? {
-                      bg: 'bg-gradient-to-br from-[#06B6D4] to-[#0891B2]',
-                      text: 'text-white',
-                      mutedText: 'text-cyan-100',
-                      barBg: 'bg-black/20',
-                      barFill: 'bg-white',
-                      badge: 'bg-white/20 text-white border-white/30',
-                      shadow: 'shadow-xl shadow-cyan-500/20'
-                    } : {
-                      bg: 'bg-white',
-                      text: 'text-[#0F172A]',
-                      mutedText: 'text-[#64748B]',
-                      barBg: 'bg-orange-100',
-                      barFill: 'bg-[#F97316]',
-                      badge: 'bg-orange-50 text-[#F97316] border-orange-200',
-                      shadow: 'shadow-lg shadow-slate-200/50'
-                    };
 
                     return (
                       <motion.div
@@ -227,28 +232,32 @@ const HostLive: React.FC = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.1 }}
-                        className={`relative overflow-hidden p-6 md:p-8 rounded-3xl border border-[#F1F5F9] ${colorTheme.bg} ${colorTheme.shadow} transition-transform hover:-translate-y-1`}
+                        className={`relative overflow-hidden p-6 md:p-8 rounded-3xl border ${opt.colors.bg} ${opt.colors.border} transition-transform hover:-translate-y-1 shadow-sm`}
                       >
                         <div className="flex justify-between items-start mb-8">
-                          <div className={`px-4 py-1.5 rounded-full border text-xs font-bold uppercase tracking-widest ${colorTheme.badge}`}>
-                            Option {String.fromCharCode(65 + idx)}
+                          <div className={`px-4 py-1.5 rounded-full border text-xs font-bold uppercase tracking-widest ${opt.colors.badge}`}>
+                            Option {opt.letter}
                           </div>
-                          <div className={`text-right ${colorTheme.text}`}>
+                          <div className={`text-right ${opt.colors.text}`}>
                             <span className="text-4xl md:text-5xl font-bold block">{pct}%</span>
-                            <span className={`text-[10px] font-bold uppercase tracking-widest ${colorTheme.mutedText}`}>{count} votes</span>
+                            <span className={`text-[10px] font-bold uppercase tracking-widest ${opt.colors.mutedText}`}>{count} votes</span>
                           </div>
                         </div>
                         
-                        <h4 className={`text-xl md:text-2xl font-serif font-medium mb-8 ${colorTheme.text}`}>
-                          {optText}
+                        <h4 className={`text-xl md:text-2xl font-serif italic font-medium mb-4 ${opt.colors.text} leading-snug`}>
+                          {opt.text}
                         </h4>
 
-                        <div className={`h-3 w-full rounded-full overflow-hidden ${colorTheme.barBg}`}>
+                        <div className={`inline-block px-3 py-1 mb-8 rounded text-[10px] font-bold tracking-[0.15em] ${opt.colors.alertBadge} shadow-sm`}>
+                          {opt.alert}
+                        </div>
+
+                        <div className={`h-3 w-full rounded-full overflow-hidden ${opt.colors.barBg}`}>
                           <motion.div 
                             initial={{ width: 0 }}
                             animate={{ width: `${pct}%` }}
                             transition={{ duration: 1.2, ease: "easeOut", delay: 0.4 + (idx * 0.1) }}
-                            className={`h-full rounded-full ${colorTheme.barFill}`}
+                            className={`h-full rounded-full ${opt.colors.barFill}`}
                           />
                         </div>
                       </motion.div>
