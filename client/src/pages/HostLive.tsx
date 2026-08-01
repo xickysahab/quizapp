@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Play, Square, ChevronRight, Users } from 'lucide-react';
+import { Play, Square, ChevronRight, ChevronLeft, Users } from 'lucide-react';
 import { socket } from '../socket/socket';
 import api from '../services/api';
 
@@ -65,6 +65,16 @@ const HostLive: React.FC = () => {
       setAnalyticsData(null);
       socket.emit('host:nextQuestion', id, event.questions[nextIndex]);
     }
+  };
+
+  const handlePrevQuestion = () => {
+    if (!event || currentQuestionIndex <= 0) return;
+    const prevIndex = currentQuestionIndex - 1;
+    setCurrentQuestionIndex(prevIndex);
+    setShowAnalytics(false);
+    setAnalyticsData(null);
+    setResponsesCount(0); // Reset responses count view for now
+    socket.emit('host:nextQuestion', id, event.questions[prevIndex]); 
   };
 
   const handleShowAnalytics = async () => {
@@ -184,22 +194,35 @@ const HostLive: React.FC = () => {
 
         {currentQuestionIndex !== -1 && (
           <div className="flex gap-4">
-            {!showAnalytics ? (
-              <button 
-                onClick={handleShowAnalytics}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-xl font-bold text-lg transition-all shadow-lg"
-              >
-                Show Results
-              </button>
-            ) : (
-              <button 
-                onClick={isFinished ? handleEndQuiz : handleNextQuestion}
-                className="bg-[#aa3bff] hover:bg-[#9024e6] text-white px-8 py-3 rounded-xl font-bold text-lg transition-all flex items-center gap-2 shadow-lg shadow-[#aa3bff]/30"
-              >
-                {isFinished ? 'Finish Quiz' : 'Next Question'}
-                <ChevronRight className="w-6 h-6" />
-              </button>
-            )}
+            <button 
+              onClick={handlePrevQuestion}
+              disabled={currentQuestionIndex === 0}
+              className={`px-6 py-3 rounded-xl font-bold transition-colors flex items-center gap-2 ${currentQuestionIndex === 0 ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-gray-700 hover:bg-gray-600 text-white shadow-lg'}`}
+            >
+              <ChevronLeft className="w-5 h-5" />
+              Prev
+            </button>
+            
+            <button 
+              onClick={() => {
+                if (showAnalytics) {
+                  setShowAnalytics(false);
+                } else {
+                  handleShowAnalytics();
+                }
+              }}
+              className={`${showAnalytics ? 'bg-gray-600 hover:bg-gray-500' : 'bg-blue-500 hover:bg-blue-600'} text-white px-8 py-3 rounded-xl font-bold text-lg transition-all shadow-lg`}
+            >
+              {showAnalytics ? 'Hide Results' : 'Show Results'}
+            </button>
+
+            <button 
+              onClick={isFinished ? handleEndQuiz : handleNextQuestion}
+              className="bg-[#aa3bff] hover:bg-[#9024e6] text-white px-8 py-3 rounded-xl font-bold text-lg transition-all flex items-center gap-2 shadow-lg shadow-[#aa3bff]/30"
+            >
+              {isFinished ? 'Finish Quiz' : 'Next'}
+              <ChevronRight className="w-6 h-6" />
+            </button>
           </div>
         )}
       </footer>
