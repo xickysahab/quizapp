@@ -57,31 +57,37 @@ export const submitResponse = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    const question = await prisma.question.findUnique({ where: { id: questionId } });
+    const question = await prisma.question.findUnique({ 
+      where: { id: questionId },
+      include: { event: true } 
+    });
+
     if (!question) {
       res.status(404).json({ message: 'Question not found.' });
       return;
     }
 
-    // Check if participant already answered
-    const existingResponse = await prisma.response.findUnique({
+    // Validate if the question is currently active for the event
+    if (!question.event.isLive || question.event.currentQuestionId !== questionId) {
+      res.status(400).json({ message: 'This question is no longer active.' });
+      return;
+    }
+
+    const isCorrect = question.correctOption === Number(selectedOption);
+
+    // Upsert response so participants can change their answer
+    const response = await prisma.response.upsert({
       where: {
         questionId_participantId: {
           questionId,
           participantId,
         },
       },
-    });
-
-    if (existingResponse) {
-      res.status(400).json({ message: 'You have already submitted an answer for this question.' });
-      return;
-    }
-
-    const isCorrect = question.correctOption === Number(selectedOption);
-
-    const response = await prisma.response.create({
-      data: {
+      update: {
+        selectedOption: Number(selectedOption),
+        isCorrect,
+      },
+      create: {
         participantId,
         questionId,
         selectedOption: Number(selectedOption),
@@ -89,7 +95,7 @@ export const submitResponse = async (req: Request, res: Response): Promise<void>
       },
     });
 
-    res.status(201).json({ message: 'Response submitted successfully', response });
+    res.status(200).json({ message: 'Response submitted successfully', response });
   } catch (error) {
     console.error('Submit response error:', error);
     res.status(500).json({ message: 'Internal server error' });

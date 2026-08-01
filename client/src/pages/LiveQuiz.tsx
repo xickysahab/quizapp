@@ -13,7 +13,7 @@ const LiveQuiz: React.FC = () => {
   const [eventId, setEventId] = useState<string | null>(null);
   
   const [activeQuestion, setActiveQuestion] = useState<any>(null);
-  const [hasAnswered, setHasAnswered] = useState(false);
+  const [currentSelection, setCurrentSelection] = useState<number | null>(null);
   const [quizEnded, setQuizEnded] = useState(false);
 
   useEffect(() => {
@@ -35,8 +35,9 @@ const LiveQuiz: React.FC = () => {
     socket.emit('participant:join', eId, pId);
 
     // Socket Listeners
-    socket.on('participant:questionActive', ({ question, hasAnswered: alreadyAnswered }) => {
-      setHasAnswered(alreadyAnswered || false);
+    socket.on('participant:questionActive', ({ question, selectedOption }) => {
+      // Clear or set the previous selection for the new question
+      setCurrentSelection(selectedOption !== undefined ? selectedOption : null);
       setActiveQuestion(question);
     });
 
@@ -53,18 +54,21 @@ const LiveQuiz: React.FC = () => {
   }, [navigate]);
 
   const submitAnswer = async (index: number) => {
-    if (hasAnswered || !activeQuestion) return;
+    if (!activeQuestion) return;
+    
+    // Instantly show the selection to the user
+    setCurrentSelection(index);
+    
     try {
       await api.post('/participants/response', {
         participantId,
         questionId: activeQuestion.id,
         selectedOption: index
       });
-      setHasAnswered(true);
       socket.emit('participant:submitAnswer', eventId);
     } catch (error) {
       console.error('Failed to submit', error);
-      alert('Error submitting answer.');
+      alert('Error saving your answer. The question might be locked.');
     }
   };
 
@@ -99,19 +103,20 @@ const LiveQuiz: React.FC = () => {
                 <button
                   key={idx}
                   onClick={() => submitAnswer(idx)}
-                  disabled={hasAnswered}
-                  className={`w-full p-4 rounded-xl text-lg font-medium transition-all ${
-                    hasAnswered 
-                      ? 'bg-white/20 text-white/50 cursor-not-allowed' 
-                      : 'bg-white text-[#aa3bff] hover:bg-gray-100 shadow-lg'
+                  className={`w-full p-4 rounded-xl text-lg font-medium transition-all shadow-lg border-2 ${
+                    currentSelection === idx 
+                      ? 'bg-[#ffe815] text-[#aa3bff] border-[#ffe815] scale-[1.02]' 
+                      : 'bg-white text-[#aa3bff] border-transparent hover:bg-gray-100 hover:scale-[1.01]'
                   }`}
                 >
                   {opt}
                 </button>
               ))}
             </div>
-            {hasAnswered && (
-              <p className="mt-6 text-center font-bold">Answer locked! Waiting for others...</p>
+            {currentSelection !== null && (
+              <p className="mt-6 text-center font-bold animate-pulse text-[#ffe815]">
+                Answer saved! You can change it until the host moves on.
+              </p>
             )}
           </div>
         )}

@@ -43,7 +43,7 @@ export const initializeSocket = (io: Server) => {
           
           socket.emit('participant:questionActive', { 
             question: activeQuestion,
-            hasAnswered: !!response
+            selectedOption: response ? response.selectedOption : null
           });
         }
       }
