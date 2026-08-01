@@ -183,85 +183,75 @@ const HostLive: React.FC = () => {
               animate={{ opacity: 1, scale: 1 }}
               className="text-left w-full"
             >
-              <div className="bg-[#FFFFFF] p-6 md:p-8 rounded-3xl border border-[#E0F2FE] shadow-lux-lg space-y-4">
-                <div className="flex items-center justify-between border-b border-[#E0F2FE] pb-3">
-                  <h3 className="font-serif text-2xl font-bold text-[#0F172A]">
-                    Your result of Sahaj Analysis.
+              <div className="w-full space-y-6">
+                <div className="flex flex-col md:flex-row items-center justify-between bg-white p-6 rounded-3xl border border-[#E0F2FE] shadow-sm">
+                  <h3 className="font-serif text-2xl md:text-3xl font-bold text-[#0F172A]">
+                    Overall Audience Sentiment
                   </h3>
-                  <span className="text-xs font-semibold uppercase tracking-[0.1em] text-[#06B6D4] bg-[#ECFEFF] px-3 py-1 rounded-full">
-                    {summaryData.totalParticipants} Participants
-                  </span>
+                  <div className="mt-4 md:mt-0 flex items-center gap-3">
+                    <span className="text-sm font-semibold uppercase tracking-wider text-[#475569]">Total Participants:</span>
+                    <span className="text-lg font-bold text-[#06B6D4] bg-[#ECFEFF] px-4 py-1.5 rounded-full">
+                      {summaryData.totalParticipants}
+                    </span>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[
-                    {
-                      optIndex: 0,
-                      letter: 'A',
-                      text: 'You need the learnings of Sahajta urgently.',
-                      alert: 'RED ALERT',
-                      colors: { bg: 'bg-[#EAB8B8]/30', border: 'border-[#EAB8B8]/50', text: 'text-[#4A3525]', alertBg: 'bg-[#D14949]', letterBg: 'bg-[#D14949]' }
-                    },
-                    {
-                      optIndex: 1,
-                      letter: 'B',
-                      text: 'You are able to being fully Sahaj.',
-                      alert: 'GREEN ALERT',
-                      colors: { bg: 'bg-[#A8D8D3]/30', border: 'border-[#A8D8D3]/50', text: 'text-[#4A3525]', alertBg: 'bg-[#55A39E]', letterBg: 'bg-[#55A39E]' }
-                    },
-                    {
-                      optIndex: 2,
-                      letter: 'C',
-                      text: 'There is some confusion, but you are moving closer to Sahajta.',
-                      alert: 'YELLOW ALERT',
-                      colors: { bg: 'bg-[#E3DC9D]/30', border: 'border-[#E3DC9D]/50', text: 'text-[#4A3525]', alertBg: 'bg-[#D9AC34]', letterBg: 'bg-[#D9AC34]' }
-                    },
-                    {
-                      optIndex: 3,
-                      letter: 'D',
-                      text: 'There are many inner complications. Sahajta is here to help you',
-                      alert: 'ORANGE ALERT',
-                      colors: { bg: 'bg-[#E3C69D]/30', border: 'border-[#E3C69D]/50', text: 'text-[#4A3525]', alertBg: 'bg-[#DD8931]', letterBg: 'bg-[#DD8931]' }
-                    }
-                  ].map((card, idx) => {
-                    const percentage = summaryData.collective?.percentages?.[card.optIndex] || 0;
-                    const count = summaryData.collective?.optionCounts?.[card.optIndex] || 0;
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {(summaryData.collective?.optionsText || ['Option A', 'Option B', 'Option C', 'Option D']).map((optText: string, idx: number) => {
+                    const pct = summaryData.collective?.percentages?.[idx] || 0;
+                    const count = summaryData.collective?.optionCounts?.[idx] || 0;
+                    const maxPercentage = Math.max(...(summaryData.collective?.percentages || [0]));
+                    const isHighest = pct === maxPercentage && maxPercentage > 0;
+                    
+                    const colorTheme = isHighest ? {
+                      bg: 'bg-gradient-to-br from-[#06B6D4] to-[#0891B2]',
+                      text: 'text-white',
+                      mutedText: 'text-cyan-100',
+                      barBg: 'bg-black/20',
+                      barFill: 'bg-white',
+                      badge: 'bg-white/20 text-white border-white/30',
+                      shadow: 'shadow-xl shadow-cyan-500/20'
+                    } : {
+                      bg: 'bg-white',
+                      text: 'text-[#0F172A]',
+                      mutedText: 'text-[#64748B]',
+                      barBg: 'bg-orange-100',
+                      barFill: 'bg-[#F97316]',
+                      badge: 'bg-orange-50 text-[#F97316] border-orange-200',
+                      shadow: 'shadow-lg shadow-slate-200/50'
+                    };
 
                     return (
-                      <div
+                      <motion.div
                         key={idx}
-                        className={`relative p-4 md:p-5 rounded-2xl border flex flex-col items-center text-center gap-3 shadow-sm h-full ${card.colors.bg} ${card.colors.border}`}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: idx * 0.1 }}
+                        className={`relative overflow-hidden p-6 md:p-8 rounded-3xl border border-[#F1F5F9] ${colorTheme.bg} ${colorTheme.shadow} transition-transform hover:-translate-y-1`}
                       >
-                        {/* Percentage Overlay */}
-                        <div className="absolute top-3 right-4 text-right z-20">
-                          <span className={`font-serif text-xl font-bold ${card.colors.text}`}>
-                            {percentage}%
-                          </span>
-                          <span className={`text-[9px] uppercase font-bold block ${card.colors.text} opacity-60 -mt-1`}>{count} votes</span>
-                        </div>
-
-                        {/* Top Badge: Mostly + Letter */}
-                        <div className="flex flex-col items-center -space-y-2 relative z-10 pt-1">
-                          <div className={`px-5 py-1 rounded-full border bg-white/70 backdrop-blur-sm shadow-sm font-serif text-xs font-semibold tracking-wide ${card.colors.text} ${card.colors.border}`}>
-                            Mostly
+                        <div className="flex justify-between items-start mb-8">
+                          <div className={`px-4 py-1.5 rounded-full border text-xs font-bold uppercase tracking-widest ${colorTheme.badge}`}>
+                            Option {String.fromCharCode(65 + idx)}
                           </div>
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-serif text-sm font-bold shadow-md z-10 text-white ${card.colors.alertBg} border-2 border-white`}>
-                            {card.letter}
+                          <div className={`text-right ${colorTheme.text}`}>
+                            <span className="text-4xl md:text-5xl font-bold block">{pct}%</span>
+                            <span className={`text-[10px] font-bold uppercase tracking-widest ${colorTheme.mutedText}`}>{count} votes</span>
                           </div>
                         </div>
                         
-                        {/* Main Text Content */}
-                        <div className="flex-1 flex items-center justify-center py-1">
-                          <p className={`font-serif text-base md:text-lg italic font-medium leading-tight ${card.colors.text} px-2 drop-shadow-sm`}>
-                            {card.text}
-                          </p>
-                        </div>
+                        <h4 className={`text-xl md:text-2xl font-serif font-medium mb-8 ${colorTheme.text}`}>
+                          {optText}
+                        </h4>
 
-                        {/* Alert Badge */}
-                        <div className={`px-4 py-1.5 rounded font-bold text-[10px] md:text-xs tracking-[0.15em] text-white shadow-md mt-auto ${card.colors.alertBg}`}>
-                          {card.alert}
+                        <div className={`h-3 w-full rounded-full overflow-hidden ${colorTheme.barBg}`}>
+                          <motion.div 
+                            initial={{ width: 0 }}
+                            animate={{ width: `${pct}%` }}
+                            transition={{ duration: 1.2, ease: "easeOut", delay: 0.4 + (idx * 0.1) }}
+                            className={`h-full rounded-full ${colorTheme.barFill}`}
+                          />
                         </div>
-                      </div>
+                      </motion.div>
                     );
                   })}
                 </div>
