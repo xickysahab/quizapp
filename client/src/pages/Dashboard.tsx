@@ -4,7 +4,7 @@ import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { Plus, Presentation, Users, Trash2, Copy, Check, Search, Radio, ArrowUpRight, UserPlus } from 'lucide-react';
+import { Plus, Presentation, Users, Trash2, Copy, Check, Search, Radio, ArrowUpRight, UserPlus, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ConfirmModal from '../components/ConfirmModal';
 import CreateAdminModal from '../components/CreateAdminModal';
@@ -119,6 +119,15 @@ const Dashboard: React.FC = () => {
               <UserPlus className="w-4 h-4" />
               Add Sub-Admin
             </button>
+            {user?.role === 'ADMIN' && (
+              <button
+                onClick={() => navigate('/admin/logs')}
+                className="flex items-center gap-2 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#334155] px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors border border-[#E2E8F0]"
+              >
+                <FileText className="w-4 h-4" />
+                Audit Logs
+              </button>
+            )}
           </div>
         </div>
 

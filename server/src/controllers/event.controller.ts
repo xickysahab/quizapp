@@ -2,6 +2,7 @@ import { Response } from 'express';
 import prisma from '../config/prisma';
 import { AuthRequest } from '../middleware/auth.middleware';
 import { generateRoomCode } from '../utils/roomCode';
+import { logActivity } from '../utils/logger';
 
 export const createEvent = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -35,6 +36,8 @@ export const createEvent = async (req: AuthRequest, res: Response): Promise<void
         hostId,
       },
     });
+
+    await logActivity(req.user?.userId, 'CREATE_EVENT', 'Event', event.id, { title: event.title, roomCode: event.roomCode });
 
     res.status(201).json({
       message: 'Event created successfully',
@@ -113,6 +116,8 @@ export const deleteEvent = async (req: AuthRequest, res: Response): Promise<void
 
     await prisma.event.delete({ where: { id } });
 
+    await logActivity(req.user?.userId, 'DELETE_EVENT', 'Event', id, { title: event.title });
+
     res.status(200).json({ message: 'Event deleted successfully' });
   } catch (error) {
     console.error('Delete event error:', error);
@@ -136,6 +141,8 @@ export const updateEventConfig = async (req: AuthRequest, res: Response): Promis
       where: { id },
       data: { concludeConfig },
     });
+
+    await logActivity(req.user?.userId, 'UPDATE_EVENT_CONFIG', 'Event', id, { title: event.title });
 
     res.status(200).json({ message: 'Event config updated successfully', event: updatedEvent });
   } catch (error) {
@@ -174,6 +181,8 @@ export const clearEventData = async (req: AuthRequest, res: Response): Promise<v
       where: { id },
       data: { currentQuestionId: null }
     });
+
+    await logActivity(req.user?.userId, 'CLEAR_EVENT_DATA', 'Event', id, { title: event.title });
 
     res.status(200).json({ message: 'Quiz data cleared successfully' });
   } catch (error) {

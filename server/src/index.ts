@@ -7,6 +7,8 @@ import authRoutes from './routes/auth.routes';
 import eventRoutes from './routes/event.routes';
 import questionRoutes from './routes/question.routes';
 import participantRoutes from './routes/participant.routes';
+import analyticsRoutes from './routes/analytics.routes';
+import logRoutes from './routes/log.routes';
 import { initializeSocket } from './socket';
 
 dotenv.config();
@@ -33,14 +35,13 @@ app.use(cors({
 }));
 app.use(express.json());
 
-import analyticsRoutes from './routes/analytics.routes';
-
 // Routes
 app.use('/auth', authRoutes);
 app.use('/events', eventRoutes);
 app.use('/questions', questionRoutes);
 app.use('/participants', participantRoutes);
 app.use('/analytics', analyticsRoutes);
+app.use('/logs', logRoutes);
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Slido server is healthy' });

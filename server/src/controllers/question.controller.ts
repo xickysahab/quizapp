@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import prisma from '../config/prisma';
 import { AuthRequest } from '../middleware/auth.middleware';
+import { logActivity } from '../utils/logger';
 
 export const addQuestion = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -31,6 +32,8 @@ export const addQuestion = async (req: AuthRequest, res: Response): Promise<void
         timeLimit: timeLimit ? Number(timeLimit) : null,
       },
     });
+
+    await logActivity(req.user?.userId, 'ADD_QUESTION', 'Question', question.id, { eventId, text: question.text });
 
     res.status(201).json({ message: 'Question created successfully', question });
   } catch (error) {
@@ -64,6 +67,8 @@ export const updateQuestion = async (req: AuthRequest, res: Response): Promise<v
       },
     });
 
+    await logActivity(req.user?.userId, 'UPDATE_QUESTION', 'Question', question.id, { eventId: existingQuestion.eventId, text: question.text });
+
     res.status(200).json({ message: 'Question updated successfully', question });
   } catch (error) {
     console.error('Update question error:', error);
@@ -86,6 +91,8 @@ export const deleteQuestion = async (req: AuthRequest, res: Response): Promise<v
     }
 
     await prisma.question.delete({ where: { id } });
+
+    await logActivity(req.user?.userId, 'DELETE_QUESTION', 'Question', id, { eventId: existingQuestion.eventId, text: existingQuestion.text });
 
     res.status(200).json({ message: 'Question deleted successfully' });
   } catch (error) {

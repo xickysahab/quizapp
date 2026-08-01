@@ -7,6 +7,7 @@ import EventDetails from './pages/EventDetails';
 import HostLive from './pages/HostLive';
 import Join from './pages/Join';
 import LiveQuiz from './pages/LiveQuiz';
+import ActivityLogs from './pages/ActivityLogs';
 
 // Protected Route Wrapper for Host Pages
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -33,6 +34,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/logs" 
+        element={
+          <ProtectedRoute>
+            <ActivityLogs />
           </ProtectedRoute>
         } 
       />

@@ -10,9 +10,10 @@ model User {
   id        String   @id @default(uuid())
   email     String   @unique
   password  String
-  name      String
-  role      String   @default("ADMIN")
-  events    Event[]
+  name        String
+  role        String        @default("ADMIN")
+  events      Event[]
+  activityLogs ActivityLog[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -65,4 +66,15 @@ model Response {
   respondedAt    DateTime    @default(now())
 
   @@unique([questionId, participantId])
+}
+
+model ActivityLog {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action     String
+  resource   String
+  resourceId String?
+  details    Json?
+  createdAt  DateTime @default(now())
 }
