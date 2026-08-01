@@ -205,28 +205,28 @@ const HostLive: React.FC = () => {
                       letter: 'A',
                       text: 'You need the learnings of Sahajta urgently.',
                       alert: 'RED ALERT',
-                      colors: { bg: 'bg-[#FECACA]', border: 'border-[#FCA5A5]', text: 'text-[#7F1D1D]', alertBg: 'bg-[#DC2626]', letterBg: 'bg-[#FEE2E2]' }
+                      colors: { bg: 'bg-[#EAB8B8]/30', border: 'border-[#EAB8B8]/50', text: 'text-[#4A3525]', alertBg: 'bg-[#D14949]', letterBg: 'bg-[#D14949]' }
                     },
                     {
                       optIndex: 3,
                       letter: 'D',
                       text: 'There are many inner complications. Sahajta is here to help you',
                       alert: 'ORANGE ALERT',
-                      colors: { bg: 'bg-[#FED7AA]', border: 'border-[#FDBA74]', text: 'text-[#7C2D12]', alertBg: 'bg-[#EA580C]', letterBg: 'bg-[#FFEDD5]' }
+                      colors: { bg: 'bg-[#E3C69D]/30', border: 'border-[#E3C69D]/50', text: 'text-[#4A3525]', alertBg: 'bg-[#DD8931]', letterBg: 'bg-[#DD8931]' }
                     },
                     {
                       optIndex: 2,
                       letter: 'C',
                       text: 'There is some confusion, but you are moving closer to Sahajta.',
                       alert: 'YELLOW ALERT',
-                      colors: { bg: 'bg-[#FEF08A]', border: 'border-[#FDE047]', text: 'text-[#713F12]', alertBg: 'bg-[#EAB308]', letterBg: 'bg-[#FEF9C3]' }
+                      colors: { bg: 'bg-[#E3DC9D]/30', border: 'border-[#E3DC9D]/50', text: 'text-[#4A3525]', alertBg: 'bg-[#D9AC34]', letterBg: 'bg-[#D9AC34]' }
                     },
                     {
                       optIndex: 1,
                       letter: 'B',
                       text: 'You are able to being fully Sahaj.',
                       alert: 'GREEN ALERT',
-                      colors: { bg: 'bg-[#CCFBF1]', border: 'border-[#99F6E4]', text: 'text-[#134E4A]', alertBg: 'bg-[#0D9488]', letterBg: 'bg-[#E0F2FE]' }
+                      colors: { bg: 'bg-[#A8D8D3]/30', border: 'border-[#A8D8D3]/50', text: 'text-[#4A3525]', alertBg: 'bg-[#55A39E]', letterBg: 'bg-[#55A39E]' }
                     }
                   ].map((card, idx) => {
                     const percentage = summaryData.collective?.percentages?.[card.optIndex] || 0;
@@ -245,20 +245,20 @@ const HostLive: React.FC = () => {
                           <span className={`text-[10px] uppercase font-bold block ${card.colors.text} opacity-70`}>{count} votes</span>
                         </div>
 
-                        <div className="space-y-2">
-                          <div className={`mx-auto w-10 h-10 rounded-full flex items-center justify-center font-serif text-lg font-bold border-2 ${card.colors.alertBg} text-white shadow-sm`}>
+                        <div className="space-y-3">
+                          <div className={`mx-auto px-4 py-1 rounded border flex items-center justify-center font-serif text-sm font-semibold shadow-sm ${card.colors.text} bg-[#FFFFFF]/50 ${card.colors.border}`}>
+                            Mostly
+                          </div>
+                          <div className={`mx-auto w-8 h-8 rounded-full flex items-center justify-center font-serif text-sm font-bold ${card.colors.alertBg} text-white shadow-sm`}>
                             {card.letter}
                           </div>
-                          <span className={`text-xs font-semibold uppercase tracking-widest ${card.colors.text} opacity-80 block`}>
-                            Mostly {card.letter}
-                          </span>
                         </div>
                         
-                        <p className={`font-serif text-lg md:text-xl font-medium leading-tight ${card.colors.text} px-2`}>
+                        <p className={`font-serif text-lg md:text-xl italic font-medium leading-tight ${card.colors.text} px-2`}>
                           {card.text}
                         </p>
 
-                        <div className={`px-4 py-1.5 rounded-lg font-bold text-sm tracking-wider text-white shadow-sm mt-2 ${card.colors.alertBg}`}>
+                        <div className={`px-4 py-1.5 rounded font-bold text-sm tracking-wider text-white shadow-sm mt-2 ${card.colors.alertBg}`}>
                           {card.alert}
                         </div>
                       </div>
