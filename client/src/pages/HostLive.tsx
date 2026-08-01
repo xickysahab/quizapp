@@ -98,7 +98,7 @@ const HostLive: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#EA580C] text-[#FFFFFF] flex items-center justify-center font-serif text-lg italic">
+      <div className="min-h-screen bg-[#FFFFFF] text-[#0F172A] flex items-center justify-center font-serif text-lg italic">
         Initializing live broadcast stage...
       </div>
     );
@@ -106,11 +106,11 @@ const HostLive: React.FC = () => {
 
   if (!event || !event.questions || event.questions.length === 0) {
     return (
-      <div className="min-h-screen bg-[#EA580C] text-[#FFFFFF] flex flex-col items-center justify-center p-6 text-center space-y-4">
+      <div className="min-h-screen bg-[#FFFFFF] text-[#0F172A] flex flex-col items-center justify-center p-6 text-center space-y-4">
         <p className="font-serif text-2xl">No questions configured for this event.</p>
         <button
           onClick={() => navigate(`/events/${id}`)}
-          className="px-6 py-3 rounded-2xl bg-[#06B6D4] text-white font-medium"
+          className="px-6 py-3 rounded-2xl bg-[#06B6D4] text-white font-medium shadow-md"
         >
           Add Questions First
         </button>
@@ -122,25 +122,25 @@ const HostLive: React.FC = () => {
   const isFinished = currentQuestionIndex >= event.questions.length - 1;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#EA580C] text-[#FFFFFF] font-sans relative selection:bg-[#06B6D4]">
+    <div className="min-h-screen flex flex-col bg-[#FFFFFF] text-[#0F172A] font-sans relative selection:bg-[#E0F2FE]">
       {/* Header Bar */}
-      <header className="bg-[#F97316] px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 border-b border-white/10 shadow-lg">
+      <header className="bg-[#FFFFFF] px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 border-b border-[#E0F2FE] shadow-sm">
         <div className="flex items-center gap-4">
           <img 
             src={brandLogo} 
             alt="Sahaj Spirit Logo" 
-            className="w-9 h-9 rounded-xl object-cover border border-white/20"
+            className="w-9 h-9 rounded-xl object-cover border border-[#E0F2FE]"
           />
           <div>
-            <h1 className="font-serif text-xl font-bold text-[#ECFEFF]">{event.title}</h1>
-            <div className="flex items-center gap-3 text-xs text-[#67E8F9]">
+            <h1 className="font-serif text-xl font-bold text-[#0F172A]">{event.title}</h1>
+            <div className="flex items-center gap-3 text-xs text-[#475569]">
               <span className="flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5 text-[#06B6D4]" />
                 <span>{participantCount} Joined</span>
               </span>
               <span>•</span>
               <span className="flex items-center gap-1.5">
-                <Radio className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+                <Radio className="w-3.5 h-3.5 text-emerald-500 animate-pulse" />
                 <span>Live Broadcast</span>
               </span>
             </div>
@@ -149,11 +149,11 @@ const HostLive: React.FC = () => {
 
         {/* PIN Badge */}
         <div className="text-right flex items-center gap-4">
-          <div className="bg-[#FFFFFF]/10 px-5 py-2 rounded-2xl border border-white/10 text-center">
-            <span className="text-[10px] tracking-[0.2em] uppercase text-[#67E8F9] font-semibold block">
+          <div className="bg-[#F0F9FF] px-5 py-2 rounded-2xl border border-[#E0F2FE] text-center">
+            <span className="text-[10px] tracking-[0.2em] uppercase text-[#06B6D4] font-semibold block">
               Join Code
             </span>
-            <span className="font-mono text-3xl font-bold tracking-[0.2em] text-[#ECFEFF]">
+            <span className="font-mono text-3xl font-bold tracking-[0.2em] text-[#0F172A]">
               {event.roomCode}
             </span>
           </div>
@@ -173,16 +173,16 @@ const HostLive: React.FC = () => {
                 <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#06B6D4]">
                   Live Session Summary
                 </span>
-                <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#ECFEFF]">
+                <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#0F172A]">
                   Collective Results
                 </h2>
-                <p className="text-sm text-[#67E8F9]">
+                <p className="text-sm text-[#475569]">
                   Aggregated response statistics from {summaryData.totalParticipants} connected participants
                 </p>
               </div>
 
-              <div className="bg-[#F97316] p-8 md:p-10 rounded-3xl border border-white/10 shadow-2xl space-y-6">
-                <h3 className="font-serif text-2xl font-bold text-[#ECFEFF] border-b border-white/10 pb-4">
+              <div className="bg-[#FFFFFF] p-8 md:p-10 rounded-3xl border border-[#E0F2FE] shadow-lux-lg space-y-6">
+                <h3 className="font-serif text-2xl font-bold text-[#0F172A] border-b border-[#E0F2FE] pb-4">
                   Response Distribution
                 </h3>
 
@@ -194,26 +194,26 @@ const HostLive: React.FC = () => {
                     return (
                       <div
                         key={optIdx}
-                        className="relative bg-[#EA580C] border border-white/10 rounded-2xl overflow-hidden p-4 flex items-center justify-between"
+                        className="relative bg-[#FFFFFF] border border-[#E0F2FE] rounded-2xl overflow-hidden p-4 flex items-center justify-between"
                       >
                         {/* Smooth Animated Bar Fill */}
                         <div
-                          className="absolute left-0 top-0 bottom-0 bg-[#06B6D4]/30 transition-all duration-1000 ease-out"
+                          className="absolute left-0 top-0 bottom-0 bg-[#ECFEFF] transition-all duration-1000 ease-out"
                           style={{ width: `${percentage}%` }}
                         ></div>
 
                         <div className="relative z-10 flex items-center gap-4">
-                          <span className="w-9 h-9 rounded-xl bg-[#F97316] border border-white/10 text-[#ECFEFF] font-serif text-sm font-bold flex items-center justify-center">
+                          <span className="w-9 h-9 rounded-xl bg-[#F0F9FF] border border-[#E0F2FE] text-[#06B6D4] font-serif text-sm font-bold flex items-center justify-center">
                             {['A', 'B', 'C', 'D'][optIdx]}
                           </span>
-                          <span className="text-base font-medium text-[#FFFFFF]">{opt}</span>
+                          <span className="text-base font-medium text-[#0F172A]">{opt}</span>
                         </div>
 
                         <div className="relative z-10 text-right">
-                          <span className="font-serif text-2xl font-bold text-[#06B6D4]">
+                          <span className="font-serif text-2xl font-bold text-[#F97316]">
                             {percentage}%
                           </span>
-                          <span className="text-xs text-[#67E8F9] block">{count} votes</span>
+                          <span className="text-xs text-[#475569] block">{count} votes</span>
                         </div>
                       </div>
                     );
@@ -231,12 +231,12 @@ const HostLive: React.FC = () => {
                 <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#06B6D4]">
                   Lobby Stage
                 </span>
-                <h2 className="font-serif text-4xl md:text-6xl font-bold text-[#ECFEFF]">
+                <h2 className="font-serif text-4xl md:text-6xl font-bold text-[#0F172A]">
                   Waiting for participants to join...
                 </h2>
-                <p className="text-base text-[#67E8F9] max-w-lg mx-auto font-light">
+                <p className="text-base text-[#475569] max-w-lg mx-auto font-light">
                   Ask your audience to go to the landing page and enter room PIN{' '}
-                  <span className="font-mono font-bold text-white bg-white/10 px-2 py-0.5 rounded-md">
+                  <span className="font-mono font-bold text-[#0F172A] bg-[#F0F9FF] px-2 py-0.5 rounded-md border border-[#E0F2FE]">
                     {event.roomCode}
                   </span>
                 </p>
@@ -245,7 +245,7 @@ const HostLive: React.FC = () => {
               <div className="pt-4">
                 <button
                   onClick={handleNextQuestion}
-                  className="px-10 py-5 rounded-2xl bg-[#06B6D4] hover:bg-[#0891B2] text-[#FFFFFF] font-serif text-2xl font-bold transition-all shadow-xl hover:shadow-2xl hover:scale-105 inline-flex items-center gap-3"
+                  className="px-10 py-5 rounded-2xl bg-[#F97316] hover:bg-[#EA580C] text-[#FFFFFF] font-serif text-2xl font-bold transition-all shadow-xl hover:shadow-2xl hover:scale-105 inline-flex items-center gap-3"
                 >
                   <Play className="w-6 h-6 fill-current text-white" />
                   <span>Begin Quiz Broadcast</span>
@@ -260,13 +260,13 @@ const HostLive: React.FC = () => {
               className="space-y-8 text-left"
             >
               {/* Question Index & Live Response Count */}
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              <div className="flex items-center justify-between border-b border-[#E0F2FE] pb-4">
                 <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#06B6D4]">
                   Question {currentQuestionIndex + 1} of {event.questions.length}
                 </span>
 
-                <div className="flex items-center gap-2 bg-[#F97316] px-4 py-2 rounded-full border border-white/10 text-xs font-medium text-[#ECFEFF]">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <div className="flex items-center gap-2 bg-[#F0F9FF] px-4 py-2 rounded-full border border-[#E0F2FE] text-xs font-medium text-[#0F172A]">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                   <span>
                     {responsesCount} / {participantCount} Submissions
                   </span>
@@ -274,7 +274,7 @@ const HostLive: React.FC = () => {
               </div>
 
               {/* Title */}
-              <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#ECFEFF] leading-tight">
+              <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#0F172A] leading-tight">
                 {activeQuestion.text}
               </h2>
 
@@ -283,12 +283,12 @@ const HostLive: React.FC = () => {
                 {activeQuestion.options.map((opt: string, idx: number) => (
                   <div
                     key={idx}
-                    className="bg-[#F97316] border border-white/10 rounded-2xl p-5 flex items-center gap-4 transition-all hover:border-[#06B6D4]"
+                    className="bg-[#FFFFFF] border border-[#E0F2FE] rounded-2xl p-5 flex items-center gap-4 transition-all hover:border-[#06B6D4] hover:bg-[#F0F9FF] shadow-sm"
                   >
-                    <span className="w-10 h-10 rounded-xl bg-[#EA580C] text-[#06B6D4] font-serif text-lg font-bold flex items-center justify-center border border-white/5">
+                    <span className="w-10 h-10 rounded-xl bg-[#ECFEFF] text-[#06B6D4] font-serif text-lg font-bold flex items-center justify-center border border-[#E0F2FE]">
                       {['A', 'B', 'C', 'D'][idx]}
                     </span>
-                    <span className="text-lg font-medium text-[#FFFFFF]">{opt}</span>
+                    <span className="text-lg font-medium text-[#0F172A]">{opt}</span>
                   </div>
                 ))}
               </div>
@@ -298,10 +298,10 @@ const HostLive: React.FC = () => {
       </main>
 
       {/* Control Footer */}
-      <footer className="bg-[#F97316] px-8 py-5 flex justify-between items-center border-t border-white/10">
+      <footer className="bg-[#FFFFFF] px-8 py-5 flex justify-between items-center border-t border-[#E0F2FE] shadow-sm">
         <button
           onClick={handleEndQuiz}
-          className="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-rose-500/20 text-[#67E8F9] hover:text-rose-400 text-xs font-semibold transition-all flex items-center gap-2 border border-white/10"
+          className="px-5 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold transition-all flex items-center gap-2 border border-rose-200"
         >
           <Square className="w-3.5 h-3.5 fill-current" />
           <span>{showFinalSummary ? 'Exit Cockpit' : 'End Live Quiz'}</span>
@@ -312,7 +312,7 @@ const HostLive: React.FC = () => {
             <button
               onClick={handlePrevQuestion}
               disabled={currentQuestionIndex === 0}
-              className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-[#FFFFFF] text-xs font-semibold transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5"
+              className="px-5 py-2.5 rounded-xl bg-[#FFFFFF] hover:bg-[#F0F9FF] border border-[#E0F2FE] text-[#475569] text-xs font-semibold transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5"
             >
               <ChevronLeft className="w-4 h-4" />
               <span>Previous</span>
@@ -321,7 +321,7 @@ const HostLive: React.FC = () => {
             {isFinished ? (
               <button
                 onClick={handleFinishAndViewSummary}
-                className="px-7 py-3 rounded-2xl bg-[#06B6D4] hover:bg-[#0891B2] text-[#FFFFFF] font-semibold text-sm transition-all shadow-md flex items-center gap-2"
+                className="px-7 py-3 rounded-2xl bg-[#F97316] hover:bg-[#EA580C] text-[#FFFFFF] font-semibold text-sm transition-all shadow-md flex items-center gap-2"
               >
                 <span>Conclude & Show Results</span>
                 <BarChart3 className="w-4 h-4" />
@@ -329,7 +329,7 @@ const HostLive: React.FC = () => {
             ) : (
               <button
                 onClick={handleNextQuestion}
-                className="px-7 py-3 rounded-2xl bg-[#FFFFFF] text-[#0F172A] hover:bg-white font-semibold text-sm transition-all shadow-md flex items-center gap-2"
+                className="px-7 py-3 rounded-2xl bg-[#06B6D4] text-[#FFFFFF] hover:bg-[#0891B2] font-semibold text-sm transition-all shadow-md flex items-center gap-2"
               >
                 <span>Next Question</span>
                 <ChevronRight className="w-4 h-4" />
