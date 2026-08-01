@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Save, Palette, RefreshCw } from 'lucide-react';
+import { X, Save, Palette, RefreshCw, BarChart, PieChart, LayoutGrid } from 'lucide-react';
 import { SAHAJOMETER_PRESET } from '../constants/presets';
 
 interface ConcludeSettingsModalProps {
@@ -10,35 +10,34 @@ interface ConcludeSettingsModalProps {
   initialConfig?: any;
 }
 
-const defaultColors = {
-  bg: 'bg-slate-50',
-  border: 'border-slate-200',
-  text: 'text-slate-800',
-  mutedText: 'text-slate-500',
-  barBg: 'bg-slate-200',
-  barFill: 'bg-slate-600',
-  badge: 'bg-white text-slate-600 border-slate-200',
-  alertBadge: 'bg-slate-600 text-white'
-};
-
 const defaultOptions = [
-  { letter: 'A', text: 'Option A Text', alert: 'ALERT A', colors: defaultColors },
-  { letter: 'B', text: 'Option B Text', alert: 'ALERT B', colors: defaultColors },
-  { letter: 'C', text: 'Option C Text', alert: 'ALERT C', colors: defaultColors },
-  { letter: 'D', text: 'Option D Text', alert: 'ALERT D', colors: defaultColors },
+  { letter: 'A', text: 'Option A Text', alert: 'ALERT A', themeColor: '#3B82F6' },
+  { letter: 'B', text: 'Option B Text', alert: 'ALERT B', themeColor: '#10B981' },
+  { letter: 'C', text: 'Option C Text', alert: 'ALERT C', themeColor: '#F59E0B' },
+  { letter: 'D', text: 'Option D Text', alert: 'ALERT D', themeColor: '#EF4444' },
 ];
 
 export default function ConcludeSettingsModal({ isOpen, onClose, onSave, initialConfig }: ConcludeSettingsModalProps) {
+  const [chartType, setChartType] = useState<string>('CUSTOM_GRID');
   const [options, setOptions] = useState<any[]>(defaultOptions);
 
   useEffect(() => {
-    if (initialConfig && Array.isArray(initialConfig) && initialConfig.length > 0) {
-      setOptions(initialConfig);
+    if (initialConfig) {
+      if (initialConfig.chartType) setChartType(initialConfig.chartType);
+      
+      // Support legacy config format (array instead of object)
+      if (Array.isArray(initialConfig)) {
+        setOptions(initialConfig);
+        setChartType('CUSTOM_GRID');
+      } else if (initialConfig.options) {
+        setOptions(initialConfig.options);
+      }
     }
   }, [initialConfig]);
 
   const loadSahajometer = () => {
-    setOptions(SAHAJOMETER_PRESET);
+    setChartType(SAHAJOMETER_PRESET.chartType);
+    setOptions(SAHAJOMETER_PRESET.options);
   };
 
   const handleChange = (index: number, field: string, value: string) => {
@@ -48,7 +47,7 @@ export default function ConcludeSettingsModal({ isOpen, onClose, onSave, initial
   };
 
   const handleSave = () => {
-    onSave(options);
+    onSave({ chartType, options });
     onClose();
   };
 
@@ -69,7 +68,7 @@ export default function ConcludeSettingsModal({ isOpen, onClose, onSave, initial
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+          className="relative w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
         >
           <div className="flex items-center justify-between px-8 py-6 border-b border-slate-100 bg-slate-50/50">
             <div>
@@ -77,7 +76,7 @@ export default function ConcludeSettingsModal({ isOpen, onClose, onSave, initial
                 <Palette className="w-6 h-6 text-indigo-500" />
                 Customize Conclude Screen
               </h2>
-              <p className="text-sm text-slate-500 mt-1">Configure the design and messages for the final results screen.</p>
+              <p className="text-sm text-slate-500 mt-1">Configure the design, charts, and colors for the results screen.</p>
             </div>
             <button
               onClick={onClose}
@@ -88,45 +87,89 @@ export default function ConcludeSettingsModal({ isOpen, onClose, onSave, initial
           </div>
 
           <div className="p-8 overflow-y-auto flex-1">
-            <div className="mb-8 flex justify-end">
-              <button
-                onClick={loadSahajometer}
-                className="flex items-center gap-2 px-4 py-2 bg-amber-50 text-amber-600 rounded-xl font-medium hover:bg-amber-100 transition-colors"
-              >
-                <RefreshCw className="w-4 h-4" />
-                Load Sahajometer Template
-              </button>
+            
+            {/* Chart Type Selector */}
+            <div className="mb-10">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-slate-800">1. Select Chart Type</h3>
+                <button
+                  onClick={loadSahajometer}
+                  className="flex items-center gap-2 px-4 py-2 bg-amber-50 text-amber-600 rounded-xl font-medium hover:bg-amber-100 transition-colors text-sm"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  Load Sahajometer Preset
+                </button>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button 
+                  onClick={() => setChartType('CUSTOM_GRID')}
+                  className={`p-4 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all ${chartType === 'CUSTOM_GRID' ? 'border-indigo-500 bg-indigo-50/50 text-indigo-700' : 'border-slate-200 hover:border-slate-300 text-slate-600'}`}
+                >
+                  <LayoutGrid className={`w-8 h-8 ${chartType === 'CUSTOM_GRID' ? 'text-indigo-500' : 'text-slate-400'}`} />
+                  <span className="font-semibold text-sm">Cards Grid Layout</span>
+                </button>
+                <button 
+                  onClick={() => setChartType('BAR_CHART')}
+                  className={`p-4 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all ${chartType === 'BAR_CHART' ? 'border-indigo-500 bg-indigo-50/50 text-indigo-700' : 'border-slate-200 hover:border-slate-300 text-slate-600'}`}
+                >
+                  <BarChart className={`w-8 h-8 ${chartType === 'BAR_CHART' ? 'text-indigo-500' : 'text-slate-400'}`} />
+                  <span className="font-semibold text-sm">Bar Chart View</span>
+                </button>
+                <button 
+                  onClick={() => setChartType('PIE_CHART')}
+                  className={`p-4 rounded-2xl border-2 flex flex-col items-center gap-3 transition-all ${chartType === 'PIE_CHART' ? 'border-indigo-500 bg-indigo-50/50 text-indigo-700' : 'border-slate-200 hover:border-slate-300 text-slate-600'}`}
+                >
+                  <PieChart className={`w-8 h-8 ${chartType === 'PIE_CHART' ? 'text-indigo-500' : 'text-slate-400'}`} />
+                  <span className="font-semibold text-sm">Donut / Pie Chart</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <h3 className="text-lg font-bold text-slate-800">2. Customize Options</h3>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {options.map((opt, idx) => (
                 <div key={idx} className="p-6 rounded-2xl border border-slate-200 bg-white shadow-sm space-y-4">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-bold text-slate-700">Option {opt.letter}</h3>
+                    <h3 className="font-bold text-slate-700 flex items-center gap-2">
+                      <span className="w-6 h-6 rounded flex items-center justify-center text-xs text-white" style={{ backgroundColor: opt.themeColor || '#000' }}>
+                        {opt.letter}
+                      </span>
+                      Option {opt.letter}
+                    </h3>
+                    
+                    <div className="flex items-center gap-2">
+                      <label className="text-xs font-semibold text-slate-500 cursor-pointer" htmlFor={`color-${idx}`}>Theme Color</label>
+                      <input 
+                        id={`color-${idx}`}
+                        type="color" 
+                        value={opt.themeColor || '#000000'}
+                        onChange={(e) => handleChange(idx, 'themeColor', e.target.value)}
+                        className="w-8 h-8 rounded cursor-pointer border-0 p-0"
+                      />
+                    </div>
                   </div>
                   
                   <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">Result Text</label>
+                    <label className="block text-xs font-semibold text-slate-500 mb-1">Result Text / Title</label>
                     <textarea
                       value={opt.text}
                       onChange={(e) => handleChange(idx, 'text', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow"
                       rows={2}
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-500 mb-1">Alert Badge</label>
+                    <label className="block text-xs font-semibold text-slate-500 mb-1">Alert Badge / Subtitle</label>
                     <input
                       type="text"
                       value={opt.alert}
                       onChange={(e) => handleChange(idx, 'alert', e.target.value)}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-shadow"
                     />
-                  </div>
-                  
-                  <div className="pt-2 border-t border-slate-100">
-                    <p className="text-xs text-slate-400">Color customization is currently pre-configured via templates. Use the Sahajometer template to load the 4-color elegant theme.</p>
                   </div>
                 </div>
               ))}
