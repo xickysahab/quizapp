@@ -122,6 +122,8 @@ export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response):
 
     let collectiveTotalResponses = 0;
     const collectiveOptionCounts = [0, 0, 0, 0]; // Assume max 4 options for aggregation
+    const sumOfPercentages = [0, 0, 0, 0];
+    let questionsWithResponses = 0;
 
     const summary = event.questions.map(question => {
       const totalResponses = question.responses.length;
@@ -141,6 +143,15 @@ export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response):
         totalResponses === 0 ? 0 : Math.round((count / totalResponses) * 100)
       );
 
+      if (totalResponses > 0) {
+        questionsWithResponses++;
+        for (let i = 0; i < percentages.length; i++) {
+          if (i < 4) {
+            sumOfPercentages[i] += percentages[i];
+          }
+        }
+      }
+
       return {
         id: question.id,
         text: question.text,
@@ -152,9 +163,19 @@ export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response):
       };
     });
 
-    const collectivePercentages = collectiveOptionCounts.map(count => 
-      collectiveTotalResponses === 0 ? 0 : Math.round((count / collectiveTotalResponses) * 100)
+    // Calculate the mean percentage for each option across all questions
+    let collectivePercentages = sumOfPercentages.map(sum => 
+      questionsWithResponses === 0 ? 0 : Math.round(sum / questionsWithResponses)
     );
+
+    // Normalize so they always sum exactly to 100% (or 0% if no responses)
+    const totalMeanPercentage = collectivePercentages.reduce((a, b) => a + b, 0);
+    if (totalMeanPercentage > 0 && totalMeanPercentage !== 100) {
+      // Find the max percentage and adjust it to make the sum 100%
+      const maxIdx = collectivePercentages.indexOf(Math.max(...collectivePercentages));
+      const diff = 100 - totalMeanPercentage;
+      collectivePercentages[maxIdx] += diff;
+    }
 
     res.status(200).json({
       eventId: event.id,
