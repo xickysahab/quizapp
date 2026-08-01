@@ -45,7 +45,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
 
     if (!email || !password) {
       res.status(400).json({ message: 'Email and password are required.' });
@@ -91,8 +91,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     res.status(401).json({ message: 'Invalid credentials. Please use the hardcoded admin credentials.' });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Login error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: error?.message || 'Internal server error', details: String(error) });
   }
 };
