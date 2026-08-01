@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { ArrowLeft, Plus, Edit2, Trash2, Play, Clock, Download, CheckCircle, HelpCircle, Settings } from 'lucide-react';
+import { ArrowLeft, Plus, Edit2, Trash2, Play, Clock, Download, CheckCircle, HelpCircle, Settings, Eraser } from 'lucide-react';
 import QuestionForm from '../components/QuestionForm';
 import ConcludeSettingsModal from '../components/ConcludeSettingsModal';
 import toast from 'react-hot-toast';
@@ -20,6 +20,7 @@ const EventDetails: React.FC = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState<any>(null);
   const [deleteModal, setDeleteModal] = useState<{isOpen: boolean, questionId: string | null}>({ isOpen: false, questionId: null });
+  const [clearDataModal, setClearDataModal] = useState(false);
 
   useEffect(() => {
     fetchEventDetails();
@@ -55,6 +56,19 @@ const EventDetails: React.FC = () => {
     } catch (error) {
       console.error('Failed to save config', error);
       toast.error('Failed to save configuration');
+    }
+  };
+
+  const handleClearData = async () => {
+    try {
+      await api.delete(`/events/${id}/clear-data`);
+      toast.success('Participants data cleared successfully');
+      setClearDataModal(false);
+      fetchEventDetails();
+    } catch (error: any) {
+      console.error('Failed to clear data', error);
+      toast.error(error.response?.data?.message || 'Failed to clear participants data');
+      setClearDataModal(false);
     }
   };
 
@@ -163,6 +177,13 @@ const EventDetails: React.FC = () => {
             >
               <Settings className="w-3.5 h-3.5 text-[#475569] group-hover:rotate-45 transition-transform duration-300" />
               <span>Customize Results UI</span>
+            </button>
+            <button
+              onClick={() => setClearDataModal(true)}
+              className="bg-[#FEF2F2] border border-[#FEE2E2] text-[#B91C1C] hover:bg-[#FEE2E2] px-6 py-3 rounded-2xl font-medium text-xs transition-all flex items-center justify-center gap-2 group"
+            >
+              <Eraser className="w-3.5 h-3.5 text-[#DC2626] group-hover:rotate-12 transition-transform duration-300" />
+              <span>Clear Participants Data</span>
             </button>
           </div>
         </div>
@@ -302,6 +323,16 @@ const EventDetails: React.FC = () => {
         confirmText="Delete"
         onConfirm={executeDelete}
         onCancel={() => setDeleteModal({ isOpen: false, questionId: null })}
+        isDestructive={true}
+      />
+
+      <ConfirmModal
+        isOpen={clearDataModal}
+        title="Clear Participants Data"
+        message="Are you sure you want to clear all participant data for this quiz? The quiz itself will remain intact, but all participant responses and records will be permanently deleted."
+        confirmText="Clear Data"
+        onConfirm={handleClearData}
+        onCancel={() => setClearDataModal(false)}
         isDestructive={true}
       />
 

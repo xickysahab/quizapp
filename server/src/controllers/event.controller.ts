@@ -143,3 +143,41 @@ export const updateEventConfig = async (req: AuthRequest, res: Response): Promis
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+export const clearEventData = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    
+    // Check if user is an ADMIN
+    const user = await prisma.user.findUnique({ where: { id: req.user?.userId } });
+    if (!user || user.role !== 'ADMIN') {
+      res.status(403).json({ message: 'Forbidden: Only ADMIN users can clear data.' });
+      return;
+    }
+
+    const event = await prisma.event.findUnique({ where: { id } });
+    if (!event) {
+      res.status(404).json({ message: 'Event not found' });
+      return;
+    }
+
+    if (event.hostId !== user.id) {
+      res.status(403).json({ message: 'Forbidden: You do not own this event.' });
+      return;
+    }
+
+    // Delete participants. Because of onDelete: Cascade in schema, this will automatically delete all Responses.
+    await prisma.participant.deleteMany({ where: { eventId: id } });
+
+    // Optionally reset the current question pointer
+    await prisma.event.update({
+      where: { id },
+      data: { currentQuestionId: null }
+    });
+
+    res.status(200).json({ message: 'Quiz data cleared successfully' });
+  } catch (error) {
+    console.error('Clear event data error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
