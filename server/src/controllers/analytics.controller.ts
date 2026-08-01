@@ -100,3 +100,60 @@ export const exportEventAnalytics = async (req: AuthRequest, res: Response): Pro
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const eventId = req.params.id as string;
+    
+    const event = await prisma.event.findUnique({
+      where: { id: eventId },
+      include: {
+        questions: {
+          orderBy: { order: 'asc' },
+          include: { responses: true }
+        }
+      }
+    });
+
+    if (!event || event.hostId !== req.user?.userId) {
+      res.status(403).json({ message: 'Forbidden or not found' });
+      return;
+    }
+
+    const summary = event.questions.map(question => {
+      const totalResponses = question.responses.length;
+      const optionCounts = Array(question.options.length).fill(0);
+      
+      question.responses.forEach(response => {
+        if (response.selectedOption >= 0 && response.selectedOption < optionCounts.length) {
+          optionCounts[response.selectedOption]++;
+        }
+      });
+
+      const percentages = optionCounts.map(count => 
+        totalResponses === 0 ? 0 : Math.round((count / totalResponses) * 100)
+      );
+
+      return {
+        id: question.id,
+        text: question.text,
+        options: question.options,
+        correctOption: question.correctOption,
+        totalResponses,
+        optionCounts,
+        percentages
+      };
+    });
+
+    res.status(200).json({
+      eventId: event.id,
+      title: event.title,
+      totalParticipants: await prisma.participant.count({ where: { eventId } }),
+      questions: summary
+    });
+
+  } catch (error) {
+    console.error('Summary analytics error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
