@@ -173,30 +173,23 @@ const HostLive: React.FC = () => {
       </header>
 
       {/* Stage Main View */}
-      <main className="flex-1 overflow-y-auto p-6 md:p-12 text-center w-full flex items-center justify-center">
-        <div className="max-w-4xl mx-auto w-full">
+      <main className="flex-1 overflow-y-auto p-4 md:p-6 text-center w-full flex items-center justify-center">
+        <div className="max-w-4xl mx-auto w-full h-full flex items-center justify-center">
           {showFinalSummary && summaryData ? (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-left space-y-8"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-left w-full"
             >
-              <div className="text-center space-y-2 mb-10">
-                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#06B6D4]">
-                  Live Session Summary
-                </span>
-                <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#0F172A]">
-                  Collective Results
-                </h2>
-                <p className="text-sm text-[#475569]">
-                  Aggregated response statistics from {summaryData.totalParticipants} connected participants
-                </p>
-              </div>
-
-              <div className="bg-[#FFFFFF] p-8 md:p-10 rounded-3xl border border-[#E0F2FE] shadow-lux-lg space-y-6">
-                <h3 className="font-serif text-2xl font-bold text-[#0F172A] border-b border-[#E0F2FE] pb-4">
-                  Your result of Sahaj Analysis.
-                </h3>
+              <div className="bg-[#FFFFFF] p-6 md:p-8 rounded-3xl border border-[#E0F2FE] shadow-lux-lg space-y-4">
+                <div className="flex items-center justify-between border-b border-[#E0F2FE] pb-3">
+                  <h3 className="font-serif text-2xl font-bold text-[#0F172A]">
+                    Your result of Sahaj Analysis.
+                  </h3>
+                  <span className="text-xs font-semibold uppercase tracking-[0.1em] text-[#06B6D4] bg-[#ECFEFF] px-3 py-1 rounded-full">
+                    {summaryData.totalParticipants} Participants
+                  </span>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {[
@@ -235,35 +228,35 @@ const HostLive: React.FC = () => {
                     return (
                       <div
                         key={idx}
-                        className={`relative p-6 rounded-2xl border flex flex-col items-center text-center gap-6 shadow-sm h-full ${card.colors.bg} ${card.colors.border}`}
+                        className={`relative p-4 md:p-5 rounded-2xl border flex flex-col items-center text-center gap-3 shadow-sm h-full ${card.colors.bg} ${card.colors.border}`}
                       >
                         {/* Percentage Overlay */}
-                        <div className="absolute top-4 right-5 text-right z-20">
-                          <span className={`font-serif text-2xl font-bold ${card.colors.text}`}>
+                        <div className="absolute top-3 right-4 text-right z-20">
+                          <span className={`font-serif text-xl font-bold ${card.colors.text}`}>
                             {percentage}%
                           </span>
-                          <span className={`text-[10px] uppercase font-bold block ${card.colors.text} opacity-60 -mt-1`}>{count} votes</span>
+                          <span className={`text-[9px] uppercase font-bold block ${card.colors.text} opacity-60 -mt-1`}>{count} votes</span>
                         </div>
 
                         {/* Top Badge: Mostly + Letter */}
-                        <div className="flex flex-col items-center -space-y-3 relative z-10 pt-2">
-                          <div className={`px-6 py-1.5 rounded-full border bg-white/70 backdrop-blur-sm shadow-sm font-serif text-sm font-semibold tracking-wide ${card.colors.text} ${card.colors.border}`}>
+                        <div className="flex flex-col items-center -space-y-2 relative z-10 pt-1">
+                          <div className={`px-5 py-1 rounded-full border bg-white/70 backdrop-blur-sm shadow-sm font-serif text-xs font-semibold tracking-wide ${card.colors.text} ${card.colors.border}`}>
                             Mostly
                           </div>
-                          <div className={`w-9 h-9 rounded-full flex items-center justify-center font-serif text-base font-bold shadow-md z-10 text-white ${card.colors.alertBg} border-2 border-white`}>
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-serif text-sm font-bold shadow-md z-10 text-white ${card.colors.alertBg} border-2 border-white`}>
                             {card.letter}
                           </div>
                         </div>
                         
                         {/* Main Text Content */}
-                        <div className="flex-1 flex items-center justify-center py-2">
-                          <p className={`font-serif text-[1.1rem] md:text-xl italic font-medium leading-relaxed ${card.colors.text} px-2 drop-shadow-sm`}>
+                        <div className="flex-1 flex items-center justify-center py-1">
+                          <p className={`font-serif text-base md:text-lg italic font-medium leading-tight ${card.colors.text} px-2 drop-shadow-sm`}>
                             {card.text}
                           </p>
                         </div>
 
                         {/* Alert Badge */}
-                        <div className={`px-5 py-2 rounded font-bold text-xs md:text-sm tracking-[0.15em] text-white shadow-md mt-auto ${card.colors.alertBg}`}>
+                        <div className={`px-4 py-1.5 rounded font-bold text-[10px] md:text-xs tracking-[0.15em] text-white shadow-md mt-auto ${card.colors.alertBg}`}>
                           {card.alert}
                         </div>
                       </div>
