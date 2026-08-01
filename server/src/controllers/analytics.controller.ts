@@ -25,7 +25,7 @@ export const getQuestionAnalytics = async (req: AuthRequest, res: Response): Pro
     
     question.responses.forEach(response => {
       if (response.selectedOption >= 0 && response.selectedOption < optionCounts.length) {
-        optionCounts[response.selectedOption]++;
+        optionCounts[response.selectedOption] = (optionCounts[response.selectedOption] || 0) + 1;
       }
     });
 
@@ -129,10 +129,10 @@ export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response):
       
       question.responses.forEach(response => {
         if (response.selectedOption >= 0 && response.selectedOption < optionCounts.length) {
-          optionCounts[response.selectedOption]++;
+          optionCounts[response.selectedOption] = (optionCounts[response.selectedOption] || 0) + 1;
         }
         if (response.selectedOption >= 0 && response.selectedOption < 4) {
-          collectiveOptionCounts[response.selectedOption]++;
+          collectiveOptionCounts[response.selectedOption] = (collectiveOptionCounts[response.selectedOption] || 0) + 1;
           collectiveTotalResponses++;
         }
       });
@@ -166,7 +166,7 @@ export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response):
         optionCounts: collectiveOptionCounts,
         percentages: collectivePercentages,
         // Take the options text from the first question assuming they are uniform for a survey
-        optionsText: event.questions.length > 0 ? event.questions[0].options : ['A', 'B', 'C', 'D']
+        optionsText: event.questions.length > 0 ? event.questions[0]!.options : ['A', 'B', 'C', 'D']
       }
     });
 
