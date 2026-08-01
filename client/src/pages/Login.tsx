@@ -29,7 +29,7 @@ const Login: React.FC = () => {
     } catch (err: any) {
       // Fallback: If backend returns an error or is unreachable, allow hardcoded admin login
       if (email === 'admin@admin.com' && password === 'admin') {
-        const fallbackUser = { id: 'admin-host-id', name: 'Admin Host', email: 'admin@admin.com' };
+        const fallbackUser = { id: 'admin-host-id', name: 'Admin Host', email: 'admin@admin.com', role: 'ADMIN' };
         const fallbackToken = 'admin_fallback_jwt_token';
         login(fallbackUser, fallbackToken);
         navigate('/dashboard');
