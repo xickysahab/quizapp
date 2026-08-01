@@ -195,37 +195,71 @@ const HostLive: React.FC = () => {
 
               <div className="bg-[#FFFFFF] p-8 md:p-10 rounded-3xl border border-[#E0F2FE] shadow-lux-lg space-y-6">
                 <h3 className="font-serif text-2xl font-bold text-[#0F172A] border-b border-[#E0F2FE] pb-4">
-                  Response Distribution
+                  Your result of Sahaj Analysis.
                 </h3>
 
-                <div className="space-y-4">
-                  {summaryData.collective?.optionsText?.map((opt: string, optIdx: number) => {
-                    const percentage = summaryData.collective.percentages[optIdx] || 0;
-                    const count = summaryData.collective.optionCounts[optIdx] || 0;
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    {
+                      optIndex: 0,
+                      letter: 'A',
+                      text: 'You need the learnings of Sahajta urgently.',
+                      alert: 'RED ALERT',
+                      colors: { bg: 'bg-[#FECACA]', border: 'border-[#FCA5A5]', text: 'text-[#7F1D1D]', alertBg: 'bg-[#DC2626]', letterBg: 'bg-[#FEE2E2]' }
+                    },
+                    {
+                      optIndex: 3,
+                      letter: 'D',
+                      text: 'There are many inner complications. Sahajta is here to help you',
+                      alert: 'ORANGE ALERT',
+                      colors: { bg: 'bg-[#FED7AA]', border: 'border-[#FDBA74]', text: 'text-[#7C2D12]', alertBg: 'bg-[#EA580C]', letterBg: 'bg-[#FFEDD5]' }
+                    },
+                    {
+                      optIndex: 2,
+                      letter: 'C',
+                      text: 'There is some confusion, but you are moving closer to Sahajta.',
+                      alert: 'YELLOW ALERT',
+                      colors: { bg: 'bg-[#FEF08A]', border: 'border-[#FDE047]', text: 'text-[#713F12]', alertBg: 'bg-[#EAB308]', letterBg: 'bg-[#FEF9C3]' }
+                    },
+                    {
+                      optIndex: 1,
+                      letter: 'B',
+                      text: 'You are able to being fully Sahaj.',
+                      alert: 'GREEN ALERT',
+                      colors: { bg: 'bg-[#CCFBF1]', border: 'border-[#99F6E4]', text: 'text-[#134E4A]', alertBg: 'bg-[#0D9488]', letterBg: 'bg-[#E0F2FE]' }
+                    }
+                  ].map((card, idx) => {
+                    const percentage = summaryData.collective?.percentages?.[card.optIndex] || 0;
+                    const count = summaryData.collective?.optionCounts?.[card.optIndex] || 0;
 
                     return (
                       <div
-                        key={optIdx}
-                        className="relative bg-[#FFFFFF] border border-[#E0F2FE] rounded-2xl overflow-hidden p-4 flex items-center justify-between"
+                        key={idx}
+                        className={`relative p-6 rounded-2xl border flex flex-col items-center justify-between text-center gap-4 transition-transform hover:scale-[1.02] shadow-sm ${card.colors.bg} ${card.colors.border}`}
                       >
-                        {/* Smooth Animated Bar Fill */}
-                        <div
-                          className="absolute left-0 top-0 bottom-0 bg-[#ECFEFF] transition-all duration-1000 ease-out"
-                          style={{ width: `${percentage}%` }}
-                        ></div>
-
-                        <div className="relative z-10 flex items-center gap-4">
-                          <span className="w-9 h-9 rounded-xl bg-[#F0F9FF] border border-[#E0F2FE] text-[#06B6D4] font-serif text-sm font-bold flex items-center justify-center">
-                            {['A', 'B', 'C', 'D'][optIdx]}
-                          </span>
-                          <span className="text-base font-medium text-[#0F172A]">{opt}</span>
-                        </div>
-
-                        <div className="relative z-10 text-right">
-                          <span className="font-serif text-2xl font-bold text-[#F97316]">
+                        {/* Percentage Overlay */}
+                        <div className="absolute top-4 right-4 text-right">
+                          <span className={`font-serif text-xl font-bold ${card.colors.text}`}>
                             {percentage}%
                           </span>
-                          <span className="text-xs text-[#475569] block">{count} votes</span>
+                          <span className={`text-[10px] uppercase font-bold block ${card.colors.text} opacity-70`}>{count} votes</span>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className={`mx-auto w-10 h-10 rounded-full flex items-center justify-center font-serif text-lg font-bold border-2 ${card.colors.alertBg} text-white shadow-sm`}>
+                            {card.letter}
+                          </div>
+                          <span className={`text-xs font-semibold uppercase tracking-widest ${card.colors.text} opacity-80 block`}>
+                            Mostly {card.letter}
+                          </span>
+                        </div>
+                        
+                        <p className={`font-serif text-lg md:text-xl font-medium leading-tight ${card.colors.text} px-2`}>
+                          {card.text}
+                        </p>
+
+                        <div className={`px-4 py-1.5 rounded-lg font-bold text-sm tracking-wider text-white shadow-sm mt-2 ${card.colors.alertBg}`}>
+                          {card.alert}
                         </div>
                       </div>
                     );
