@@ -54,28 +54,37 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     // Hardcoded credentials for Admin/Host as requested
     if (email === 'admin@admin.com' && password === 'admin') {
-      // Ensure this user exists in DB so foreign keys work (like for events)
-      let user = await prisma.user.findUnique({ where: { email } });
-      if (!user) {
-        const hashedPassword = await hashPassword(password);
-        user = await prisma.user.create({
-          data: {
-            name: 'Admin Host',
-            email,
-            password: hashedPassword,
-          },
-        });
+      let userId = 'admin-host-id';
+      let userName = 'Admin Host';
+
+      try {
+        // Ensure this user exists in DB so foreign keys work (like for events)
+        let user = await prisma.user.findUnique({ where: { email } });
+        if (!user) {
+          const hashedPassword = await hashPassword(password);
+          user = await prisma.user.create({
+            data: {
+              name: userName,
+              email,
+              password: hashedPassword,
+            },
+          });
+        }
+        userId = user.id;
+        userName = user.name;
+      } catch (dbErr) {
+        console.warn('Database lookup failed during admin login, using fallback admin identity:', dbErr);
       }
 
-      const token = generateToken(user.id, user.email);
+      const token = generateToken(userId, email);
 
       res.status(200).json({
         message: 'Login successful',
         token,
         user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
+          id: userId,
+          name: userName,
+          email: email,
         },
       });
       return;
