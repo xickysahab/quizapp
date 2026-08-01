@@ -52,29 +52,36 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
-      res.status(401).json({ message: 'Invalid credentials.' });
+    // Hardcoded credentials for Admin/Host as requested
+    if (email === 'admin@admin.com' && password === 'admin') {
+      // Ensure this user exists in DB so foreign keys work (like for events)
+      let user = await prisma.user.findUnique({ where: { email } });
+      if (!user) {
+        const hashedPassword = await hashPassword(password);
+        user = await prisma.user.create({
+          data: {
+            name: 'Admin Host',
+            email,
+            password: hashedPassword,
+          },
+        });
+      }
+
+      const token = generateToken(user.id, user.email);
+
+      res.status(200).json({
+        message: 'Login successful',
+        token,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+      });
       return;
     }
 
-    const isMatch = await comparePassword(password, user.password);
-    if (!isMatch) {
-      res.status(401).json({ message: 'Invalid credentials.' });
-      return;
-    }
-
-    const token = generateToken(user.id, user.email);
-
-    res.status(200).json({
-      message: 'Login successful',
-      token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      },
-    });
+    res.status(401).json({ message: 'Invalid credentials. Please use the hardcoded admin credentials.' });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ message: 'Internal server error' });

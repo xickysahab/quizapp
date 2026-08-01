@@ -41,7 +41,16 @@ const Join: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4 relative">
+      <div className="absolute top-4 right-4">
+        <button
+          onClick={() => navigate('/login')}
+          className="bg-white text-[#aa3bff] hover:bg-gray-100 font-bold py-2 px-6 rounded-xl border-2 border-[#aa3bff] transition-all shadow-sm flex items-center gap-2"
+        >
+          <LogIn className="w-5 h-5" />
+          Admin Login
+        </button>
+      </div>
       <div className="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
         <div className="text-center mb-8">
           <div className="bg-[#aa3bff]/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">

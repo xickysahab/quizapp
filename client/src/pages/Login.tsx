@@ -5,8 +5,8 @@ import { useAuth } from '../context/AuthContext';
 import { LogIn } from 'lucide-react';
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@admin.com');
+  const [password, setPassword] = useState('admin');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
@@ -37,7 +37,10 @@ const Login: React.FC = () => {
             <LogIn className="w-8 h-8 text-[#aa3bff]" />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Welcome Back</h2>
-          <p className="text-gray-500 dark:text-gray-400">Log in to manage your live quizzes</p>
+          <p className="text-gray-500 dark:text-gray-400 mb-2">Log in to manage your live quizzes</p>
+          <div className="inline-block bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full text-xs font-medium">
+            Using hardcoded admin credentials
+          </div>
         </div>
 
         {error && (
@@ -56,6 +59,7 @@ const Login: React.FC = () => {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              readOnly
             />
           </div>
           
@@ -68,6 +72,7 @@ const Login: React.FC = () => {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              readOnly
             />
           </div>
 
