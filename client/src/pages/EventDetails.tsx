@@ -7,6 +7,7 @@ import { ArrowLeft, Plus, Edit2, Trash2, Play, Clock, Download, CheckCircle, Hel
 import QuestionForm from '../components/QuestionForm';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
+import ConfirmModal from '../components/ConfirmModal';
 
 const EventDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,9 +15,9 @@ const EventDetails: React.FC = () => {
 
   const [event, setEvent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState<any>(null);
+  const [deleteModal, setDeleteModal] = useState<{isOpen: boolean, questionId: string | null}>({ isOpen: false, questionId: null });
 
   useEffect(() => {
     fetchEventDetails();
@@ -44,10 +45,15 @@ const EventDetails: React.FC = () => {
     fetchEventDetails();
   };
 
-  const handleDeleteQuestion = async (questionId: string) => {
-    if (!window.confirm('Are you sure you want to delete this question?')) return;
+  const handleDeleteQuestion = (questionId: string) => {
+    setDeleteModal({ isOpen: true, questionId });
+  };
+
+  const executeDelete = async () => {
+    if (!deleteModal.questionId) return;
     try {
-      await api.delete(`/questions/${questionId}`);
+      await api.delete(`/questions/${deleteModal.questionId}`);
+      setDeleteModal({ isOpen: false, questionId: null });
       fetchEventDetails();
     } catch (error) {
       console.error('Failed to delete question', error);
@@ -268,6 +274,16 @@ const EventDetails: React.FC = () => {
           onSubmit={editingQuestion ? handleEditQuestion : handleAddQuestion}
         />
       )}
+
+      <ConfirmModal
+        isOpen={deleteModal.isOpen}
+        title="Delete Question"
+        message="Are you sure you want to delete this question? This action cannot be undone."
+        confirmText="Delete"
+        onConfirm={executeDelete}
+        onCancel={() => setDeleteModal({ isOpen: false, questionId: null })}
+        isDestructive={true}
+      />
     </div>
   );
 };

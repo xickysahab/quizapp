@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Plus, Presentation, Users, Trash2, Copy, Check, Search, Radio, ArrowUpRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ConfirmModal from '../components/ConfirmModal';
 
 interface Event {
   id: string;
@@ -24,6 +25,7 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteModal, setDeleteModal] = useState<{isOpen: boolean, eventId: string | null}>({ isOpen: false, eventId: null });
   const [newEventTitle, setNewEventTitle] = useState('');
   const [creating, setCreating] = useState(false);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
@@ -60,10 +62,15 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const handleDeleteEvent = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this event? All questions and participant data will be removed.')) return;
+  const handleDeleteEvent = (id: string) => {
+    setDeleteModal({ isOpen: true, eventId: id });
+  };
+
+  const executeDelete = async () => {
+    if (!deleteModal.eventId) return;
     try {
-      await api.delete(`/events/${id}`);
+      await api.delete(`/events/${deleteModal.eventId}`);
+      setDeleteModal({ isOpen: false, eventId: null });
       fetchEvents();
     } catch (error) {
       console.error('Failed to delete event', error);
@@ -295,6 +302,16 @@ const Dashboard: React.FC = () => {
       </main>
 
       <Footer />
+
+      <ConfirmModal
+        isOpen={deleteModal.isOpen}
+        title="Delete Event"
+        message="Are you sure you want to delete this event? All questions and participant data will be permanently removed."
+        confirmText="Delete Event"
+        onConfirm={executeDelete}
+        onCancel={() => setDeleteModal({ isOpen: false, eventId: null })}
+        isDestructive={true}
+      />
     </div>
   );
 };

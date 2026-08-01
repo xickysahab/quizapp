@@ -6,6 +6,7 @@ import { socket } from '../socket/socket';
 import api from '../services/api';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import ConfirmModal from '../components/ConfirmModal';
 
 const HostLive: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -13,6 +14,7 @@ const HostLive: React.FC = () => {
 
   const [event, setEvent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [confirmModal, setConfirmModal] = useState<{isOpen: boolean, action: 'conclude' | 'exit' | null}>({ isOpen: false, action: null });
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(-1);
   const [participantCount, setParticipantCount] = useState(0);
   const [responsesCount, setResponsesCount] = useState(0);
@@ -77,8 +79,10 @@ const HostLive: React.FC = () => {
   };
 
   const handleFinishAndViewSummary = async () => {
-    if (!window.confirm('Are you sure you want to conclude the live quiz and display final analytics?')) return;
+    setConfirmModal({ isOpen: true, action: 'conclude' });
+  };
 
+  const executeConclude = async () => {
     socket.emit('host:endQuiz', id);
 
     try {
@@ -92,7 +96,14 @@ const HostLive: React.FC = () => {
   };
 
   const handleEndQuiz = () => {
-    if (!showFinalSummary && !window.confirm('Are you sure you want to exit the broadcast?')) return;
+    if (!showFinalSummary) {
+      setConfirmModal({ isOpen: true, action: 'exit' });
+      return;
+    }
+    executeExit();
+  };
+
+  const executeExit = () => {
     if (!showFinalSummary) socket.emit('host:endQuiz', id);
     navigate(`/dashboard`);
   };
@@ -339,6 +350,22 @@ const HostLive: React.FC = () => {
           </div>
         )}
       </footer>
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.action === 'conclude' ? 'Conclude Quiz' : 'Exit Broadcast'}
+        message={
+          confirmModal.action === 'conclude'
+            ? 'Are you sure you want to conclude the live quiz and display final analytics?'
+            : 'Are you sure you want to exit the broadcast?'
+        }
+        onConfirm={() => {
+          if (confirmModal.action === 'conclude') executeConclude();
+          else if (confirmModal.action === 'exit') executeExit();
+        }}
+        onCancel={() => setConfirmModal({ isOpen: false, action: null })}
+        isDestructive={true}
+      />
     </div>
   );
 };
