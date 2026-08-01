@@ -8,6 +8,7 @@ interface ConfirmModalProps {
   message: string;
   confirmText?: string;
   cancelText?: string;
+  icon?: React.ReactNode;
   onConfirm: () => void;
   onCancel: () => void;
   isDestructive?: boolean;
@@ -19,6 +20,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   message,
   confirmText = 'Confirm',
   cancelText = 'Cancel',
+  icon,
   onConfirm,
   onCancel,
   isDestructive = false,
@@ -53,7 +55,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                   isDestructive ? 'bg-[#FEF2F2] text-[#EF4444]' : 'bg-[#E0F2FE] text-[#06B6D4]'
                 }`}
               >
-                <AlertTriangle className="w-7 h-7" />
+                {icon ? icon : <AlertTriangle className="w-7 h-7" />}
               </div>
 
               <h3 className="font-serif text-2xl font-bold text-[#0F172A] mb-2">{title}</h3>

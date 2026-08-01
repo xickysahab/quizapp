@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Play, Square, ChevronRight, ChevronLeft, Users, BarChart3, Radio } from 'lucide-react';
+import { Play, Square, ChevronRight, ChevronLeft, Users, BarChart3, Radio, Award, LogOut } from 'lucide-react';
 import brandLogo from '../assets/Sahaj spirit.jpeg';
 import { socket } from '../socket/socket';
 import api from '../services/api';
@@ -359,12 +359,13 @@ const HostLive: React.FC = () => {
             ? 'Are you sure you want to conclude the live quiz and display final analytics?'
             : 'Are you sure you want to exit the broadcast?'
         }
+        icon={confirmModal.action === 'conclude' ? <Award className="w-7 h-7" /> : <LogOut className="w-7 h-7" />}
         onConfirm={() => {
           if (confirmModal.action === 'conclude') executeConclude();
           else if (confirmModal.action === 'exit') executeExit();
         }}
         onCancel={() => setConfirmModal({ isOpen: false, action: null })}
-        isDestructive={true}
+        isDestructive={confirmModal.action === 'exit'}
       />
     </div>
   );
