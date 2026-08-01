@@ -70,7 +70,7 @@ const ActivityLogs: React.FC = () => {
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
       <Navbar />
       
-      <main className="flex-grow container mx-auto px-4 py-8 md:py-12 max-w-6xl">
+      <main className="flex-grow container mx-auto px-4 pt-32 pb-12 md:pb-24 max-w-6xl">
         <div className="flex items-center gap-4 mb-8">
           <button
             onClick={() => navigate('/host/dashboard')}
