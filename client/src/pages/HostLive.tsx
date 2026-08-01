@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Play, Square, ChevronRight, ChevronLeft, Users, BarChart3, Radio, Award, LogOut } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Play, Square, ChevronRight, ChevronLeft, Users, BarChart3, Radio, Award, LogOut, QrCode, X } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import brandLogo from '../assets/Sahaj spirit.jpeg';
 import { socket } from '../socket/socket';
 import api from '../services/api';
-import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import ConfirmModal from '../components/ConfirmModal';
 
@@ -21,6 +22,7 @@ const HostLive: React.FC = () => {
 
   const [showFinalSummary, setShowFinalSummary] = useState(false);
   const [summaryData, setSummaryData] = useState<any>(null);
+  const [showQR, setShowQR] = useState(false);
 
   useEffect(() => {
     fetchEventDetails();
@@ -278,12 +280,49 @@ const HostLive: React.FC = () => {
                 <h2 className="font-serif text-4xl md:text-6xl font-bold text-[#0F172A]">
                   Waiting for participants to join...
                 </h2>
-                <p className="text-base text-[#475569] max-w-lg mx-auto font-light">
-                  Ask your audience to go to the landing page and enter room PIN{' '}
-                  <span className="font-mono font-bold text-[#0F172A] bg-[#F0F9FF] px-2 py-0.5 rounded-md border border-[#E0F2FE]">
-                    {event.roomCode}
-                  </span>
-                </p>
+                
+                {!showQR ? (
+                  <div className="flex flex-col items-center gap-4 mt-4">
+                    <p className="text-base text-[#475569] max-w-lg mx-auto font-light">
+                      Ask your audience to go to the landing page and enter room PIN{' '}
+                      <span className="font-mono font-bold text-[#0F172A] bg-[#F0F9FF] px-2 py-0.5 rounded-md border border-[#E0F2FE]">
+                        {event.roomCode}
+                      </span>
+                    </p>
+                    <button
+                      onClick={() => setShowQR(true)}
+                      className="text-sm font-semibold text-[#06B6D4] flex items-center gap-2 hover:text-[#0891B2] transition-colors bg-[#ECFEFF] px-4 py-2 rounded-full"
+                    >
+                      <QrCode className="w-4 h-4" />
+                      Show QR Code
+                    </button>
+                  </div>
+                ) : (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex flex-col items-center gap-4 mt-6 bg-[#FFFFFF] p-6 rounded-3xl border border-[#E0F2FE] shadow-sm max-w-xs mx-auto relative"
+                  >
+                    <button
+                      onClick={() => setShowQR(false)}
+                      className="absolute top-4 right-4 text-[#94A3B8] hover:text-[#0F172A] transition-colors"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                    <span className="text-xs font-bold uppercase tracking-widest text-[#06B6D4]">Scan to Join</span>
+                    <div className="p-4 bg-white rounded-xl shadow-sm border border-[#F1F5F9]">
+                      <QRCodeSVG 
+                        value={`${window.location.origin}/?code=${event.roomCode}`} 
+                        size={180}
+                        fgColor="#0F172A"
+                        level="H"
+                      />
+                    </div>
+                    <span className="font-mono text-2xl font-bold tracking-[0.2em] text-[#0F172A]">
+                      {event.roomCode}
+                    </span>
+                  </motion.div>
+                )}
               </div>
 
               <div className="pt-4">

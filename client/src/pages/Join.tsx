@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../services/api';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -12,6 +12,15 @@ const Join: React.FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  React.useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const codeParam = params.get('code');
+    if (codeParam) {
+      setRoomCode(codeParam.toUpperCase());
+    }
+  }, [location.search]);
 
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
