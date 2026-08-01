@@ -133,41 +133,42 @@ const HostLive: React.FC = () => {
               </div>
               <p className="text-center text-gray-400 text-xl mb-12">Collective results from {summaryData.totalParticipants} participants</p>
               
-              <div className="space-y-16">
-                {summaryData.questions.map((q: any, qIdx: number) => (
-                  <div key={q.id} className="bg-gray-800 p-8 rounded-3xl border-2 border-gray-700 shadow-xl">
-                    <h3 className="text-3xl font-bold mb-8">Q{qIdx + 1}. {q.text}</h3>
-                    <div className="flex flex-col gap-4">
-                      {q.options.map((opt: string, optIdx: number) => {
-                        const percentage = q.percentages[optIdx];
-                        const isCorrect = q.correctOption === optIdx; // Might be null for polls
-                        
-                        return (
-                          <div key={optIdx} className="relative bg-gray-900 border border-gray-700 rounded-2xl overflow-hidden text-xl font-medium text-left flex items-center h-16">
-                            {/* Progress Bar Background */}
-                            <div 
-                              className={`absolute left-0 top-0 bottom-0 transition-all duration-1000 ease-out opacity-20 ${isCorrect ? 'bg-green-500' : 'bg-[#aa3bff]'}`}
-                              style={{ width: `${percentage}%` }}
-                            ></div>
-                            
-                            {/* Content */}
-                            <div className="relative z-10 flex items-center w-full px-6 justify-between">
-                              <div className="flex items-center">
-                                <span className={`w-10 h-10 rounded-full flex items-center justify-center mr-4 font-bold ${isCorrect ? 'bg-green-500 text-white' : 'bg-gray-700 text-gray-300'}`}>
-                                  {['A', 'B', 'C', 'D'][optIdx]}
-                                </span>
-                                <span className={isCorrect ? 'text-green-400 font-bold' : 'text-gray-200'}>{opt}</span>
-                              </div>
-                              <span className="font-bold text-2xl text-gray-300">
+              <div className="space-y-16 max-w-3xl mx-auto">
+                <div className="bg-gray-800 p-8 rounded-3xl border-2 border-gray-700 shadow-xl">
+                  <h3 className="text-3xl font-bold mb-8 text-center text-[#aa3bff]">Overall Survey Results</h3>
+                  <div className="flex flex-col gap-6">
+                    {summaryData.collective.optionsText.map((opt: string, optIdx: number) => {
+                      const percentage = summaryData.collective.percentages[optIdx];
+                      const count = summaryData.collective.optionCounts[optIdx];
+                      
+                      return (
+                        <div key={optIdx} className="relative bg-gray-900 border border-gray-700 rounded-2xl overflow-hidden text-2xl font-medium text-left flex items-center h-20">
+                          {/* Progress Bar Background */}
+                          <div 
+                            className="absolute left-0 top-0 bottom-0 transition-all duration-1000 ease-out opacity-20 bg-[#aa3bff]"
+                            style={{ width: `${percentage}%` }}
+                          ></div>
+                          
+                          {/* Content */}
+                          <div className="relative z-10 flex items-center w-full px-8 justify-between">
+                            <div className="flex items-center">
+                              <span className="w-12 h-12 rounded-full flex items-center justify-center mr-6 font-bold bg-gray-700 text-gray-300">
+                                {['A', 'B', 'C', 'D'][optIdx]}
+                              </span>
+                              <span className="text-gray-200">{opt}</span>
+                            </div>
+                            <div className="text-right">
+                              <span className="font-bold text-3xl text-[#aa3bff] mr-4">
                                 {percentage}%
                               </span>
+                              <span className="text-sm text-gray-500 block -mt-1">{count} votes</span>
                             </div>
                           </div>
-                        );
-                      })}
-                    </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                ))}
+                </div>
               </div>
             </div>
           ) : currentQuestionIndex === -1 ? (

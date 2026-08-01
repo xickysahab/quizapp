@@ -120,6 +120,9 @@ export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response):
       return;
     }
 
+    let collectiveTotalResponses = 0;
+    const collectiveOptionCounts = [0, 0, 0, 0]; // Assume max 4 options for aggregation
+
     const summary = event.questions.map(question => {
       const totalResponses = question.responses.length;
       const optionCounts = Array(question.options.length).fill(0);
@@ -127,6 +130,10 @@ export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response):
       question.responses.forEach(response => {
         if (response.selectedOption >= 0 && response.selectedOption < optionCounts.length) {
           optionCounts[response.selectedOption]++;
+        }
+        if (response.selectedOption >= 0 && response.selectedOption < 4) {
+          collectiveOptionCounts[response.selectedOption]++;
+          collectiveTotalResponses++;
         }
       });
 
@@ -145,11 +152,22 @@ export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response):
       };
     });
 
+    const collectivePercentages = collectiveOptionCounts.map(count => 
+      collectiveTotalResponses === 0 ? 0 : Math.round((count / collectiveTotalResponses) * 100)
+    );
+
     res.status(200).json({
       eventId: event.id,
       title: event.title,
       totalParticipants: await prisma.participant.count({ where: { eventId } }),
-      questions: summary
+      questions: summary,
+      collective: {
+        totalResponses: collectiveTotalResponses,
+        optionCounts: collectiveOptionCounts,
+        percentages: collectivePercentages,
+        // Take the options text from the first question assuming they are uniform for a survey
+        optionsText: event.questions.length > 0 ? event.questions[0].options : ['A', 'B', 'C', 'D']
+      }
     });
 
   } catch (error) {
