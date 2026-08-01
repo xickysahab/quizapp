@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
               className="w-9 h-9 rounded-xl object-cover border border-[#E0F2FE]"
             />
             <span className="font-serif text-2xl font-semibold tracking-tight text-[#0F172A]">
-              PULSE
+              SAHAJOMETER
             </span>
           </div>
           <p className="text-[#475569] text-sm leading-relaxed max-w-sm">
@@ -73,7 +73,7 @@ const Footer: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto pt-8 border-t border-[#E0F2FE]/60 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#94A3B8]">
-        <p>© {new Date().getFullYear()} Pulse Interactive. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Sahajometer. All rights reserved.</p>
         <p className="font-serif italic text-sm text-[#475569]">Designed with elegance and purpose.</p>
       </div>
     </footer>

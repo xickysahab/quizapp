@@ -43,7 +43,7 @@ const Navbar: React.FC = () => {
           />
           <div className="flex flex-col">
             <span className="font-serif text-2xl font-semibold tracking-tight text-[#0F172A] group-hover:text-[#06B6D4] transition-colors">
-              PULSE
+              SAHAJOMETER
             </span>
             <span className="text-[10px] tracking-[0.25em] text-[#475569] uppercase font-medium -mt-1">
               Interactive Quiz

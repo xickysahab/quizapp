@@ -258,7 +258,7 @@ const Join: React.FC = () => {
               Simple Three-Step Process
             </span>
             <h2 className="font-serif text-4xl font-semibold text-[#0F172A] mt-2">
-              How Pulse Works
+              How Sahajometer Works
             </h2>
           </div>
 

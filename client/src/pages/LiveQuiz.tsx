@@ -117,7 +117,7 @@ const LiveQuiz: React.FC = () => {
       <div className="fixed top-6 left-6 right-6 max-w-xl mx-auto flex items-center justify-between px-6 py-3 rounded-2xl bg-[#FFFFFF]/80 backdrop-blur-md border border-[#E0F2FE] shadow-lux z-20">
         <div className="flex items-center gap-2">
           <img src={brandLogo} alt="Sahaj Spirit Logo" className="w-5 h-5 rounded-md object-cover border border-[#E0F2FE]" />
-          <span className="font-serif font-bold text-sm text-[#0F172A]">PULSE</span>
+          <span className="font-serif font-bold text-sm text-[#0F172A]">SAHAJOMETER</span>
         </div>
         <div className="flex items-center gap-3 text-xs">
           <span className="text-[#475569]">
