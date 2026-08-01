@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('admin@admin.com');
-  const [password, setPassword] = useState('admin');
+  const [password, setPassword] = useState('sahajometer@admin');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -28,7 +28,7 @@ const Login: React.FC = () => {
       navigate('/dashboard');
     } catch (err: any) {
       // Fallback: If backend returns an error or is unreachable, allow hardcoded admin login
-      if (email === 'admin@admin.com' && password === 'admin') {
+      if (email === 'admin@admin.com' && password === 'sahajometer@admin') {
         const fallbackUser = { id: 'admin-host-id', name: 'Admin Host', email: 'admin@admin.com', role: 'ADMIN' };
         const fallbackToken = 'admin_fallback_jwt_token';
         login(fallbackUser, fallbackToken);
