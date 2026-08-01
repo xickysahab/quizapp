@@ -56,9 +56,9 @@ export const createEvent = async (req: AuthRequest, res: Response): Promise<void
       message: 'Event created successfully',
       event,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Create event error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error', error: error?.message || String(error) });
   }
 };
 
