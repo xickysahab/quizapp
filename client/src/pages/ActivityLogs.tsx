@@ -45,18 +45,18 @@ const ActivityLogs: React.FC = () => {
   };
 
   const getActionIcon = (action: string) => {
-    if (action.includes('CREATE') || action.includes('ADD')) return <Play className="w-4 h-4 text-emerald-500" />;
-    if (action.includes('DELETE') || action.includes('CLEAR')) return <Trash2 className="w-4 h-4 text-red-500" />;
-    if (action.includes('UPDATE') || action.includes('EDIT')) return <Edit2 className="w-4 h-4 text-blue-500" />;
-    return <Server className="w-4 h-4 text-slate-500" />;
+    if (action.includes('CREATE') || action.includes('ADD')) return <Play className="w-4 h-4 text-[#06B6D4]" />;
+    if (action.includes('DELETE') || action.includes('CLEAR')) return <Trash2 className="w-4 h-4 text-rose-500" />;
+    if (action.includes('UPDATE') || action.includes('EDIT')) return <Edit2 className="w-4 h-4 text-[#F97316]" />;
+    return <Server className="w-4 h-4 text-[#94A3B8]" />;
   };
 
   const getActionBadge = (action: string) => {
-    const baseClasses = "px-2.5 py-1 text-xs font-semibold rounded-full";
-    if (action.includes('CREATE') || action.includes('ADD')) return `${baseClasses} bg-emerald-100 text-emerald-700`;
-    if (action.includes('DELETE') || action.includes('CLEAR')) return `${baseClasses} bg-red-100 text-red-700`;
-    if (action.includes('UPDATE') || action.includes('EDIT')) return `${baseClasses} bg-blue-100 text-blue-700`;
-    return `${baseClasses} bg-slate-100 text-slate-700`;
+    const baseClasses = "px-2.5 py-1 text-[11px] font-bold rounded-md tracking-wide";
+    if (action.includes('CREATE') || action.includes('ADD')) return `${baseClasses} bg-[#F0F9FF] text-[#06B6D4]`;
+    if (action.includes('DELETE') || action.includes('CLEAR')) return `${baseClasses} bg-rose-50 text-rose-600`;
+    if (action.includes('UPDATE') || action.includes('EDIT')) return `${baseClasses} bg-[#FFF7ED] text-[#F97316]`;
+    return `${baseClasses} bg-[#F8FAFC] text-[#64748B]`;
   };
 
   const filteredLogs = logs.filter(log => 
@@ -67,40 +67,43 @@ const ActivityLogs: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#FFFFFF] text-[#0F172A] flex flex-col font-sans relative selection:bg-[#E0F2FE]">
       <Navbar />
       
       <main className="flex-grow container mx-auto px-4 pt-32 pb-12 md:pb-24 max-w-6xl">
         <div className="flex items-center gap-4 mb-8">
           <button
             onClick={() => navigate('/host/dashboard')}
-            className="p-2.5 bg-white border border-[#E2E8F0] text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] rounded-xl transition-all shadow-sm"
+            className="p-2.5 bg-[#F0F9FF] hover:bg-[#E0F2FE] text-[#06B6D4] rounded-xl transition-all border border-[#E0F2FE]"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-[#0F172A] flex items-center gap-3">
-              <FileText className="w-8 h-8 text-[#3B82F6]" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#06B6D4]">
+              System Records
+            </span>
+            <h1 className="text-4xl font-serif font-bold text-[#0F172A] flex items-center gap-3 mt-1">
+              <FileText className="w-8 h-8 text-[#06B6D4]" />
               Audit Logs
             </h1>
-            <p className="text-sm text-[#64748B] mt-1">Track platform activities and administrative actions</p>
+            <p className="text-sm text-[#475569] mt-1">Track platform activities and administrative actions</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-[#E2E8F0] overflow-hidden">
+        <div className="bg-[#FFFFFF] rounded-3xl shadow-lux border border-[#E0F2FE] overflow-hidden">
           {/* Search Header */}
-          <div className="p-4 border-b border-[#E2E8F0] bg-slate-50 flex items-center justify-between">
+          <div className="p-4 border-b border-[#E0F2FE] bg-[#F8FAFC] flex items-center justify-between">
             <div className="relative max-w-md w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94A3B8]" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94A3B8]" />
               <input 
                 type="text" 
                 placeholder="Search by action, user, or details..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-[#E2E8F0] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent transition-all bg-white"
+                className="w-full pl-10 pr-4 py-2.5 border border-[#E0F2FE] rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] transition-all bg-[#FFFFFF] text-[#0F172A]"
               />
             </div>
-            <div className="text-sm text-slate-500 font-medium">
+            <div className="text-sm text-[#475569] font-medium font-mono bg-[#FFFFFF] px-3 py-1 rounded-full border border-[#E0F2FE]">
               Total records: {filteredLogs.length}
             </div>
           </div>
@@ -108,7 +111,7 @@ const ActivityLogs: React.FC = () => {
           {/* Table */}
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-[#475569]">
-              <thead className="text-xs uppercase bg-[#F1F5F9] text-[#64748B] font-semibold border-b border-[#E2E8F0]">
+              <thead className="text-[10px] uppercase tracking-wider bg-[#F0F9FF] text-[#06B6D4] font-semibold border-b border-[#E0F2FE]">
                 <tr>
                   <th className="px-6 py-4">Timestamp</th>
                   <th className="px-6 py-4">User</th>
@@ -129,19 +132,19 @@ const ActivityLogs: React.FC = () => {
                   </tr>
                 ) : filteredLogs.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-12 text-slate-500 bg-white">
+                    <td colSpan={5} className="text-center py-12 text-[#64748B] bg-[#FFFFFF]">
                       No logs found.
                     </td>
                   </tr>
                 ) : (
                   filteredLogs.map((log) => (
-                    <tr key={log.id} className="border-b border-[#F1F5F9] hover:bg-[#F8FAFC] transition-colors">
+                    <tr key={log.id} className="border-b border-[#E0F2FE] hover:bg-[#F0F9FF]/50 transition-colors">
                       <td className="px-6 py-4 font-mono text-xs whitespace-nowrap">
                         {format(new Date(log.createdAt), 'MMM dd, yyyy HH:mm:ss')}
                       </td>
                       <td className="px-6 py-4">
                         <div className="font-medium text-[#0F172A]">{log.user.name}</div>
-                        <div className="text-xs text-slate-500">{log.user.email}</div>
+                        <div className="text-xs text-[#64748B]">{log.user.email}</div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
@@ -149,11 +152,11 @@ const ActivityLogs: React.FC = () => {
                           <span className={getActionBadge(log.action)}>{log.action}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 font-medium text-slate-700">
+                      <td className="px-6 py-4 font-medium text-[#334155]">
                         {log.resource}
                       </td>
                       <td className="px-6 py-4">
-                        <pre className="text-xs bg-slate-50 p-2 rounded-lg border border-slate-100 overflow-x-auto max-w-xs text-slate-600">
+                        <pre className="text-xs bg-[#F8FAFC] p-2.5 rounded-xl border border-[#E2E8F0] overflow-x-auto max-w-xs text-[#475569]">
                           {log.details ? JSON.stringify(log.details, null, 2) : 'No details'}
                         </pre>
                       </td>

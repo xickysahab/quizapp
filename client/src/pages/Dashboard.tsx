@@ -122,7 +122,7 @@ const Dashboard: React.FC = () => {
             {user?.role === 'ADMIN' && (
               <button
                 onClick={() => navigate('/admin/logs')}
-                className="flex items-center gap-2 bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#334155] px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors border border-[#E2E8F0]"
+                className="flex items-center gap-2 bg-[#FFF7ED] hover:bg-[#FFEDD5] text-[#F97316] px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors border border-[#FFEDD5]"
               >
                 <FileText className="w-4 h-4" />
                 Audit Logs
