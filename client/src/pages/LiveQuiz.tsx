@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { Loader2, CheckCircle2, Sparkles, Award, ArrowLeft } from 'lucide-react';
 import { socket } from '../socket/socket';
 import api from '../services/api';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const LiveQuiz: React.FC = () => {
   const { roomCode } = useParams<{ roomCode: string }>();
   const navigate = useNavigate();
-  
+
   const [participantName, setParticipantName] = useState<string | null>(null);
   const [participantId, setParticipantId] = useState<string | null>(null);
   const [eventId, setEventId] = useState<string | null>(null);
-  
+
   const [activeQuestion, setActiveQuestion] = useState<any>(null);
   const [currentSelection, setCurrentSelection] = useState<number | null>(null);
   const [quizEnded, setQuizEnded] = useState(false);
@@ -20,12 +21,12 @@ const LiveQuiz: React.FC = () => {
     const pName = localStorage.getItem('participantName');
     const pId = localStorage.getItem('participantId');
     const eId = localStorage.getItem('eventId');
-    
+
     if (!pName || !pId || !eId) {
       navigate('/');
       return;
     }
-    
+
     setParticipantName(pName);
     setParticipantId(pId);
     setEventId(eId);
@@ -36,7 +37,6 @@ const LiveQuiz: React.FC = () => {
 
     // Socket Listeners
     socket.on('participant:questionActive', ({ question, selectedOption }) => {
-      // Clear or set the previous selection for the new question
       setCurrentSelection(selectedOption !== undefined ? selectedOption : null);
       setActiveQuestion(question);
     });
@@ -55,72 +55,165 @@ const LiveQuiz: React.FC = () => {
 
   const submitAnswer = async (index: number) => {
     if (!activeQuestion) return;
-    
-    // Instantly show the selection to the user
+
     setCurrentSelection(index);
-    
+
     try {
       await api.post('/participants/response', {
         participantId,
         questionId: activeQuestion.id,
-        selectedOption: index
+        selectedOption: index,
       });
       socket.emit('participant:submitAnswer', eventId);
     } catch (error) {
-      console.error('Failed to submit', error);
-      alert('Error saving your answer. The question might be locked.');
+      console.error('Failed to submit response', error);
+      alert('Unable to save response. The question may have been closed by the host.');
     }
   };
 
   if (quizEnded) {
     return (
-      <div className="min-h-screen bg-[#aa3bff] flex flex-col items-center justify-center p-4 text-white text-center">
-        <h1 className="text-4xl font-bold mb-4">Quiz Ended!</h1>
-        <p className="text-xl">Thanks for playing, {participantName}!</p>
+      <div className="min-h-screen bg-[#FAF8F6] text-[#1C1917] flex flex-col items-center justify-center p-6 font-sans relative selection:bg-[#E8DFD5] bg-ambient-glow">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-md w-full bg-[#FFFFFF] rounded-3xl p-10 text-center shadow-lux-lg border border-[#E8DFD5] space-y-6"
+        >
+          <div className="w-16 h-16 rounded-full bg-[#F4ECE1] text-[#8C6D46] flex items-center justify-center mx-auto shadow-sm">
+            <Award className="w-8 h-8" />
+          </div>
+          <div>
+            <span className="text-[11px] font-semibold tracking-[0.2em] text-[#8C6D46] uppercase">
+              Session Concluded
+            </span>
+            <h1 className="font-serif text-4xl font-bold text-[#1C1917] mt-1">
+              Quiz Completed!
+            </h1>
+            <p className="text-sm text-[#78716C] mt-2">
+              Thank you for participating, <span className="font-semibold text-[#1C1917]">{participantName}</span>. Your responses were recorded.
+            </p>
+          </div>
+
+          <div className="pt-4">
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl bg-[#2D2A26] hover:bg-[#1C1917] text-[#FAF8F6] font-medium text-sm transition-all"
+            >
+              <ArrowLeft className="w-4 h-4 text-[#8C6D46]" />
+              <span>Return to Home</span>
+            </Link>
+          </div>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#aa3bff] flex flex-col items-center justify-center p-4 text-white text-center">
-      <div className="max-w-md w-full bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-10 shadow-2xl">
-        <h2 className="text-2xl font-medium text-white/80 mb-2">Room Code: {roomCode}</h2>
-        
-        {!activeQuestion ? (
-          <>
-            <h1 className="text-4xl font-bold mb-10">Quiz Time!</h1>
-            <div className="flex justify-center mb-8">
-              <Loader2 className="w-16 h-16 animate-spin text-white" />
-            </div>
-            <h3 className="text-2xl font-bold mb-2">You're in, {participantName}!</h3>
-            <p className="text-white/80 text-lg">Waiting for the host to start the quiz...</p>
-          </>
-        ) : (
-          <div className="text-left">
-            <h3 className="text-2xl font-bold mb-6 text-white">{activeQuestion.text}</h3>
-            <div className="space-y-3">
-              {activeQuestion.options.map((opt: string, idx: number) => (
-                <button
-                  key={idx}
-                  onClick={() => submitAnswer(idx)}
-                  className={`w-full p-4 rounded-xl text-lg font-medium transition-all shadow-lg border-2 ${
-                    currentSelection === idx 
-                      ? 'bg-[#ffe815] text-[#aa3bff] border-[#ffe815] scale-[1.02]' 
-                      : 'bg-white text-[#aa3bff] border-transparent hover:bg-gray-100 hover:scale-[1.01]'
-                  }`}
-                >
-                  {opt}
-                </button>
-              ))}
-            </div>
-            {currentSelection !== null && (
-              <p className="mt-6 text-center font-bold animate-pulse text-[#ffe815]">
-                Answer saved! You can change it until the host moves on.
-              </p>
-            )}
-          </div>
-        )}
+    <div className="min-h-screen bg-[#FAF8F6] text-[#1C1917] flex flex-col items-center justify-center p-6 font-sans relative selection:bg-[#E8DFD5] bg-ambient-glow">
+      {/* Participant Top Header */}
+      <div className="fixed top-6 left-6 right-6 max-w-xl mx-auto flex items-center justify-between px-6 py-3 rounded-2xl bg-[#FFFFFF]/80 backdrop-blur-md border border-[#E8DFD5] shadow-lux z-20">
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-[#8C6D46]" />
+          <span className="font-serif font-bold text-sm text-[#1C1917]">PULSE</span>
+        </div>
+        <div className="flex items-center gap-3 text-xs">
+          <span className="text-[#78716C]">
+            Player: <strong className="text-[#1C1917]">{participantName}</strong>
+          </span>
+          <span className="px-2.5 py-1 rounded-full bg-[#F5F0EB] text-[#8C6D46] font-mono font-bold">
+            {roomCode}
+          </span>
+        </div>
       </div>
+
+      <main className="max-w-xl w-full pt-16">
+        <AnimatePresence mode="wait">
+          {!activeQuestion ? (
+            <motion.div
+              key="waiting"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              className="bg-[#FFFFFF] rounded-3xl p-10 text-center shadow-lux-lg border border-[#E8DFD5] space-y-6"
+            >
+              <div className="w-16 h-16 rounded-full bg-[#F5F0EB] text-[#8C6D46] flex items-center justify-center mx-auto">
+                <Loader2 className="w-8 h-8 animate-spin" />
+              </div>
+              <div className="space-y-2">
+                <span className="text-[11px] font-semibold tracking-[0.2em] text-[#8C6D46] uppercase">
+                  Connected & Ready
+                </span>
+                <h1 className="font-serif text-3xl md:text-4xl font-bold text-[#1C1917]">
+                  You're in, {participantName}!
+                </h1>
+                <p className="text-sm text-[#78716C] max-w-sm mx-auto">
+                  Waiting for the host to present the next question...
+                </p>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key={activeQuestion.id}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              className="bg-[#FFFFFF] rounded-3xl p-8 md:p-10 shadow-lux-lg border border-[#E8DFD5] space-y-6"
+            >
+              <div>
+                <span className="text-[11px] font-semibold tracking-[0.2em] text-[#8C6D46] uppercase">
+                  Active Question
+                </span>
+                <h2 className="font-serif text-3xl font-bold text-[#1C1917] mt-1 leading-snug">
+                  {activeQuestion.text}
+                </h2>
+              </div>
+
+              {/* Options List */}
+              <div className="space-y-3.5 pt-2">
+                {activeQuestion.options.map((opt: string, idx: number) => {
+                  const isSelected = currentSelection === idx;
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => submitAnswer(idx)}
+                      className={`w-full p-4.5 rounded-2xl text-left font-medium text-base transition-all flex items-center justify-between border ${
+                        isSelected
+                          ? 'bg-[#F4ECE1] border-[#8C6D46] text-[#1C1917] shadow-sm font-semibold'
+                          : 'bg-[#FAF8F6] border-[#E8DFD5] text-[#44403C] hover:border-[#D8CCC0] hover:bg-[#F5F0EB]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3.5">
+                        <span
+                          className={`w-8 h-8 rounded-full text-xs font-serif font-bold flex items-center justify-center transition-colors ${
+                            isSelected ? 'bg-[#8C6D46] text-white' : 'bg-[#E8DFD5] text-[#78716C]'
+                          }`}
+                        >
+                          {['A', 'B', 'C', 'D'][idx]}
+                        </span>
+                        <span>{opt}</span>
+                      </div>
+
+                      {isSelected && (
+                        <CheckCircle2 className="w-5 h-5 text-[#8C6D46]" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {currentSelection !== null && (
+                <div className="pt-2 text-center">
+                  <span className="inline-flex items-center gap-2 text-xs font-semibold text-[#8C6D46] bg-[#F4ECE1] px-4 py-2 rounded-full border border-[#E8DFD5]">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Response recorded — You may update until host advances</span>
+                  </span>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </main>
     </div>
   );
 };

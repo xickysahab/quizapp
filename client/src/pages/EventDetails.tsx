@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import { ArrowLeft, Plus, Edit2, Trash2, PlayCircle, Clock } from 'lucide-react';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import { ArrowLeft, Plus, Edit2, Trash2, Play, Clock, Download, CheckCircle, HelpCircle } from 'lucide-react';
 import QuestionForm from '../components/QuestionForm';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const EventDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  
+
   const [event, setEvent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState<any>(null);
 
@@ -24,7 +27,7 @@ const EventDetails: React.FC = () => {
       setEvent(response.data.event);
     } catch (error) {
       console.error('Failed to fetch event details', error);
-      navigate('/dashboard'); // Go back if error
+      navigate('/dashboard');
     } finally {
       setLoading(false);
     }
@@ -41,7 +44,7 @@ const EventDetails: React.FC = () => {
   };
 
   const handleDeleteQuestion = async (questionId: string) => {
-    if (!window.confirm('Delete this question?')) return;
+    if (!window.confirm('Are you sure you want to delete this question?')) return;
     try {
       await api.delete(`/questions/${questionId}`);
       fetchEventDetails();
@@ -61,40 +64,59 @@ const EventDetails: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="min-h-screen bg-[#FAF8F6] text-[#1C1917] flex items-center justify-center font-serif text-lg italic">
+        Loading event details...
+      </div>
+    );
   }
 
   if (!event) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#16171d] text-gray-900 dark:text-gray-100 p-6 md:p-12">
-      <div className="max-w-4xl mx-auto">
-        
-        {/* Header */}
-        <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:hover:text-white mb-8 transition-colors">
-          <ArrowLeft className="w-5 h-5" />
+    <div className="min-h-screen bg-[#FAF8F6] text-[#1C1917] flex flex-col font-sans relative selection:bg-[#E8DFD5]">
+      <Navbar />
+
+      <main className="flex-1 pt-32 pb-24 px-6 md:px-12 max-w-5xl mx-auto w-full">
+        {/* Back Button */}
+        <button
+          onClick={() => navigate('/dashboard')}
+          className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#78716C] hover:text-[#1C1917] mb-8 transition-colors group"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           <span>Back to Dashboard</span>
         </button>
 
-        <div className="bg-white dark:bg-[#1f2028] rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 p-8 mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div>
-            <div className="flex items-center gap-4 mb-2">
-              <h1 className="text-3xl font-bold">{event.title}</h1>
-              <span className="bg-[#aa3bff]/10 text-[#aa3bff] px-3 py-1 rounded-md text-sm font-bold tracking-widest">
-                {event.roomCode}
+        {/* Event Header Banner Card */}
+        <div className="bg-[#FFFFFF] rounded-3xl p-8 md:p-10 shadow-lux border border-[#E8DFD5] mb-12 flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <div className="space-y-3 max-w-xl">
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8C6D46]">
+                Event Studio
+              </span>
+              <span className="px-3 py-1 rounded-full bg-[#FAF8F6] border border-[#E8DFD5] text-xs font-mono font-bold text-[#1C1917]">
+                PIN: {event.roomCode}
               </span>
             </div>
-            <p className="text-gray-500">Participants will join using this room code.</p>
+            <h1 className="font-serif text-4xl md:text-5xl font-bold text-[#1C1917]">
+              {event.title}
+            </h1>
+            <p className="text-sm text-[#78716C] leading-relaxed">
+              Share the PIN code <span className="font-mono font-bold text-[#1C1917] bg-[#FAF8F6] px-2 py-0.5 rounded-md border border-[#E8DFD5]">{event.roomCode}</span> with your participants to join live.
+            </p>
           </div>
-          
-          <div className="flex flex-col gap-3">
-            <button 
+
+          {/* Action CTAs */}
+          <div className="flex flex-col sm:flex-row md:flex-col gap-3 min-w-[220px]">
+            <button
               onClick={() => navigate(`/host/live/${id}`)}
-              className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-green-500/30 transition-all flex items-center gap-3 w-full justify-center">
-              <PlayCircle className="w-6 h-6" />
-              Host Live Quiz
+              className="bg-[#2D2A26] hover:bg-[#1C1917] text-[#FAF8F6] px-6 py-4 rounded-2xl font-medium text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 group"
+            >
+              <Play className="w-4 h-4 text-[#8C6D46] fill-[#8C6D46] group-hover:scale-110 transition-transform" />
+              <span>Broadcast Live Quiz</span>
             </button>
-            <button 
+
+            <button
               onClick={async () => {
                 try {
                   const response = await api.get(`/analytics/events/${id}/export`, { responseType: 'blob' });
@@ -107,75 +129,136 @@ const EventDetails: React.FC = () => {
                   link.parentNode?.removeChild(link);
                 } catch (error: any) {
                   console.error('Download error', error);
-                  alert(error.response?.data?.message || 'Failed to download analytics');
+                  alert(error.response?.data?.message || 'Failed to download analytics report');
                 }
               }}
-              className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-900 dark:text-white px-8 py-3 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 w-full">
-              Download CSV Report
+              className="bg-[#F5F0EB] hover:bg-[#EFE7DE] text-[#44403C] px-6 py-3 rounded-2xl text-xs font-semibold transition-all flex items-center justify-center gap-2 border border-[#E8DFD5]"
+            >
+              <Download className="w-3.5 h-3.5 text-[#8C6D46]" />
+              <span>Export CSV Report</span>
             </button>
           </div>
         </div>
 
-        {/* Questions Section */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Quiz Questions ({event.questions.length})</h2>
-          <button 
+        {/* Questions Header & Add Button */}
+        <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#E8DFD5]">
+          <div>
+            <h2 className="font-serif text-3xl font-bold text-[#1C1917]">
+              Questions & Polls ({event.questions.length})
+            </h2>
+            <p className="text-xs text-[#78716C] mt-0.5">
+              Draft questions to be presented sequentially during the live session
+            </p>
+          </div>
+
+          <button
             onClick={openAddModal}
-            className="bg-[#aa3bff] hover:bg-[#9024e6] text-white px-5 py-2.5 rounded-xl font-medium transition-colors flex items-center gap-2"
+            className="bg-[#8C6D46] hover:bg-[#9B7A50] text-[#FAF8F6] px-5 py-3 rounded-2xl font-medium text-sm transition-all shadow-xs flex items-center gap-2"
           >
-            <Plus className="w-5 h-5" />
-            Add Question
+            <Plus className="w-4 h-4" />
+            <span>Add Question</span>
           </button>
         </div>
 
+        {/* Questions List */}
         {event.questions.length === 0 ? (
-          <div className="text-center bg-white dark:bg-[#1f2028] border border-gray-100 dark:border-gray-800 rounded-3xl p-16">
-            <h3 className="text-xl font-semibold mb-2">No questions yet</h3>
-            <p className="text-gray-500 mb-6">Add multiple-choice questions to start your quiz.</p>
-            <button onClick={openAddModal} className="text-[#aa3bff] font-medium hover:underline">
-              + Create first question
+          <div className="text-center bg-[#FFFFFF] rounded-3xl border border-[#E8DFD5] p-16 space-y-4">
+            <div className="w-14 h-14 rounded-full bg-[#F5F0EB] flex items-center justify-center text-[#8C6D46] mx-auto">
+              <HelpCircle className="w-6 h-6" />
+            </div>
+            <h3 className="font-serif text-2xl font-semibold text-[#1C1917]">No questions added yet</h3>
+            <p className="text-sm text-[#78716C] max-w-md mx-auto">
+              Add your first multiple-choice question or poll prompt to start your quiz collection.
+            </p>
+            <button
+              onClick={openAddModal}
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[#8C6D46] hover:underline pt-2"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Create First Question</span>
             </button>
           </div>
         ) : (
           <div className="space-y-6">
-            {event.questions.map((q: any, index: number) => (
-              <div key={q.id} className="bg-white dark:bg-[#1f2028] border border-gray-100 dark:border-gray-800 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row gap-6">
-                
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="bg-gray-100 dark:bg-gray-800 text-gray-500 font-bold px-3 py-1 rounded-lg">Q{index + 1}</span>
-                    <h3 className="text-xl font-semibold">{q.text}</h3>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-                    {q.options.map((opt: string, optIdx: number) => (
-                      <div key={optIdx} className={`p-3 rounded-xl border ${q.correctOption === optIdx ? 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-900/50 text-green-800 dark:text-green-300 font-medium' : 'bg-gray-50 border-gray-100 dark:bg-[#16171d] dark:border-gray-800 text-gray-600 dark:text-gray-400'}`}>
-                        <span className="font-bold mr-2 opacity-50">{['A', 'B', 'C', 'D'][optIdx]}.</span> {opt}
+            <AnimatePresence>
+              {event.questions.map((q: any, index: number) => (
+                <motion.div
+                  key={q.id}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.96 }}
+                  className="bg-[#FFFFFF] rounded-3xl border border-[#E8DFD5] p-7 shadow-lux flex flex-col md:flex-row gap-6 justify-between items-start"
+                >
+                  <div className="flex-1 space-y-4">
+                    {/* Header: Question Number & Title */}
+                    <div className="flex items-start gap-4">
+                      <span className="w-8 h-8 rounded-full bg-[#2D2A26] text-[#FAF8F6] text-xs font-serif font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+                        Q{index + 1}
+                      </span>
+                      <div className="space-y-1">
+                        <h3 className="font-serif text-2xl font-bold text-[#1C1917] leading-snug">
+                          {q.text}
+                        </h3>
+                        <div className="flex items-center gap-2 text-xs text-[#78716C]">
+                          <Clock className="w-3.5 h-3.5 text-[#8C6D46]" />
+                          <span>{q.timeLimit > 0 ? `${q.timeLimit} seconds timer` : 'Manual advance (No timer)'}</span>
+                        </div>
                       </div>
-                    ))}
+                    </div>
+
+                    {/* Options Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                      {q.options.map((opt: string, optIdx: number) => {
+                        const isCorrect = q.correctOption === optIdx;
+                        return (
+                          <div
+                            key={optIdx}
+                            className={`p-3.5 rounded-2xl border text-sm transition-all flex items-center gap-3 ${
+                              isCorrect
+                                ? 'bg-[#F4ECE1] border-[#8C6D46] text-[#1C1917] font-semibold shadow-xs'
+                                : 'bg-[#FAF8F6] border-[#E8DFD5] text-[#44403C]'
+                            }`}
+                          >
+                            <span className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center ${
+                              isCorrect ? 'bg-[#8C6D46] text-white' : 'bg-[#E8DFD5] text-[#78716C]'
+                            }`}>
+                              {['A', 'B', 'C', 'D'][optIdx]}
+                            </span>
+                            <span className="flex-1">{opt}</span>
+                            {isCorrect && (
+                              <CheckCircle className="w-4 h-4 text-[#8C6D46]" />
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                    <Clock className="w-4 h-4" />
-                    <span>{q.timeLimit} seconds</span>
+                  {/* Question Controls */}
+                  <div className="flex md:flex-col gap-2 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-[#E8DFD5] md:pl-6 w-full md:w-auto justify-end">
+                    <button
+                      onClick={() => openEditModal(q)}
+                      className="p-3 rounded-2xl bg-[#FAF8F6] hover:bg-[#F5F0EB] text-[#78716C] hover:text-[#1C1917] border border-[#E8DFD5] transition-colors"
+                      title="Edit Question"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteQuestion(q.id)}
+                      className="p-3 rounded-2xl bg-[#FAF8F6] hover:bg-rose-50 text-[#78716C] hover:text-rose-600 border border-[#E8DFD5] hover:border-rose-200 transition-colors"
+                      title="Delete Question"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
-                </div>
-
-                <div className="flex md:flex-col gap-2 justify-start border-t md:border-t-0 md:border-l border-gray-100 dark:border-gray-800 pt-4 md:pt-0 md:pl-6">
-                  <button onClick={() => openEditModal(q)} className="p-3 bg-gray-50 dark:bg-[#16171d] text-gray-600 hover:text-[#aa3bff] hover:bg-[#aa3bff]/10 rounded-xl transition-colors" title="Edit">
-                    <Edit2 className="w-5 h-5" />
-                  </button>
-                  <button onClick={() => handleDeleteQuestion(q.id)} className="p-3 bg-gray-50 dark:bg-[#16171d] text-gray-600 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors" title="Delete">
-                    <Trash2 className="w-5 h-5" />
-                  </button>
-                </div>
-
-              </div>
-            ))}
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
         )}
+      </main>
 
-      </div>
+      <Footer />
 
       {isModalOpen && (
         <QuestionForm

@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { UserPlus } from 'lucide-react';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import { UserPlus, ArrowRight, Lock, Mail, User } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Register: React.FC = () => {
   const [name, setName] = useState('');
@@ -10,7 +13,7 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -31,75 +34,114 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#16171d] p-4">
-      <div className="max-w-md w-full bg-white dark:bg-[#1f2028] rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-800">
-        <div className="text-center mb-8">
-          <div className="bg-[#aa3bff]/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <UserPlus className="w-8 h-8 text-[#aa3bff]" />
-          </div>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Create Account</h2>
-          <p className="text-gray-500 dark:text-gray-400">Sign up to host live quizzes</p>
-        </div>
+    <div className="min-h-screen bg-[#FAF8F6] text-[#1C1917] flex flex-col font-sans relative selection:bg-[#E8DFD5]">
+      <Navbar />
 
-        {error && (
-          <div className="bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm mb-6 text-center border border-red-100 dark:border-red-800/50">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleRegister} className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
-            <input
-              type="text"
-              required
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#16171d] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#aa3bff] focus:border-transparent outline-none transition-all"
-              placeholder="John Doe"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+      <main className="flex-1 pt-32 pb-24 px-6 md:px-12 flex items-center justify-center bg-ambient-glow">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-md w-full bg-[#FFFFFF] rounded-3xl p-8 md:p-10 shadow-lux-lg border border-[#E8DFD5] relative"
+        >
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-[#2D2A26] flex items-center justify-center text-[#F4ECE1] mx-auto mb-4 shadow-sm">
+              <UserPlus className="w-6 h-6 text-[#8C6D46]" />
+            </div>
+            <span className="text-[11px] font-semibold tracking-[0.2em] text-[#8C6D46] uppercase">
+              Host Registration
+            </span>
+            <h2 className="font-serif text-3xl font-bold text-[#1C1917] mt-1">
+              Create Host Account
+            </h2>
+            <p className="text-sm text-[#78716C] mt-1">
+              Start creating interactive quizzes & live polls
+            </p>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
-            <input
-              type="email"
-              required
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#16171d] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#aa3bff] focus:border-transparent outline-none transition-all"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
-            <input
-              type="password"
-              required
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#16171d] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#aa3bff] focus:border-transparent outline-none transition-all"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-[#FFF5F5] border border-[#FEB2B2] text-[#C53030] p-3.5 rounded-2xl text-xs font-medium text-center mb-6"
+            >
+              {error}
+            </motion.div>
+          )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-[#aa3bff] hover:bg-[#9024e6] text-white font-semibold py-3 rounded-xl transition-colors disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-[#aa3bff]/30"
-          >
-            {loading ? 'Creating Account...' : 'Sign Up'}
-          </button>
-        </form>
+          <form onSubmit={handleRegister} className="space-y-5">
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#78716C] mb-2">
+                Full Name
+              </label>
+              <div className="relative">
+                <User className="w-4 h-4 text-[#A8A29E] absolute left-4 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  required
+                  className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-[#E8DFD5] bg-[#FAF8F6] text-[#1C1917] text-sm focus:ring-2 focus:ring-[#8C6D46]/20 focus:border-[#8C6D46] outline-none transition-all"
+                  placeholder="E.g. Sarah Jenkins"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+            </div>
 
-        <p className="mt-6 text-center text-gray-600 dark:text-gray-400">
-          Already have an account?{' '}
-          <Link to="/login" className="text-[#aa3bff] hover:text-[#9024e6] font-medium transition-colors">
-            Log in
-          </Link>
-        </p>
-      </div>
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#78716C] mb-2">
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail className="w-4 h-4 text-[#A8A29E] absolute left-4 top-1/2 -translate-y-1/2" />
+                <input
+                  type="email"
+                  required
+                  className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-[#E8DFD5] bg-[#FAF8F6] text-[#1C1917] text-sm focus:ring-2 focus:ring-[#8C6D46]/20 focus:border-[#8C6D46] outline-none transition-all"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#78716C] mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="w-4 h-4 text-[#A8A29E] absolute left-4 top-1/2 -translate-y-1/2" />
+                <input
+                  type="password"
+                  required
+                  className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-[#E8DFD5] bg-[#FAF8F6] text-[#1C1917] text-sm focus:ring-2 focus:ring-[#8C6D46]/20 focus:border-[#8C6D46] outline-none transition-all"
+                  placeholder="Create a strong password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#2D2A26] hover:bg-[#1C1917] text-[#FAF8F6] font-medium py-3.5 rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group mt-2 disabled:opacity-50"
+            >
+              <span>{loading ? 'Creating Account...' : 'Get Started Free'}</span>
+              <ArrowRight className="w-4 h-4 text-[#8C6D46] group-hover:translate-x-1 transition-transform" />
+            </button>
+          </form>
+
+          <p className="mt-8 text-center text-xs text-[#78716C]">
+            Already have an account?{' '}
+            <Link to="/login" className="font-semibold text-[#1C1917] underline hover:text-[#8C6D46] transition-colors">
+              Sign in
+            </Link>
+          </p>
+        </motion.div>
+      </main>
+
+      <Footer />
     </div>
   );
 };
