@@ -35,6 +35,7 @@ model Question {
   eventId       String
   event         Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
   text          String
+  imageUrl      String?    // Added image url support
   options       String[]
   correctOption Int?
   order         Int

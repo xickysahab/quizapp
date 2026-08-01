@@ -257,14 +257,13 @@ const HostLive: React.FC = () => {
               key={currentQuestionIndex}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              className="space-y-8 text-left"
+              className="w-full max-w-5xl mx-auto"
             >
               {/* Question Index & Live Response Count */}
-              <div className="flex items-center justify-between border-b border-[#E0F2FE] pb-4">
+              <div className="flex items-center justify-between mb-4 px-2">
                 <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#06B6D4]">
                   Question {currentQuestionIndex + 1} of {event.questions.length}
                 </span>
-
                 <div className="flex items-center gap-2 bg-[#F0F9FF] px-4 py-2 rounded-full border border-[#E0F2FE] text-xs font-medium text-[#0F172A]">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                   <span>
@@ -273,24 +272,63 @@ const HostLive: React.FC = () => {
                 </div>
               </div>
 
-              {/* Title */}
-              <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#0F172A] leading-tight">
-                {activeQuestion.text}
-              </h2>
+              {/* SAHAJOMETER CARD UI */}
+              <div className="bg-[#E4F1EF] rounded-[2rem] p-6 md:p-8 pt-10 relative shadow-md border border-[#D0E3E1]">
+                {/* SAHAJOMETER Badge */}
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#00BFA5] text-white px-8 py-2 font-sans font-bold tracking-widest text-sm uppercase rounded-sm shadow-sm">
+                  SAHAJOMETER
+                </div>
 
-              {/* Options Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                {activeQuestion.options.map((opt: string, idx: number) => (
-                  <div
-                    key={idx}
-                    className="bg-[#FFFFFF] border border-[#E0F2FE] rounded-2xl p-5 flex items-center gap-4 transition-all hover:border-[#06B6D4] hover:bg-[#F0F9FF] shadow-sm"
-                  >
-                    <span className="w-10 h-10 rounded-xl bg-[#ECFEFF] text-[#06B6D4] font-serif text-lg font-bold flex items-center justify-center border border-[#E0F2FE]">
-                      {['A', 'B', 'C', 'D'][idx]}
-                    </span>
-                    <span className="text-lg font-medium text-[#0F172A]">{opt}</span>
+                {/* Top Question Container */}
+                <div className="bg-[#F6F5F2] rounded-2xl border border-[#DEDCD6] p-6 md:p-8 mb-6 flex flex-col md:flex-row gap-8 items-center min-h-[250px]">
+                  {/* Question Text */}
+                  <div className={`flex-1 ${!activeQuestion.imageUrl ? 'text-center' : 'text-left'}`}>
+                    <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#4E342E] leading-tight">
+                      {activeQuestion.text}
+                    </h2>
                   </div>
-                ))}
+                  
+                  {/* Image */}
+                  {activeQuestion.imageUrl && (
+                    <div className="w-full md:w-[40%] flex-shrink-0">
+                      <img 
+                        src={activeQuestion.imageUrl} 
+                        alt="Question Reference" 
+                        className="w-full h-auto rounded-xl object-cover shadow-sm border border-[#E5E5E5]"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Options 2x2 Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {activeQuestion.options.map((opt: string, idx: number) => {
+                    const colors = [
+                      'bg-[#AEE2D9]', // A: Mint Green
+                      'bg-[#BDCCD4]', // B: Steel Blue
+                      'bg-[#F3D7B5]', // C: Light Peach
+                      'bg-[#D3EEF4]'  // D: Light Cyan
+                    ];
+                    return (
+                      <div
+                        key={idx}
+                        className={`${colors[idx]} rounded-2xl p-6 flex flex-col items-center justify-center text-center gap-3 transition-transform hover:scale-[1.02] shadow-sm border border-black/5`}
+                      >
+                        <span className="w-7 h-7 rounded-full bg-[#0097A7] text-white font-sans text-xs font-bold flex items-center justify-center shadow-sm">
+                          {['A', 'B', 'C', 'D'][idx]}
+                        </span>
+                        <span className="font-serif text-xl md:text-2xl font-bold italic text-[#4E342E]">
+                          {opt}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Footer Tag */}
+                <div className="text-center mt-6 text-[#795548] font-sans text-xs italic opacity-80">
+                  Follow @sahajspirit
+                </div>
               </div>
             </motion.div>
           )}
