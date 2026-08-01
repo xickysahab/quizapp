@@ -65,7 +65,7 @@ const Join: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-7 space-y-8 text-left"
+            className="lg:col-span-7 space-y-8 text-left order-2 lg:order-1"
           >
             {/* Pill Tag */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F0F9FF] border border-[#E0F2FE] shadow-xs">
@@ -107,7 +107,7 @@ const Join: React.FC = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5"
+            className="lg:col-span-5 order-1 lg:order-2"
           >
             <div className="bg-[#FFFFFF] rounded-3xl p-8 md:p-10 shadow-lux-lg border border-[#E0F2FE] relative">
               <div className="text-center mb-8">
