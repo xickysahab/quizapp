@@ -235,30 +235,35 @@ const HostLive: React.FC = () => {
                     return (
                       <div
                         key={idx}
-                        className={`relative p-6 rounded-2xl border flex flex-col items-center justify-between text-center gap-4 transition-transform hover:scale-[1.02] shadow-sm ${card.colors.bg} ${card.colors.border}`}
+                        className={`relative p-6 rounded-2xl border flex flex-col items-center text-center gap-6 shadow-sm h-full ${card.colors.bg} ${card.colors.border}`}
                       >
                         {/* Percentage Overlay */}
-                        <div className="absolute top-4 right-4 text-right">
-                          <span className={`font-serif text-xl font-bold ${card.colors.text}`}>
+                        <div className="absolute top-4 right-5 text-right z-20">
+                          <span className={`font-serif text-2xl font-bold ${card.colors.text}`}>
                             {percentage}%
                           </span>
-                          <span className={`text-[10px] uppercase font-bold block ${card.colors.text} opacity-70`}>{count} votes</span>
+                          <span className={`text-[10px] uppercase font-bold block ${card.colors.text} opacity-60 -mt-1`}>{count} votes</span>
                         </div>
 
-                        <div className="space-y-3">
-                          <div className={`mx-auto px-4 py-1 rounded border flex items-center justify-center font-serif text-sm font-semibold shadow-sm ${card.colors.text} bg-[#FFFFFF]/50 ${card.colors.border}`}>
+                        {/* Top Badge: Mostly + Letter */}
+                        <div className="flex flex-col items-center -space-y-3 relative z-10 pt-2">
+                          <div className={`px-6 py-1.5 rounded-full border bg-white/70 backdrop-blur-sm shadow-sm font-serif text-sm font-semibold tracking-wide ${card.colors.text} ${card.colors.border}`}>
                             Mostly
                           </div>
-                          <div className={`mx-auto w-8 h-8 rounded-full flex items-center justify-center font-serif text-sm font-bold ${card.colors.alertBg} text-white shadow-sm`}>
+                          <div className={`w-9 h-9 rounded-full flex items-center justify-center font-serif text-base font-bold shadow-md z-10 text-white ${card.colors.alertBg} border-2 border-white`}>
                             {card.letter}
                           </div>
                         </div>
                         
-                        <p className={`font-serif text-lg md:text-xl italic font-medium leading-tight ${card.colors.text} px-2`}>
-                          {card.text}
-                        </p>
+                        {/* Main Text Content */}
+                        <div className="flex-1 flex items-center justify-center py-2">
+                          <p className={`font-serif text-[1.1rem] md:text-xl italic font-medium leading-relaxed ${card.colors.text} px-2 drop-shadow-sm`}>
+                            {card.text}
+                          </p>
+                        </div>
 
-                        <div className={`px-4 py-1.5 rounded font-bold text-sm tracking-wider text-white shadow-sm mt-2 ${card.colors.alertBg}`}>
+                        {/* Alert Badge */}
+                        <div className={`px-5 py-2 rounded font-bold text-xs md:text-sm tracking-[0.15em] text-white shadow-md mt-auto ${card.colors.alertBg}`}>
                           {card.alert}
                         </div>
                       </div>
