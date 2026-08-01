@@ -10,7 +10,7 @@ interface QuestionFormProps {
 const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialData }) => {
   const [text, setText] = useState('');
   const [options, setOptions] = useState(['', '', '', '']);
-  const [correctOption, setCorrectOption] = useState<number>(0);
+  const [correctOption, setCorrectOption] = useState<number | null>(null);
   const [timeLimit, setTimeLimit] = useState<number>(30);
   const [loading, setLoading] = useState(false);
 
@@ -18,8 +18,8 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
     if (initialData) {
       setText(initialData.text);
       setOptions(initialData.options.length ? initialData.options : ['', '', '', '']);
-      setCorrectOption(initialData.correctOption || 0);
-      setTimeLimit(initialData.timeLimit || 30);
+      setCorrectOption(initialData.correctOption !== undefined ? initialData.correctOption : null);
+      setTimeLimit(initialData.timeLimit || 0);
     }
   }, [initialData]);
 
@@ -77,14 +77,17 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
 
           {/* Options */}
           <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Options (Select the correct one)</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Options (Select one as the correct answer, or leave unselected for a Poll)
+            </label>
             {options.map((opt, idx) => (
               <div key={idx} className={`flex items-center gap-3 p-2 rounded-xl border-2 transition-all ${correctOption === idx ? 'border-[#aa3bff] bg-[#aa3bff]/5' : 'border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-[#16171d]'}`}>
                 <input
                   type="radio"
                   name="correctOption"
                   checked={correctOption === idx}
-                  onChange={() => setCorrectOption(idx)}
+                  onClick={() => setCorrectOption(correctOption === idx ? null : idx)}
+                  onChange={() => {}} // Handle click instead of change to allow toggling off
                   className="w-5 h-5 text-[#aa3bff] focus:ring-[#aa3bff] cursor-pointer ml-2"
                 />
                 <input
@@ -107,6 +110,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
               onChange={(e) => setTimeLimit(Number(e.target.value))}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-[#16171d] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#aa3bff] outline-none"
             >
+              <option value={0}>No timer (Manual host control)</option>
               <option value={15}>15 seconds</option>
               <option value={30}>30 seconds</option>
               <option value={60}>60 seconds (1 minute)</option>

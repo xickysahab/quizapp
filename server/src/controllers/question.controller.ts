@@ -26,7 +26,7 @@ export const addQuestion = async (req: AuthRequest, res: Response): Promise<void
         eventId,
         text,
         options,
-        correctOption: correctOption !== undefined ? Number(correctOption) : null,
+        correctOption: correctOption !== undefined && correctOption !== null ? Number(correctOption) : null,
         order: count + 1,
         timeLimit: timeLimit ? Number(timeLimit) : null,
       },
@@ -59,8 +59,8 @@ export const updateQuestion = async (req: AuthRequest, res: Response): Promise<v
       data: {
         text: text || existingQuestion.text,
         options: options || existingQuestion.options,
-        correctOption: correctOption !== undefined ? Number(correctOption) : existingQuestion.correctOption,
-        timeLimit: timeLimit !== undefined ? Number(timeLimit) : existingQuestion.timeLimit,
+        correctOption: correctOption !== undefined ? (correctOption === null ? null : Number(correctOption)) : existingQuestion.correctOption,
+        timeLimit: timeLimit !== undefined ? (timeLimit === null || timeLimit === 0 ? null : Number(timeLimit)) : existingQuestion.timeLimit,
       },
     });
 
