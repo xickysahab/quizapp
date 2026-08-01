@@ -146,8 +146,10 @@ export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response):
       if (totalResponses > 0) {
         questionsWithResponses++;
         for (let i = 0; i < percentages.length; i++) {
-          if (i < 4) {
-            sumOfPercentages[i] += percentages[i];
+          const prevSum = sumOfPercentages[i];
+          const currPct = percentages[i];
+          if (i < 4 && prevSum !== undefined && currPct !== undefined) {
+            sumOfPercentages[i] = prevSum + currPct;
           }
         }
       }
@@ -174,7 +176,9 @@ export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response):
       // Find the max percentage and adjust it to make the sum 100%
       const maxIdx = collectivePercentages.indexOf(Math.max(...collectivePercentages));
       const diff = 100 - totalMeanPercentage;
-      collectivePercentages[maxIdx] += diff;
+      if (maxIdx !== -1 && collectivePercentages[maxIdx] !== undefined) {
+        collectivePercentages[maxIdx] += diff;
+      }
     }
 
     res.status(200).json({
