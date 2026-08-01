@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Play, Square, ChevronRight, ChevronLeft, Users, BarChart3, Radio, Award, LogOut, QrCode, X } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import brandLogo from '../assets/Sahaj spirit.jpeg';
+import { SAHAJOMETER_PRESET } from '../constants/presets';
 import { socket } from '../socket/socket';
 import api from '../services/api';
 import toast from 'react-hot-toast';
@@ -197,32 +198,7 @@ const HostLive: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {[
-                    {
-                      letter: 'A',
-                      text: 'You need the learnings of Sahajta urgently.',
-                      alert: 'RED ALERT',
-                      colors: { bg: 'bg-[#FDF8F8]', border: 'border-[#FADFDF]', text: 'text-[#5C3232]', mutedText: 'text-[#A67575]', barBg: 'bg-[#FCECEC]', barFill: 'bg-[#D67474]', badge: 'bg-white text-[#C25959] border-[#FADFDF]', alertBadge: 'bg-[#D67474] text-white' }
-                    },
-                    {
-                      letter: 'B',
-                      text: 'You are able to being fully Sahaj.',
-                      alert: 'GREEN ALERT',
-                      colors: { bg: 'bg-[#F5FBFA]', border: 'border-[#D9EFEB]', text: 'text-[#2D544E]', mutedText: 'text-[#739993]', barBg: 'bg-[#EAF6F4]', barFill: 'bg-[#6FB0A6]', badge: 'bg-white text-[#56948A] border-[#D9EFEB]', alertBadge: 'bg-[#6FB0A6] text-white' }
-                    },
-                    {
-                      letter: 'C',
-                      text: 'There is some confusion, but you are moving closer to Sahajta.',
-                      alert: 'YELLOW ALERT',
-                      colors: { bg: 'bg-[#FDFDF7]', border: 'border-[#F1ECCD]', text: 'text-[#594B24]', mutedText: 'text-[#A69968]', barBg: 'bg-[#F8F5E6]', barFill: 'bg-[#D4C366]', badge: 'bg-white text-[#B5A449] border-[#F1ECCD]', alertBadge: 'bg-[#D4C366] text-white' }
-                    },
-                    {
-                      letter: 'D',
-                      text: 'There are many inner complications. Sahajta is here to help you.',
-                      alert: 'ORANGE ALERT',
-                      colors: { bg: 'bg-[#FDF9F6]', border: 'border-[#F5E3D5]', text: 'text-[#5E3F26]', mutedText: 'text-[#A88568]', barBg: 'bg-[#F9EDE4]', barFill: 'bg-[#DB9F6B]', badge: 'bg-white text-[#C2824A] border-[#F5E3D5]', alertBadge: 'bg-[#DB9F6B] text-white' }
-                    }
-                  ].map((opt, idx) => {
+                  {(event?.concludeConfig || SAHAJOMETER_PRESET).map((opt: any, idx: number) => {
                     const pct = summaryData.collective?.percentages?.[idx] || 0;
                     const count = summaryData.collective?.optionCounts?.[idx] || 0;
 

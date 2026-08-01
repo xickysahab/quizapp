@@ -24,6 +24,7 @@ model Event {
   host              User          @relation(fields: [hostId], references: [id])
   isLive            Boolean       @default(false)
   currentQuestionId String?
+  concludeConfig    Json?
   questions         Question[]
   participants      Participant[]
   createdAt         DateTime      @default(now())

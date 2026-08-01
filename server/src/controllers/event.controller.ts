@@ -119,3 +119,27 @@ export const deleteEvent = async (req: AuthRequest, res: Response): Promise<void
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+export const updateEventConfig = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const id = req.params.id as string;
+    const { concludeConfig } = req.body;
+
+    const event = await prisma.event.findUnique({ where: { id } });
+
+    if (!event) {
+      res.status(404).json({ message: 'Event not found' });
+      return;
+    }
+
+    const updatedEvent = await prisma.event.update({
+      where: { id },
+      data: { concludeConfig },
+    });
+
+    res.status(200).json({ message: 'Event config updated successfully', event: updatedEvent });
+  } catch (error) {
+    console.error('Update event config error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};

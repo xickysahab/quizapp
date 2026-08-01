@@ -3,8 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { ArrowLeft, Plus, Edit2, Trash2, Play, Clock, Download, CheckCircle, HelpCircle } from 'lucide-react';
+import { ArrowLeft, Plus, Edit2, Trash2, Play, Clock, Download, CheckCircle, HelpCircle, Settings } from 'lucide-react';
 import QuestionForm from '../components/QuestionForm';
+import ConcludeSettingsModal from '../components/ConcludeSettingsModal';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import ConfirmModal from '../components/ConfirmModal';
@@ -16,6 +17,7 @@ const EventDetails: React.FC = () => {
   const [event, setEvent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState<any>(null);
   const [deleteModal, setDeleteModal] = useState<{isOpen: boolean, questionId: string | null}>({ isOpen: false, questionId: null });
 
@@ -43,6 +45,17 @@ const EventDetails: React.FC = () => {
   const handleEditQuestion = async (data: any) => {
     await api.put(`/questions/${editingQuestion.id}`, data);
     fetchEventDetails();
+  };
+
+  const handleSaveConfig = async (config: any) => {
+    try {
+      await api.put(`/events/${id}/config`, { concludeConfig: config });
+      toast.success('Results configuration saved successfully');
+      fetchEventDetails();
+    } catch (error) {
+      console.error('Failed to save config', error);
+      toast.error('Failed to save configuration');
+    }
   };
 
   const handleDeleteQuestion = (questionId: string) => {
@@ -143,6 +156,13 @@ const EventDetails: React.FC = () => {
             >
               <Download className="w-3.5 h-3.5 text-[#06B6D4]" />
               <span>Export CSV Report</span>
+            </button>
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="bg-[#FFFFFF] border border-[#E0F2FE] text-[#0F172A] hover:bg-[#F8FAFC] px-6 py-3 rounded-2xl font-medium text-xs transition-all flex items-center justify-center gap-2 group"
+            >
+              <Settings className="w-3.5 h-3.5 text-[#475569] group-hover:rotate-45 transition-transform duration-300" />
+              <span>Customize Results UI</span>
             </button>
           </div>
         </div>
@@ -283,6 +303,13 @@ const EventDetails: React.FC = () => {
         onConfirm={executeDelete}
         onCancel={() => setDeleteModal({ isOpen: false, questionId: null })}
         isDestructive={true}
+      />
+
+      <ConcludeSettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        onSave={handleSaveConfig}
+        initialConfig={event?.concludeConfig}
       />
     </div>
   );
