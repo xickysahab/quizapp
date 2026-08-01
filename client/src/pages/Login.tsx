@@ -4,7 +4,8 @@ import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { Sparkles, ArrowRight, Lock, Mail } from 'lucide-react';
+import { ArrowRight, Lock, Mail } from 'lucide-react';
+import brandLogo from '../assets/Sahaj spirit.jpeg';
 import { motion } from 'framer-motion';
 
 const Login: React.FC = () => {
@@ -41,7 +42,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F6] text-[#1C1917] flex flex-col font-sans relative selection:bg-[#E8DFD5]">
+    <div className="min-h-screen bg-[#FFFFFF] text-[#0F172A] flex flex-col font-sans relative selection:bg-[#E0F2FE]">
       <Navbar />
 
       <main className="flex-1 pt-32 pb-24 px-6 md:px-12 flex items-center justify-center bg-ambient-glow">
@@ -49,26 +50,28 @@ const Login: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-md w-full bg-[#FFFFFF] rounded-3xl p-8 md:p-10 shadow-lux-lg border border-[#E8DFD5] relative"
+          className="max-w-md w-full bg-[#FFFFFF] rounded-3xl p-8 md:p-10 shadow-lux-lg border border-[#E0F2FE] relative"
         >
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-12 h-12 rounded-2xl bg-[#2D2A26] flex items-center justify-center text-[#F4ECE1] mx-auto mb-4 shadow-sm">
-              <Sparkles className="w-6 h-6 text-[#8C6D46]" />
-            </div>
-            <span className="text-[11px] font-semibold tracking-[0.2em] text-[#8C6D46] uppercase">
+            <img 
+              src={brandLogo} 
+              alt="Sahaj Spirit Logo" 
+              className="w-12 h-12 rounded-2xl object-cover mx-auto mb-4 shadow-sm border border-[#E0F2FE]"
+            />
+            <span className="text-[11px] font-semibold tracking-[0.2em] text-[#06B6D4] uppercase">
               Host Portal
             </span>
-            <h2 className="font-serif text-3xl font-bold text-[#1C1917] mt-1">
+            <h2 className="font-serif text-3xl font-bold text-[#0F172A] mt-1">
               Welcome Back
             </h2>
-            <p className="text-sm text-[#78716C] mt-1">
+            <p className="text-sm text-[#475569] mt-1">
               Sign in to manage live quizzes & audience polls
             </p>
           </div>
 
           {/* Admin Credentials Info Pill */}
-          <div className="bg-[#F5F0EB] border border-[#E8DFD5] text-[#8C6D46] px-4 py-2.5 rounded-2xl text-xs text-center font-medium mb-6">
+          <div className="bg-[#F0F9FF] border border-[#E0F2FE] text-[#06B6D4] px-4 py-2.5 rounded-2xl text-xs text-center font-medium mb-6">
             Default Host Credentials pre-filled for instant demo access
           </div>
 
@@ -84,15 +87,15 @@ const Login: React.FC = () => {
 
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[#78716C] mb-2">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-[#A8A29E] absolute left-4 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-[#94A3B8] absolute left-4 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   required
-                  className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-[#E8DFD5] bg-[#FAF8F6] text-[#1C1917] text-sm focus:ring-2 focus:ring-[#8C6D46]/20 focus:border-[#8C6D46] outline-none transition-all"
+                  className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-[#E0F2FE] bg-[#FFFFFF] text-[#0F172A] text-sm focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] outline-none transition-all"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -101,15 +104,15 @@ const Login: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[#78716C] mb-2">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-[#A8A29E] absolute left-4 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-[#94A3B8] absolute left-4 top-1/2 -translate-y-1/2" />
                 <input
                   type="password"
                   required
-                  className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-[#E8DFD5] bg-[#FAF8F6] text-[#1C1917] text-sm focus:ring-2 focus:ring-[#8C6D46]/20 focus:border-[#8C6D46] outline-none transition-all"
+                  className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-[#E0F2FE] bg-[#FFFFFF] text-[#0F172A] text-sm focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] outline-none transition-all"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -120,16 +123,16 @@ const Login: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#2D2A26] hover:bg-[#1C1917] text-[#FAF8F6] font-medium py-3.5 rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group mt-2 disabled:opacity-50"
+              className="w-full bg-[#F97316] hover:bg-[#EA580C] text-[#FFFFFF] font-medium py-3.5 rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 group mt-2 disabled:opacity-50"
             >
               <span>{loading ? 'Authenticating...' : 'Sign In as Host'}</span>
-              <ArrowRight className="w-4 h-4 text-[#8C6D46] group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 text-[#06B6D4] group-hover:translate-x-1 transition-transform" />
             </button>
           </form>
 
-          <p className="mt-8 text-center text-xs text-[#78716C]">
+          <p className="mt-8 text-center text-xs text-[#475569]">
             Don't have a host account?{' '}
-            <Link to="/register" className="font-semibold text-[#1C1917] underline hover:text-[#8C6D46] transition-colors">
+            <Link to="/register" className="font-semibold text-[#0F172A] underline hover:text-[#06B6D4] transition-colors">
               Create account
             </Link>
           </p>

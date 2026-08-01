@@ -50,27 +50,27 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
   };
 
   return (
-    <div className="fixed inset-0 bg-[#1C1917]/50 backdrop-blur-md flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div className="fixed inset-0 bg-[#EA580C]/50 backdrop-blur-md flex items-center justify-center p-4 z-50 overflow-y-auto">
       <motion.div
         initial={{ opacity: 0, scale: 0.96, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 15 }}
         transition={{ duration: 0.25, ease: 'easeOut' }}
-        className="bg-[#FAF8F6] rounded-3xl max-w-2xl w-full p-8 shadow-lux-lg border border-[#E8DFD5] relative my-8"
+        className="bg-[#FFFFFF] rounded-3xl max-w-2xl w-full p-8 shadow-lux-lg border border-[#E0F2FE] relative my-8"
       >
         {/* Header */}
-        <div className="flex justify-between items-center pb-5 mb-6 border-b border-[#E8DFD5]">
+        <div className="flex justify-between items-center pb-5 mb-6 border-b border-[#E0F2FE]">
           <div>
-            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8C6D46]">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#06B6D4]">
               Question Builder
             </span>
-            <h2 className="font-serif text-3xl font-bold text-[#1C1917]">
+            <h2 className="font-serif text-3xl font-bold text-[#0F172A]">
               {initialData ? 'Edit Question' : 'Craft New Question'}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2.5 bg-[#F5F0EB] hover:bg-[#EFE7DE] text-[#78716C] hover:text-[#1C1917] rounded-full transition-all"
+            className="p-2.5 bg-[#F0F9FF] hover:bg-[#E0F2FE] text-[#475569] hover:text-[#0F172A] rounded-full transition-all"
           >
             <X className="w-5 h-5" />
           </button>
@@ -79,7 +79,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Question Text */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-[#78716C] mb-2">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] mb-2">
               Question Title
             </label>
             <div className="relative">
@@ -87,7 +87,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
                 type="text"
                 required
                 placeholder="E.g., What is the capital of France?"
-                className="w-full px-5 py-3.5 rounded-2xl border border-[#E8DFD5] bg-[#FFFFFF] text-[#1C1917] text-base placeholder:text-[#A8A29E] focus:ring-2 focus:ring-[#8C6D46]/20 focus:border-[#8C6D46] outline-none transition-all shadow-sm"
+                className="w-full px-5 py-3.5 rounded-2xl border border-[#E0F2FE] bg-[#FFFFFF] text-[#0F172A] text-base placeholder:text-[#94A3B8] focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] outline-none transition-all shadow-sm"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
               />
@@ -97,10 +97,10 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
           {/* Options */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-[#78716C]">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569]">
                 Answer Options
               </label>
-              <span className="text-xs text-[#8C6D46] italic">
+              <span className="text-xs text-[#06B6D4] italic">
                 Tap radio icon to mark the correct answer
               </span>
             </div>
@@ -113,8 +113,8 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
                     key={idx}
                     className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${
                       isSelected
-                        ? 'border-[#8C6D46] bg-[#F4ECE1] shadow-sm'
-                        : 'border-[#E8DFD5] bg-[#FFFFFF] hover:border-[#D8CCC0]'
+                        ? 'border-[#06B6D4] bg-[#ECFEFF] shadow-sm'
+                        : 'border-[#E0F2FE] bg-[#FFFFFF] hover:border-[#D8CCC0]'
                     }`}
                   >
                     <button
@@ -122,8 +122,8 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
                       onClick={() => setCorrectOption(isSelected ? null : idx)}
                       className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${
                         isSelected
-                          ? 'bg-[#8C6D46] text-white shadow-sm'
-                          : 'border-2 border-[#D8CCC0] hover:border-[#8C6D46] text-transparent'
+                          ? 'bg-[#06B6D4] text-white shadow-sm'
+                          : 'border-2 border-[#D8CCC0] hover:border-[#06B6D4] text-transparent'
                       }`}
                     >
                       <Check className="w-4 h-4" />
@@ -132,12 +132,12 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
                       type="text"
                       required
                       placeholder={`Option ${idx + 1}`}
-                      className="flex-1 bg-transparent px-2 py-1 outline-none text-[#1C1917] font-medium placeholder:text-[#A8A29E]"
+                      className="flex-1 bg-transparent px-2 py-1 outline-none text-[#0F172A] font-medium placeholder:text-[#94A3B8]"
                       value={opt}
                       onChange={(e) => handleOptionChange(idx, e.target.value)}
                     />
                     {isSelected && (
-                      <span className="text-xs font-semibold tracking-wide uppercase px-3 py-1 rounded-full bg-[#8C6D46]/10 text-[#8C6D46]">
+                      <span className="text-xs font-semibold tracking-wide uppercase px-3 py-1 rounded-full bg-[#06B6D4]/10 text-[#06B6D4]">
                         Correct Answer
                       </span>
                     )}
@@ -149,14 +149,14 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
 
           {/* Time Limit */}
           <div>
-            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#78716C] mb-2">
-              <Clock className="w-3.5 h-3.5 text-[#8C6D46]" />
+            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#475569] mb-2">
+              <Clock className="w-3.5 h-3.5 text-[#06B6D4]" />
               <span>Time Limit</span>
             </label>
             <select
               value={timeLimit}
               onChange={(e) => setTimeLimit(Number(e.target.value))}
-              className="w-full px-5 py-3.5 rounded-2xl border border-[#E8DFD5] bg-[#FFFFFF] text-[#1C1917] font-medium outline-none focus:ring-2 focus:ring-[#8C6D46]/20 focus:border-[#8C6D46] transition-all shadow-sm"
+              className="w-full px-5 py-3.5 rounded-2xl border border-[#E0F2FE] bg-[#FFFFFF] text-[#0F172A] font-medium outline-none focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] transition-all shadow-sm"
             >
               <option value={0}>No timer — Manual host advance</option>
               <option value={15}>15 seconds</option>
@@ -167,18 +167,18 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
           </div>
 
           {/* Submit Action */}
-          <div className="pt-4 flex gap-4 border-t border-[#E8DFD5]">
+          <div className="pt-4 flex gap-4 border-t border-[#E0F2FE]">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 bg-[#F5F0EB] hover:bg-[#EFE7DE] text-[#44403C] font-medium py-3.5 rounded-2xl transition-all"
+              className="flex-1 bg-[#F0F9FF] hover:bg-[#E0F2FE] text-[#334155] font-medium py-3.5 rounded-2xl transition-all"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-[#2D2A26] hover:bg-[#1C1917] text-[#FAF8F6] font-medium py-3.5 rounded-2xl transition-all shadow-md hover:shadow-lg disabled:opacity-50"
+              className="flex-1 bg-[#F97316] hover:bg-[#EA580C] text-[#FFFFFF] font-medium py-3.5 rounded-2xl transition-all shadow-md hover:shadow-lg disabled:opacity-50"
             >
               {loading ? 'Saving...' : 'Save Question'}
             </button>

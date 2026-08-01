@@ -86,27 +86,27 @@ const Dashboard: React.FC = () => {
   const totalParticipants = events.reduce((acc, curr) => acc + (curr._count?.participants || 0), 0);
 
   return (
-    <div className="min-h-screen bg-[#FAF8F6] text-[#1C1917] flex flex-col font-sans relative selection:bg-[#E8DFD5]">
+    <div className="min-h-screen bg-[#FFFFFF] text-[#0F172A] flex flex-col font-sans relative selection:bg-[#E0F2FE]">
       <Navbar />
 
       <main className="flex-1 pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto w-full">
         {/* Welcome Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 pb-8 border-b border-[#E8DFD5]">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 pb-8 border-b border-[#E0F2FE]">
           <div>
-            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8C6D46]">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#06B6D4]">
               Host Cockpit
             </span>
-            <h1 className="font-serif text-4xl md:text-5xl font-semibold text-[#1C1917] mt-1">
+            <h1 className="font-serif text-4xl md:text-5xl font-semibold text-[#0F172A] mt-1">
               Welcome, {user?.name || 'Host'}
             </h1>
-            <p className="text-[#78716C] text-sm mt-1">
+            <p className="text-[#475569] text-sm mt-1">
               Manage your interactive quizzes, live polls, and audience sessions
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FFFFFF] border border-[#E8DFD5] text-xs font-medium text-[#44403C] shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-[#8C6D46] animate-pulse"></span>
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FFFFFF] border border-[#E0F2FE] text-xs font-medium text-[#334155] shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-[#06B6D4] animate-pulse"></span>
               <span>Host Status: Active</span>
             </span>
           </div>
@@ -114,44 +114,44 @@ const Dashboard: React.FC = () => {
 
         {/* Metric Cards Summary Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
-          <div className="bg-[#FFFFFF] rounded-3xl p-6 border border-[#E8DFD5] shadow-lux space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#78716C]">
+          <div className="bg-[#FFFFFF] rounded-3xl p-6 border border-[#E0F2FE] shadow-lux space-y-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#475569]">
               Total Quiz Sessions
             </span>
             <div className="flex items-baseline justify-between">
-              <span className="font-serif text-3xl font-bold text-[#1C1917]">{events.length}</span>
-              <Presentation className="w-5 h-5 text-[#8C6D46]" />
+              <span className="font-serif text-3xl font-bold text-[#0F172A]">{events.length}</span>
+              <Presentation className="w-5 h-5 text-[#06B6D4]" />
             </div>
           </div>
 
-          <div className="bg-[#FFFFFF] rounded-3xl p-6 border border-[#E8DFD5] shadow-lux space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#78716C]">
+          <div className="bg-[#FFFFFF] rounded-3xl p-6 border border-[#E0F2FE] shadow-lux space-y-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#475569]">
               Questions Built
             </span>
             <div className="flex items-baseline justify-between">
-              <span className="font-serif text-3xl font-bold text-[#1C1917]">{totalQuestions}</span>
-              <Radio className="w-5 h-5 text-[#8C6D46]" />
+              <span className="font-serif text-3xl font-bold text-[#0F172A]">{totalQuestions}</span>
+              <Radio className="w-5 h-5 text-[#06B6D4]" />
             </div>
           </div>
 
-          <div className="bg-[#FFFFFF] rounded-3xl p-6 border border-[#E8DFD5] shadow-lux space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#78716C]">
+          <div className="bg-[#FFFFFF] rounded-3xl p-6 border border-[#E0F2FE] shadow-lux space-y-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#475569]">
               Total Engaged Audience
             </span>
             <div className="flex items-baseline justify-between">
-              <span className="font-serif text-3xl font-bold text-[#1C1917]">{totalParticipants}</span>
-              <Users className="w-5 h-5 text-[#8C6D46]" />
+              <span className="font-serif text-3xl font-bold text-[#0F172A]">{totalParticipants}</span>
+              <Users className="w-5 h-5 text-[#06B6D4]" />
             </div>
           </div>
         </div>
 
         {/* Create Event Card Container */}
-        <div className="bg-[#FFFFFF] rounded-3xl p-8 border border-[#E8DFD5] shadow-lux mb-14">
+        <div className="bg-[#FFFFFF] rounded-3xl p-8 border border-[#E0F2FE] shadow-lux mb-14">
           <div className="mb-6">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8C6D46]">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#06B6D4]">
               Quick Setup
             </span>
-            <h2 className="font-serif text-2xl font-bold text-[#1C1917]">
+            <h2 className="font-serif text-2xl font-bold text-[#0F172A]">
               Create New Live Event
             </h2>
           </div>
@@ -163,15 +163,15 @@ const Dashboard: React.FC = () => {
                 value={newEventTitle}
                 onChange={(e) => setNewEventTitle(e.target.value)}
                 placeholder="E.g., Design Systems Workshop Q&A"
-                className="w-full px-5 py-3.5 rounded-2xl border border-[#E8DFD5] bg-[#FAF8F6] text-[#1C1917] text-base placeholder:text-[#A8A29E] focus:ring-2 focus:ring-[#8C6D46]/20 focus:border-[#8C6D46] outline-none transition-all"
+                className="w-full px-5 py-3.5 rounded-2xl border border-[#E0F2FE] bg-[#FFFFFF] text-[#0F172A] text-base placeholder:text-[#94A3B8] focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] outline-none transition-all"
               />
             </div>
             <button
               type="submit"
               disabled={creating || !newEventTitle.trim()}
-              className="bg-[#2D2A26] hover:bg-[#1C1917] text-[#FAF8F6] px-8 py-3.5 rounded-2xl font-medium transition-all disabled:opacity-40 flex items-center justify-center gap-2 whitespace-nowrap shadow-sm hover:shadow-md"
+              className="bg-[#F97316] hover:bg-[#EA580C] text-[#FFFFFF] px-8 py-3.5 rounded-2xl font-medium transition-all disabled:opacity-40 flex items-center justify-center gap-2 whitespace-nowrap shadow-sm hover:shadow-md"
             >
-              <Plus className="w-4 h-4 text-[#8C6D46]" />
+              <Plus className="w-4 h-4 text-[#06B6D4]" />
               <span>{creating ? 'Creating...' : 'Create Event'}</span>
             </button>
           </form>
@@ -180,38 +180,38 @@ const Dashboard: React.FC = () => {
         {/* Events Grid Header with Search */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h2 className="font-serif text-3xl font-bold text-[#1C1917]">
+            <h2 className="font-serif text-3xl font-bold text-[#0F172A]">
               Your Quiz Collection
             </h2>
-            <p className="text-xs text-[#78716C] mt-0.5">
+            <p className="text-xs text-[#475569] mt-0.5">
               Select an event to edit questions or broadcast live
             </p>
           </div>
 
           <div className="relative w-full sm:w-72">
-            <Search className="w-4 h-4 text-[#A8A29E] absolute left-4 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-[#94A3B8] absolute left-4 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search by title or code..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-[#E8DFD5] bg-[#FFFFFF] text-xs text-[#1C1917] focus:ring-2 focus:ring-[#8C6D46]/20 focus:border-[#8C6D46] outline-none transition-all"
+              className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-[#E0F2FE] bg-[#FFFFFF] text-xs text-[#0F172A] focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] outline-none transition-all"
             />
           </div>
         </div>
 
         {/* Events Grid */}
         {loading ? (
-          <div className="text-center py-16 text-[#78716C] italic font-serif">
+          <div className="text-center py-16 text-[#475569] italic font-serif">
             Loading your interactive collection...
           </div>
         ) : filteredEvents.length === 0 ? (
-          <div className="text-center bg-[#FFFFFF] rounded-3xl border border-[#E8DFD5] p-16 space-y-4">
-            <div className="w-14 h-14 rounded-full bg-[#F5F0EB] flex items-center justify-center text-[#8C6D46] mx-auto">
+          <div className="text-center bg-[#FFFFFF] rounded-3xl border border-[#E0F2FE] p-16 space-y-4">
+            <div className="w-14 h-14 rounded-full bg-[#F0F9FF] flex items-center justify-center text-[#06B6D4] mx-auto">
               <Presentation className="w-6 h-6" />
             </div>
-            <h3 className="font-serif text-xl font-semibold text-[#1C1917]">No events found</h3>
-            <p className="text-sm text-[#78716C] max-w-sm mx-auto">
+            <h3 className="font-serif text-xl font-semibold text-[#0F172A]">No events found</h3>
+            <p className="text-sm text-[#475569] max-w-sm mx-auto">
               {searchQuery ? 'No matching events for your search.' : 'Create your first event above to start interacting with your audience.'}
             </p>
           </div>
@@ -227,44 +227,44 @@ const Dashboard: React.FC = () => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.25 }}
-                  className="bg-[#FFFFFF] rounded-3xl border border-[#E8DFD5] p-7 shadow-lux hover:shadow-lux-lg transition-all flex flex-col justify-between group"
+                  className="bg-[#FFFFFF] rounded-3xl border border-[#E0F2FE] p-7 shadow-lux hover:shadow-lux-lg transition-all flex flex-col justify-between group"
                 >
                   <div>
                     {/* Top Row: Status Pill & Room Code */}
                     <div className="flex items-center justify-between mb-4">
                       <span className={`text-[10px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full ${
-                        event.isLive ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-[#F5F0EB] text-[#78716C]'
+                        event.isLive ? 'bg-amber-100 text-amber-800 border border-amber-200' : 'bg-[#F0F9FF] text-[#475569]'
                       }`}>
                         {event.isLive ? '🔴 Live Now' : 'Draft / Ready'}
                       </span>
 
                       <button
                         onClick={() => copyRoomCode(event.roomCode)}
-                        className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF8F6] border border-[#E8DFD5] text-xs font-mono font-bold text-[#1C1917] hover:border-[#8C6D46] transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFFFFF] border border-[#E0F2FE] text-xs font-mono font-bold text-[#0F172A] hover:border-[#06B6D4] transition-colors"
                         title="Click to copy room code"
                       >
                         <span>{event.roomCode}</span>
                         {copiedCode === event.roomCode ? (
                           <Check className="w-3.5 h-3.5 text-emerald-600" />
                         ) : (
-                          <Copy className="w-3.5 h-3.5 text-[#A8A29E]" />
+                          <Copy className="w-3.5 h-3.5 text-[#94A3B8]" />
                         )}
                       </button>
                     </div>
 
                     {/* Title */}
-                    <h3 className="font-serif text-2xl font-bold text-[#1C1917] mb-4 line-clamp-2 group-hover:text-[#8C6D46] transition-colors">
+                    <h3 className="font-serif text-2xl font-bold text-[#0F172A] mb-4 line-clamp-2 group-hover:text-[#06B6D4] transition-colors">
                       {event.title}
                     </h3>
 
                     {/* Metadata Counters */}
-                    <div className="flex items-center gap-5 text-xs text-[#78716C] mb-6 pt-3 border-t border-[#F5F0EB]">
+                    <div className="flex items-center gap-5 text-xs text-[#475569] mb-6 pt-3 border-t border-[#F0F9FF]">
                       <div className="flex items-center gap-1.5">
-                        <Presentation className="w-3.5 h-3.5 text-[#8C6D46]" />
+                        <Presentation className="w-3.5 h-3.5 text-[#06B6D4]" />
                         <span>{event._count?.questions || 0} Questions</span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <Users className="w-3.5 h-3.5 text-[#8C6D46]" />
+                        <Users className="w-3.5 h-3.5 text-[#06B6D4]" />
                         <span>{event._count?.participants || 0} Joined</span>
                       </div>
                     </div>
@@ -274,14 +274,14 @@ const Dashboard: React.FC = () => {
                   <div className="flex items-center gap-3 pt-2">
                     <button
                       onClick={() => navigate(`/events/${event.id}`)}
-                      className="flex-1 bg-[#F5F0EB] hover:bg-[#2D2A26] text-[#1C1917] hover:text-[#FAF8F6] py-3 rounded-2xl text-xs font-medium transition-all flex items-center justify-center gap-1.5 group/btn"
+                      className="flex-1 bg-[#F0F9FF] hover:bg-[#F97316] text-[#0F172A] hover:text-[#FFFFFF] py-3 rounded-2xl text-xs font-medium transition-all flex items-center justify-center gap-1.5 group/btn"
                     >
                       <span>Manage & Host</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-[#8C6D46] group-hover/btn:text-[#FAF8F6] transition-colors" />
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[#06B6D4] group-hover/btn:text-[#FFFFFF] transition-colors" />
                     </button>
                     <button
                       onClick={() => handleDeleteEvent(event.id)}
-                      className="p-3 rounded-2xl text-[#A8A29E] hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-100 transition-all"
+                      className="p-3 rounded-2xl text-[#94A3B8] hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-100 transition-all"
                       title="Delete Event"
                     >
                       <Trash2 className="w-4 h-4" />

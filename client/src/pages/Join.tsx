@@ -44,7 +44,7 @@ const Join: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F6] text-[#1C1917] flex flex-col font-sans relative selection:bg-[#E8DFD5]">
+    <div className="min-h-screen bg-[#FFFFFF] text-[#0F172A] flex flex-col font-sans relative selection:bg-[#E0F2FE]">
       <Navbar />
 
       {/* Hero Section */}
@@ -59,35 +59,35 @@ const Join: React.FC = () => {
             className="lg:col-span-7 space-y-8 text-left"
           >
             {/* Pill Tag */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F5F0EB] border border-[#E8DFD5] shadow-xs">
-              <Sparkles className="w-3.5 h-3.5 text-[#8C6D46]" />
-              <span className="text-xs font-semibold tracking-wider text-[#8C6D46] uppercase">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F0F9FF] border border-[#E0F2FE] shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#06B6D4]" />
+              <span className="text-xs font-semibold tracking-wider text-[#06B6D4] uppercase">
                 Reimagining Audience Interactivity
               </span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.08] tracking-tight text-[#1C1917]">
-              Where live questions turn into <span className="italic font-normal text-[#8C6D46]">shared clarity</span>.
+            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.08] tracking-tight text-[#0F172A]">
+              Where live questions turn into <span className="italic font-normal text-[#06B6D4]">shared clarity</span>.
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg md:text-xl text-[#78716C] leading-relaxed max-w-xl font-normal">
+            <p className="text-lg md:text-xl text-[#475569] leading-relaxed max-w-xl font-normal">
               An elegant platform for real-time polls, live quizzes, and audience interaction. Designed with calm sophistication and zero friction.
             </p>
 
             {/* Quick Metrics & Feature Highlights */}
-            <div className="pt-2 flex flex-wrap items-center gap-6 text-sm text-[#78716C]">
+            <div className="pt-2 flex flex-wrap items-center gap-6 text-sm text-[#475569]">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#8C6D46]" />
+                <CheckCircle2 className="w-4 h-4 text-[#06B6D4]" />
                 <span>No app download required</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#8C6D46]" />
+                <CheckCircle2 className="w-4 h-4 text-[#06B6D4]" />
                 <span>Instant WebSocket syncing</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#8C6D46]" />
+                <CheckCircle2 className="w-4 h-4 text-[#06B6D4]" />
                 <span>Distraction-free interface</span>
               </div>
             </div>
@@ -100,15 +100,15 @@ const Join: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-5"
           >
-            <div className="bg-[#FFFFFF] rounded-3xl p-8 md:p-10 shadow-lux-lg border border-[#E8DFD5] relative">
+            <div className="bg-[#FFFFFF] rounded-3xl p-8 md:p-10 shadow-lux-lg border border-[#E0F2FE] relative">
               <div className="text-center mb-8">
-                <span className="text-[11px] font-semibold tracking-[0.2em] text-[#8C6D46] uppercase">
+                <span className="text-[11px] font-semibold tracking-[0.2em] text-[#06B6D4] uppercase">
                   Participant Portal
                 </span>
-                <h2 className="font-serif text-3xl font-bold text-[#1C1917] mt-1">
+                <h2 className="font-serif text-3xl font-bold text-[#0F172A] mt-1">
                   Join a Live Session
                 </h2>
-                <p className="text-sm text-[#78716C] mt-1">
+                <p className="text-sm text-[#475569] mt-1">
                   Enter the 6-character room code provided by your host
                 </p>
               </div>
@@ -125,13 +125,13 @@ const Join: React.FC = () => {
 
               <form onSubmit={handleJoin} className="space-y-5">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#78716C] mb-2 text-left">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] mb-2 text-left">
                     Room Code
                   </label>
                   <input
                     type="text"
                     required
-                    className="w-full px-5 py-4 text-center text-3xl font-mono font-bold tracking-[0.25em] uppercase rounded-2xl border border-[#E8DFD5] bg-[#FAF8F6] text-[#1C1917] focus:ring-2 focus:ring-[#8C6D46]/20 focus:border-[#8C6D46] outline-none transition-all placeholder:tracking-normal placeholder:font-sans placeholder:font-normal placeholder:text-[#A8A29E] placeholder:text-base"
+                    className="w-full px-5 py-4 text-center text-3xl font-mono font-bold tracking-[0.25em] uppercase rounded-2xl border border-[#E0F2FE] bg-[#FFFFFF] text-[#0F172A] focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] outline-none transition-all placeholder:tracking-normal placeholder:font-sans placeholder:font-normal placeholder:text-[#94A3B8] placeholder:text-base"
                     placeholder="E.G. A1B2C3"
                     value={roomCode}
                     onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
@@ -140,13 +140,13 @@ const Join: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#78716C] mb-2 text-left">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] mb-2 text-left">
                     Your Name
                   </label>
                   <input
                     type="text"
                     required
-                    className="w-full px-5 py-3.5 text-base rounded-2xl border border-[#E8DFD5] bg-[#FAF8F6] text-[#1C1917] focus:ring-2 focus:ring-[#8C6D46]/20 focus:border-[#8C6D46] outline-none transition-all placeholder:text-[#A8A29E]"
+                    className="w-full px-5 py-3.5 text-base rounded-2xl border border-[#E0F2FE] bg-[#FFFFFF] text-[#0F172A] focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] outline-none transition-all placeholder:text-[#94A3B8]"
                     placeholder="Enter your name or alias"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -157,18 +157,18 @@ const Join: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading || roomCode.length < 6 || name.length < 2}
-                  className="w-full bg-[#2D2A26] hover:bg-[#1C1917] text-[#FAF8F6] text-base font-medium py-4 rounded-2xl transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-md active:scale-[0.99] flex items-center justify-center gap-2 group mt-2"
+                  className="w-full bg-[#F97316] hover:bg-[#EA580C] text-[#FFFFFF] text-base font-medium py-4 rounded-2xl transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-md active:scale-[0.99] flex items-center justify-center gap-2 group mt-2"
                 >
                   <span>{loading ? 'Connecting...' : 'Enter Live Quiz'}</span>
-                  <ArrowRight className="w-4 h-4 text-[#8C6D46] group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 text-[#06B6D4] group-hover:translate-x-1 transition-transform" />
                 </button>
               </form>
 
               {/* Host Sign In Hint */}
-              <div className="mt-8 pt-6 border-t border-[#E8DFD5]/60 text-center">
-                <p className="text-xs text-[#78716C]">
+              <div className="mt-8 pt-6 border-t border-[#E0F2FE]/60 text-center">
+                <p className="text-xs text-[#475569]">
                   Are you hosting a session?{' '}
-                  <Link to="/login" className="font-semibold text-[#1C1917] underline hover:text-[#8C6D46] transition-colors">
+                  <Link to="/login" className="font-semibold text-[#0F172A] underline hover:text-[#06B6D4] transition-colors">
                     Sign in to Host Dashboard
                   </Link>
                 </p>
@@ -179,17 +179,17 @@ const Join: React.FC = () => {
       </section>
 
       {/* Feature Showcase Grid */}
-      <section id="features" className="py-24 px-6 md:px-12 bg-[#FAF8F6] border-t border-[#E8DFD5]/50">
+      <section id="features" className="py-24 px-6 md:px-12 bg-[#FFFFFF] border-t border-[#E0F2FE]/50">
         <div className="max-w-7xl mx-auto">
           {/* Section Header */}
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8C6D46]">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#06B6D4]">
               Designed for High Engagement
             </span>
-            <h2 className="font-serif text-4xl md:text-5xl font-semibold text-[#1C1917]">
+            <h2 className="font-serif text-4xl md:text-5xl font-semibold text-[#0F172A]">
               Every element crafted with intention.
             </h2>
-            <p className="text-[#78716C] text-base leading-relaxed">
+            <p className="text-[#475569] text-base leading-relaxed">
               Remove friction between speakers and participants with serene visual layouts and instant real-time synchronization.
             </p>
           </div>
@@ -200,15 +200,15 @@ const Join: React.FC = () => {
             <motion.div
               whileHover={{ y: -6 }}
               transition={{ duration: 0.3 }}
-              className="bg-[#FFFFFF] rounded-3xl p-8 border border-[#E8DFD5] shadow-lux space-y-5"
+              className="bg-[#FFFFFF] rounded-3xl p-8 border border-[#E0F2FE] shadow-lux space-y-5"
             >
-              <div className="w-12 h-12 rounded-2xl bg-[#F5F0EB] flex items-center justify-center text-[#8C6D46]">
+              <div className="w-12 h-12 rounded-2xl bg-[#F0F9FF] flex items-center justify-center text-[#06B6D4]">
                 <Zap className="w-6 h-6" />
               </div>
-              <h3 className="font-serif text-2xl font-semibold text-[#1C1917]">
+              <h3 className="font-serif text-2xl font-semibold text-[#0F172A]">
                 Instant Syncing
               </h3>
-              <p className="text-[#78716C] text-sm leading-relaxed">
+              <p className="text-[#475569] text-sm leading-relaxed">
                 Powered by WebSockets for zero latency. Answers, timers, and leaderboard positions update live across hundreds of connected devices.
               </p>
             </motion.div>
@@ -217,15 +217,15 @@ const Join: React.FC = () => {
             <motion.div
               whileHover={{ y: -6 }}
               transition={{ duration: 0.3 }}
-              className="bg-[#FFFFFF] rounded-3xl p-8 border border-[#E8DFD5] shadow-lux space-y-5"
+              className="bg-[#FFFFFF] rounded-3xl p-8 border border-[#E0F2FE] shadow-lux space-y-5"
             >
-              <div className="w-12 h-12 rounded-2xl bg-[#F5F0EB] flex items-center justify-center text-[#8C6D46]">
+              <div className="w-12 h-12 rounded-2xl bg-[#F0F9FF] flex items-center justify-center text-[#06B6D4]">
                 <BarChart3 className="w-6 h-6" />
               </div>
-              <h3 className="font-serif text-2xl font-semibold text-[#1C1917]">
+              <h3 className="font-serif text-2xl font-semibold text-[#0F172A]">
                 Real-Time Analytics
               </h3>
-              <p className="text-[#78716C] text-sm leading-relaxed">
+              <p className="text-[#475569] text-sm leading-relaxed">
                 Observe live participant response breakdowns as they submit. Host control options allow you to reveal solutions or pause timer instantly.
               </p>
             </motion.div>
@@ -234,15 +234,15 @@ const Join: React.FC = () => {
             <motion.div
               whileHover={{ y: -6 }}
               transition={{ duration: 0.3 }}
-              className="bg-[#FFFFFF] rounded-3xl p-8 border border-[#E8DFD5] shadow-lux space-y-5"
+              className="bg-[#FFFFFF] rounded-3xl p-8 border border-[#E0F2FE] shadow-lux space-y-5"
             >
-              <div className="w-12 h-12 rounded-2xl bg-[#F5F0EB] flex items-center justify-center text-[#8C6D46]">
+              <div className="w-12 h-12 rounded-2xl bg-[#F0F9FF] flex items-center justify-center text-[#06B6D4]">
                 <ShieldCheck className="w-6 h-6" />
               </div>
-              <h3 className="font-serif text-2xl font-semibold text-[#1C1917]">
+              <h3 className="font-serif text-2xl font-semibold text-[#0F172A]">
                 Minimalist Elegance
               </h3>
-              <p className="text-[#78716C] text-sm leading-relaxed">
+              <p className="text-[#475569] text-sm leading-relaxed">
                 A serene color scheme, clear typography, and soft micro-animations eliminate distraction so participants remain focused.
               </p>
             </motion.div>
@@ -251,44 +251,44 @@ const Join: React.FC = () => {
       </section>
 
       {/* Workflow Section */}
-      <section id="how-it-works" className="py-24 px-6 md:px-12 bg-[#F5F0EB] border-t border-[#E8DFD5]">
+      <section id="how-it-works" className="py-24 px-6 md:px-12 bg-[#F0F9FF] border-t border-[#E0F2FE]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-xl mx-auto mb-16">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8C6D46]">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#06B6D4]">
               Simple Three-Step Process
             </span>
-            <h2 className="font-serif text-4xl font-semibold text-[#1C1917] mt-2">
+            <h2 className="font-serif text-4xl font-semibold text-[#0F172A] mt-2">
               How Pulse Works
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="w-14 h-14 rounded-full bg-[#2D2A26] text-[#FAF8F6] font-serif text-2xl font-bold flex items-center justify-center shadow-md">
+              <div className="w-14 h-14 rounded-full bg-[#F97316] text-[#FFFFFF] font-serif text-2xl font-bold flex items-center justify-center shadow-md">
                 1
               </div>
-              <h3 className="font-serif text-xl font-semibold text-[#1C1917]">Create & Schedule</h3>
-              <p className="text-sm text-[#78716C] leading-relaxed max-w-xs">
+              <h3 className="font-serif text-xl font-semibold text-[#0F172A]">Create & Schedule</h3>
+              <p className="text-sm text-[#475569] leading-relaxed max-w-xs">
                 Build your quiz questions, set answer timers, and generate a unique 6-character room code in seconds.
               </p>
             </div>
 
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="w-14 h-14 rounded-full bg-[#2D2A26] text-[#FAF8F6] font-serif text-2xl font-bold flex items-center justify-center shadow-md">
+              <div className="w-14 h-14 rounded-full bg-[#F97316] text-[#FFFFFF] font-serif text-2xl font-bold flex items-center justify-center shadow-md">
                 2
               </div>
-              <h3 className="font-serif text-xl font-semibold text-[#1C1917]">Share Room Code</h3>
-              <p className="text-sm text-[#78716C] leading-relaxed max-w-xs">
+              <h3 className="font-serif text-xl font-semibold text-[#0F172A]">Share Room Code</h3>
+              <p className="text-sm text-[#475569] leading-relaxed max-w-xs">
                 Display the room PIN on screen. Audience members join instantly on mobile or desktop without downloads.
               </p>
             </div>
 
             <div className="flex flex-col items-center text-center space-y-4">
-              <div className="w-14 h-14 rounded-full bg-[#2D2A26] text-[#FAF8F6] font-serif text-2xl font-bold flex items-center justify-center shadow-md">
+              <div className="w-14 h-14 rounded-full bg-[#F97316] text-[#FFFFFF] font-serif text-2xl font-bold flex items-center justify-center shadow-md">
                 3
               </div>
-              <h3 className="font-serif text-xl font-semibold text-[#1C1917]">Host & Engage</h3>
-              <p className="text-sm text-[#78716C] leading-relaxed max-w-xs">
+              <h3 className="font-serif text-xl font-semibold text-[#0F172A]">Host & Engage</h3>
+              <p className="text-sm text-[#475569] leading-relaxed max-w-xs">
                 Advance questions live, display option distributions, and celebrate top participants with instant leaderboards.
               </p>
             </div>
@@ -297,24 +297,24 @@ const Join: React.FC = () => {
       </section>
 
       {/* CTA Footer Banner */}
-      <section className="py-20 px-6 md:px-12 bg-[#2D2A26] text-[#FAF8F6] relative overflow-hidden">
+      <section className="py-20 px-6 md:px-12 bg-[#F97316] text-[#FFFFFF] relative overflow-hidden">
         <div className="max-w-4xl mx-auto text-center space-y-6 relative z-10">
-          <h2 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight text-[#F4ECE1]">
+          <h2 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight text-[#ECFEFF]">
             Ready to elevate your next session?
           </h2>
-          <p className="text-[#BFA890] text-base max-w-xl mx-auto font-light">
+          <p className="text-[#67E8F9] text-base max-w-xl mx-auto font-light">
             Join thousands of presenters and educators creating memorable live experiences.
           </p>
           <div className="pt-4 flex flex-wrap justify-center gap-4">
             <Link
               to="/register"
-              className="px-8 py-4 rounded-2xl bg-[#8C6D46] hover:bg-[#9B7A50] text-[#FAF8F6] font-medium transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+              className="px-8 py-4 rounded-2xl bg-[#06B6D4] hover:bg-[#0891B2] text-[#FFFFFF] font-medium transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
             >
               Get Started for Free
             </Link>
             <Link
               to="/login"
-              className="px-8 py-4 rounded-2xl bg-white/10 hover:bg-white/15 text-[#FAF8F6] font-medium transition-all backdrop-blur-xs"
+              className="px-8 py-4 rounded-2xl bg-white/10 hover:bg-white/15 text-[#FFFFFF] font-medium transition-all backdrop-blur-xs"
             >
               Sign In as Host
             </Link>

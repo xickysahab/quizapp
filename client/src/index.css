@@ -4,19 +4,19 @@
   --font-serif: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
 
-  --color-ivory-bg: #FAF8F6;
-  --color-ivory-surface: #F5F0EB;
-  --color-ivory-border: #E8DFD5;
-  --color-ivory-hover: #EFE7DE;
+  --color-ivory-bg: #FFFFFF;
+  --color-ivory-surface: #F0F9FF;
+  --color-ivory-border: #E0F2FE;
+  --color-ivory-hover: #E0F2FE;
 
-  --color-accent-brown: #2D2A26;
-  --color-accent-gold: #8C6D46;
-  --color-accent-taupe: #BFA890;
-  --color-accent-gold-light: #F4ECE1;
+  --color-accent-brown: #F97316;
+  --color-accent-gold: #06B6D4;
+  --color-accent-taupe: #67E8F9;
+  --color-accent-gold-light: #ECFEFF;
 
-  --color-text-main: #1C1917;
-  --color-text-muted: #78716C;
-  --color-text-subtle: #A8A29E;
+  --color-text-main: #0F172A;
+  --color-text-muted: #475569;
+  --color-text-subtle: #94A3B8;
 
   --shadow-lux: 0 10px 30px -10px rgba(45, 42, 38, 0.05), 0 4px 12px -4px rgba(45, 42, 38, 0.03);
   --shadow-lux-hover: 0 20px 40px -15px rgba(45, 42, 38, 0.09), 0 8px 20px -6px rgba(45, 42, 38, 0.04);
@@ -74,7 +74,7 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px #FFFFFF inset !important;
-  -webkit-text-fill-color: #1C1917 !important;
+  -webkit-text-fill-color: #0F172A !important;
 }
 
 /* Custom Smooth Scrollbar */
@@ -82,12 +82,12 @@ input:-webkit-autofill:focus {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #FAF8F6;
+  background: #FFFFFF;
 }
 ::-webkit-scrollbar-thumb {
   background: #D8CCC0;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #BFA890;
+  background: #67E8F9;
 }
