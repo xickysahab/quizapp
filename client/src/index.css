@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #aa3bff;
+  --color-primary-hover: #9024e6;
+  --color-dark: #16171d;
+  --color-dark-surface: #1f2028;
+}
+
+body {
+  @apply bg-gray-50 text-gray-900 dark:bg-dark dark:text-gray-100 antialiased;
+}
