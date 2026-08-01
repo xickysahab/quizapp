@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Loader2, CheckCircle2, Award, ArrowLeft } from 'lucide-react';
+import toast from 'react-hot-toast';
 import brandLogo from '../assets/Sahaj spirit.jpeg';
 import { socket } from '../socket/socket';
 import api from '../services/api';
@@ -68,7 +69,7 @@ const LiveQuiz: React.FC = () => {
       socket.emit('participant:submitAnswer', eventId);
     } catch (error) {
       console.error('Failed to submit response', error);
-      alert('Unable to save response. The question may have been closed by the host.');
+      toast.error('Unable to save response. The question may have been closed by the host.');
     }
   };
 

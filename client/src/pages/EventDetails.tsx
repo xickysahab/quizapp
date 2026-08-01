@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { ArrowLeft, Plus, Edit2, Trash2, Play, Clock, Download, CheckCircle, HelpCircle } from 'lucide-react';
 import QuestionForm from '../components/QuestionForm';
+import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const EventDetails: React.FC = () => {
@@ -128,8 +129,8 @@ const EventDetails: React.FC = () => {
                   link.click();
                   link.parentNode?.removeChild(link);
                 } catch (error: any) {
-                  console.error('Download error', error);
-                  alert(error.response?.data?.message || 'Failed to download analytics report');
+                  console.error('Download error:', error);
+                  toast.error(error.response?.data?.message || 'Failed to download analytics report');
                 }
               }}
               className="bg-[#F0F9FF] hover:bg-[#E0F2FE] text-[#334155] px-6 py-3 rounded-2xl text-xs font-semibold transition-all flex items-center justify-center gap-2 border border-[#E0F2FE]"

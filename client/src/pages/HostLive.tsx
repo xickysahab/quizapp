@@ -5,6 +5,7 @@ import brandLogo from '../assets/Sahaj spirit.jpeg';
 import { socket } from '../socket/socket';
 import api from '../services/api';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 
 const HostLive: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -86,7 +87,7 @@ const HostLive: React.FC = () => {
       setShowFinalSummary(true);
     } catch (err) {
       console.error('Failed to load summary analytics', err);
-      alert('Failed to load results summary.');
+      toast.error('Failed to load results summary.');
     }
   };
 

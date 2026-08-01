@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Check, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 
 interface QuestionFormProps {
   onClose: () => void;
@@ -33,7 +34,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim() || options.some((opt) => !opt.trim())) {
-      alert('Please fill in the question title and all four options.');
+      toast.error('Please fill in the question title and all four options.');
       return;
     }
 
@@ -43,7 +44,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
       onClose();
     } catch (error) {
       console.error('Submit error:', error);
-      alert('Failed to save question.');
+      toast.error('Failed to save question.');
     } finally {
       setLoading(false);
     }

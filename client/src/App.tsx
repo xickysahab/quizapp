@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -64,6 +65,7 @@ function AppRoutes() {
 function App() {
   return (
     <AuthProvider>
+      <Toaster position="top-center" />
       <BrowserRouter>
         <AppRoutes />
       </BrowserRouter>
