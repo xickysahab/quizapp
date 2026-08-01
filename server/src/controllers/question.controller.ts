@@ -4,7 +4,7 @@ import { AuthRequest } from '../middleware/auth.middleware';
 
 export const addQuestion = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { eventId, text, imageUrl, options, correctOption, timeLimit } = req.body;
+    const { eventId, text, options, correctOption, timeLimit } = req.body;
 
     if (!eventId || !text || !Array.isArray(options) || options.length < 2) {
       res.status(400).json({ message: 'Event ID, question text, and at least 2 options are required.' });
@@ -25,7 +25,6 @@ export const addQuestion = async (req: AuthRequest, res: Response): Promise<void
       data: {
         eventId,
         text,
-        imageUrl: imageUrl || null,
         options,
         correctOption: correctOption !== undefined && correctOption !== null ? Number(correctOption) : null,
         order: count + 1,
@@ -43,7 +42,7 @@ export const addQuestion = async (req: AuthRequest, res: Response): Promise<void
 export const updateQuestion = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const id = req.params.id as string;
-    const { text, imageUrl, options, correctOption, timeLimit } = req.body;
+    const { text, options, correctOption, timeLimit } = req.body;
 
     const existingQuestion = await prisma.question.findUnique({
       where: { id },
@@ -59,7 +58,6 @@ export const updateQuestion = async (req: AuthRequest, res: Response): Promise<v
       where: { id },
       data: {
         text: text || existingQuestion.text,
-        imageUrl: imageUrl !== undefined ? (imageUrl === '' ? null : imageUrl) : existingQuestion.imageUrl,
         options: options || existingQuestion.options,
         correctOption: correctOption !== undefined ? (correctOption === null ? null : Number(correctOption)) : existingQuestion.correctOption,
         timeLimit: timeLimit !== undefined ? (timeLimit === null || timeLimit === 0 ? null : Number(timeLimit)) : existingQuestion.timeLimit,

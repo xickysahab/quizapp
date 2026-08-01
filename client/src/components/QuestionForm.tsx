@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Check, Clock, Image as ImageIcon } from 'lucide-react';
+import { X, Check, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface QuestionFormProps {
@@ -10,7 +10,6 @@ interface QuestionFormProps {
 
 const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialData }) => {
   const [text, setText] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
   const [options, setOptions] = useState(['', '', '', '']);
   const [correctOption, setCorrectOption] = useState<number | null>(null);
   const [timeLimit, setTimeLimit] = useState<number>(30);
@@ -19,7 +18,6 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
   useEffect(() => {
     if (initialData) {
       setText(initialData.text);
-      setImageUrl(initialData.imageUrl || '');
       setOptions(initialData.options.length ? initialData.options : ['', '', '', '']);
       setCorrectOption(initialData.correctOption !== undefined ? initialData.correctOption : null);
       setTimeLimit(initialData.timeLimit || 0);
@@ -41,7 +39,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
 
     setLoading(true);
     try {
-      await onSubmit({ text, imageUrl, options, correctOption, timeLimit });
+      await onSubmit({ text, options, correctOption, timeLimit });
       onClose();
     } catch (error) {
       console.error('Submit error:', error);
@@ -92,23 +90,6 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
                 className="w-full px-5 py-3.5 rounded-2xl border border-[#E0F2FE] bg-[#FFFFFF] text-[#0F172A] text-base placeholder:text-[#94A3B8] focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] outline-none transition-all shadow-sm"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* Image URL */}
-          <div>
-            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#475569] mb-2">
-              <ImageIcon className="w-3.5 h-3.5 text-[#06B6D4]" />
-              <span>Image URL (Optional)</span>
-            </label>
-            <div className="relative">
-              <input
-                type="url"
-                placeholder="https://example.com/image.jpg"
-                className="w-full px-5 py-3.5 rounded-2xl border border-[#E0F2FE] bg-[#FFFFFF] text-[#0F172A] text-base placeholder:text-[#94A3B8] focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] outline-none transition-all shadow-sm"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
               />
             </div>
           </div>

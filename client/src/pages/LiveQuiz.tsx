@@ -159,86 +159,58 @@ const LiveQuiz: React.FC = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
-              className="w-full max-w-5xl mx-auto"
+              className="bg-[#FFFFFF] rounded-3xl p-8 md:p-10 shadow-lux-lg border border-[#E0F2FE] space-y-6"
             >
-              {/* SAHAJOMETER CARD UI */}
-              <div className="bg-[#E4F1EF] rounded-[2rem] p-4 md:p-8 pt-8 relative shadow-md border border-[#D0E3E1]">
-                {/* SAHAJOMETER Badge */}
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#00BFA5] text-white px-8 py-2 font-sans font-bold tracking-widest text-sm uppercase rounded-sm shadow-sm">
-                  SAHAJOMETER
-                </div>
+              <div>
+                <span className="text-[11px] font-semibold tracking-[0.2em] text-[#06B6D4] uppercase">
+                  Active Question
+                </span>
+                <h2 className="font-serif text-3xl font-bold text-[#0F172A] mt-1 leading-snug">
+                  {activeQuestion.text}
+                </h2>
+              </div>
 
-                {/* Top Question Container */}
-                <div className="bg-[#F6F5F2] rounded-2xl border border-[#DEDCD6] p-5 md:p-8 mb-6 flex flex-col md:flex-row gap-6 items-center min-h-[200px]">
-                  {/* Question Text */}
-                  <div className={`flex-1 ${!activeQuestion.imageUrl ? 'text-center' : 'text-left'}`}>
-                    <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#4E342E] leading-tight">
-                      {activeQuestion.text}
-                    </h2>
-                  </div>
-                  
-                  {/* Image */}
-                  {activeQuestion.imageUrl && (
-                    <div className="w-full md:w-[40%] flex-shrink-0">
-                      <img 
-                        src={activeQuestion.imageUrl} 
-                        alt="Question Reference" 
-                        className="w-full h-auto rounded-xl object-cover shadow-sm border border-[#E5E5E5]"
-                      />
-                    </div>
-                  )}
-                </div>
-
-                {/* Options 2x2 Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {activeQuestion.options.map((opt: string, idx: number) => {
-                    const isSelected = currentSelection === idx;
-                    const colors = [
-                      'bg-[#AEE2D9]', // A: Mint Green
-                      'bg-[#BDCCD4]', // B: Steel Blue
-                      'bg-[#F3D7B5]', // C: Light Peach
-                      'bg-[#D3EEF4]'  // D: Light Cyan
-                    ];
-                    return (
-                      <button
-                        key={idx}
-                        onClick={() => submitAnswer(idx)}
-                        className={`${colors[idx]} rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 transition-transform hover:scale-[1.02] shadow-sm border-[3px] relative ${
-                          isSelected ? 'border-[#0097A7] scale-[1.02] ring-4 ring-[#0097A7]/20' : 'border-transparent'
-                        }`}
-                      >
-                        <span className={`w-7 h-7 rounded-full font-sans text-xs font-bold flex items-center justify-center shadow-sm ${
-                          isSelected ? 'bg-[#0097A7] text-white' : 'bg-[#0097A7]/80 text-white'
-                        }`}>
+              {/* Options List */}
+              <div className="space-y-3.5 pt-2">
+                {activeQuestion.options.map((opt: string, idx: number) => {
+                  const isSelected = currentSelection === idx;
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => submitAnswer(idx)}
+                      className={`w-full p-4.5 rounded-2xl text-left font-medium text-base transition-all flex items-center justify-between border ${
+                        isSelected
+                          ? 'bg-[#ECFEFF] border-[#06B6D4] text-[#0F172A] shadow-sm font-semibold'
+                          : 'bg-[#FFFFFF] border-[#E0F2FE] text-[#334155] hover:border-[#D8CCC0] hover:bg-[#F0F9FF]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3.5">
+                        <span
+                          className={`w-8 h-8 rounded-full text-xs font-serif font-bold flex items-center justify-center transition-colors ${
+                            isSelected ? 'bg-[#06B6D4] text-white' : 'bg-[#E0F2FE] text-[#475569]'
+                          }`}
+                        >
                           {['A', 'B', 'C', 'D'][idx]}
                         </span>
-                        <span className="font-serif text-xl font-bold italic text-[#4E342E]">
-                          {opt}
-                        </span>
-                        {isSelected && (
-                          <div className="absolute top-3 right-3 text-[#0097A7]">
-                            <CheckCircle2 className="w-5 h-5 fill-current text-white" />
-                          </div>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
+                        <span>{opt}</span>
+                      </div>
 
-                {currentSelection !== null && (
-                  <div className="pt-6 text-center">
-                    <span className="inline-flex items-center gap-2 text-xs font-semibold text-[#00796B] bg-white/50 backdrop-blur-sm px-4 py-2 rounded-full border border-[#0097A7]/20">
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>Response recorded — You may update until host advances</span>
-                    </span>
-                  </div>
-                )}
-                
-                {/* Footer Tag */}
-                <div className="text-center mt-6 text-[#795548] font-sans text-xs italic opacity-80">
-                  Follow @sahajspirit
-                </div>
+                      {isSelected && (
+                        <CheckCircle2 className="w-5 h-5 text-[#06B6D4]" />
+                      )}
+                    </button>
+                  );
+                })}
               </div>
+
+              {currentSelection !== null && (
+                <div className="pt-2 text-center">
+                  <span className="inline-flex items-center gap-2 text-xs font-semibold text-[#06B6D4] bg-[#ECFEFF] px-4 py-2 rounded-full border border-[#E0F2FE]">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Response recorded — You may update until host advances</span>
+                  </span>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
