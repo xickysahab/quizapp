@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -164,15 +164,6 @@ const Join: React.FC = () => {
                 </button>
               </form>
 
-              {/* Host Sign In Hint */}
-              <div className="mt-8 pt-6 border-t border-[#E0F2FE]/60 text-center">
-                <p className="text-xs text-[#475569]">
-                  Are you hosting a session?{' '}
-                  <Link to="/login" className="font-semibold text-[#0F172A] underline hover:text-[#06B6D4] transition-colors">
-                    Sign in to Host Dashboard
-                  </Link>
-                </p>
-              </div>
             </div>
           </motion.div>
         </div>
@@ -292,32 +283,6 @@ const Join: React.FC = () => {
                 Advance questions live, display option distributions, and celebrate top participants with instant leaderboards.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Footer Banner */}
-      <section className="py-20 px-6 md:px-12 bg-[#F97316] text-[#FFFFFF] relative overflow-hidden">
-        <div className="max-w-4xl mx-auto text-center space-y-6 relative z-10">
-          <h2 className="font-serif text-4xl md:text-5xl font-semibold tracking-tight text-[#ECFEFF]">
-            Ready to elevate your next session?
-          </h2>
-          <p className="text-[#67E8F9] text-base max-w-xl mx-auto font-light">
-            Join thousands of presenters and educators creating memorable live experiences.
-          </p>
-          <div className="pt-4 flex flex-wrap justify-center gap-4">
-            <Link
-              to="/register"
-              className="px-8 py-4 rounded-2xl bg-[#06B6D4] hover:bg-[#0891B2] text-[#FFFFFF] font-medium transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-            >
-              Get Started for Free
-            </Link>
-            <Link
-              to="/login"
-              className="px-8 py-4 rounded-2xl bg-white/10 hover:bg-white/15 text-[#FFFFFF] font-medium transition-all backdrop-blur-xs"
-            >
-              Sign In as Host
-            </Link>
           </div>
         </div>
       </section>
