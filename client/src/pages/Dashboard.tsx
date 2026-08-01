@@ -306,13 +306,15 @@ const Dashboard: React.FC = () => {
                       <span>Manage & Host</span>
                       <ArrowUpRight className="w-3.5 h-3.5 text-[#06B6D4] group-hover/btn:text-[#FFFFFF] transition-colors" />
                     </button>
-                    <button
-                      onClick={() => handleDeleteEvent(event.id)}
-                      className="p-3 rounded-2xl text-[#94A3B8] hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-100 transition-all"
-                      title="Delete Event"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    {user?.role === 'ADMIN' && (
+                      <button
+                        onClick={() => handleDeleteEvent(event.id)}
+                        className="p-3 rounded-2xl text-[#94A3B8] hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-100 transition-all"
+                        title="Delete Event"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
                 </motion.div>
               ))}

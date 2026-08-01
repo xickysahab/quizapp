@@ -107,6 +107,12 @@ export const deleteEvent = async (req: AuthRequest, res: Response): Promise<void
     const id = req.params.id as string;
     const hostId = req.user?.userId;
 
+    const user = await prisma.user.findUnique({ where: { id: hostId } });
+    if (!user || user.role !== 'ADMIN') {
+      res.status(403).json({ message: 'Forbidden: Only ADMIN users can delete a quiz.' });
+      return;
+    }
+
     const event = await prisma.event.findUnique({ where: { id } });
 
     if (!event) {
