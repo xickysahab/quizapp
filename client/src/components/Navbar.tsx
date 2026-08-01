@@ -92,15 +92,9 @@ const Navbar: React.FC = () => {
             <div className="flex items-center gap-3">
               <Link
                 to="/login"
-                className="text-sm font-medium text-[#334155] hover:text-[#0F172A] px-4 py-2 transition-colors"
-              >
-                Host Sign In
-              </Link>
-              <Link
-                to="/register"
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#F97316] text-[#FFFFFF] text-sm font-medium hover:bg-[#EA580C] transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 duration-200"
               >
-                <span>Create Account</span>
+                <span>Host Sign In</span>
                 <ArrowRight className="w-3.5 h-3.5 text-[#06B6D4]" />
               </Link>
             </div>
@@ -173,16 +167,9 @@ const Navbar: React.FC = () => {
                   <Link
                     to="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full text-center py-3 rounded-xl bg-[#F0F9FF] text-[#0F172A] font-medium border border-[#E0F2FE]"
-                  >
-                    Host Sign In
-                  </Link>
-                  <Link
-                    to="/register"
-                    onClick={() => setMobileMenuOpen(false)}
                     className="w-full text-center py-3 rounded-xl bg-[#F97316] text-[#FFFFFF] font-medium"
                   >
-                    Get Started Free
+                    Host Sign In
                   </Link>
                 </div>
               )}
