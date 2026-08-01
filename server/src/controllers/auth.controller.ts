@@ -52,45 +52,44 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Hardcoded credentials for Admin/Host as requested
+    // Auto-create main admin if logging in with admin@admin.com and it doesn't exist
     if (email === 'admin@admin.com' && password === 'admin') {
-      let userId = 'admin-host-id';
-      let userName = 'Admin Host';
-
-      try {
-        // Ensure this user exists in DB so foreign keys work (like for events)
-        let user = await prisma.user.findUnique({ where: { email } });
-        if (!user) {
-          const hashedPassword = await hashPassword(password);
-          user = await prisma.user.create({
-            data: {
-              name: userName,
-              email,
-              password: hashedPassword,
-            },
-          });
-        }
-        userId = user.id;
-        userName = user.name;
-      } catch (dbErr) {
-        console.warn('Database lookup failed during admin login, using fallback admin identity:', dbErr);
+      let user = await prisma.user.findUnique({ where: { email } });
+      if (!user) {
+        const hashedPassword = await hashPassword(password);
+        user = await prisma.user.create({
+          data: {
+            name: 'Main Admin',
+            email,
+            password: hashedPassword,
+          },
+        });
       }
+    }
 
-      const token = generateToken(userId, email);
-
-      res.status(200).json({
-        message: 'Login successful',
-        token,
-        user: {
-          id: userId,
-          name: userName,
-          email: email,
-        },
-      });
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      res.status(401).json({ message: 'Invalid credentials.' });
       return;
     }
 
-    res.status(401).json({ message: 'Invalid credentials. Please use the hardcoded admin credentials.' });
+    const isPasswordValid = await comparePassword(password, user.password);
+    if (!isPasswordValid) {
+      res.status(401).json({ message: 'Invalid credentials.' });
+      return;
+    }
+
+    const token = generateToken(user.id, user.email);
+
+    res.status(200).json({
+      message: 'Login successful',
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+    });
   } catch (error: any) {
     console.error('Login error:', error);
     res.status(500).json({ message: error?.message || 'Internal server error', details: String(error) });

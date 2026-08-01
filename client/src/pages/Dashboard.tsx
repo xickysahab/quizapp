@@ -4,9 +4,10 @@ import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { Plus, Presentation, Users, Trash2, Copy, Check, Search, Radio, ArrowUpRight } from 'lucide-react';
+import { Plus, Presentation, Users, Trash2, Copy, Check, Search, Radio, ArrowUpRight, UserPlus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ConfirmModal from '../components/ConfirmModal';
+import CreateAdminModal from '../components/CreateAdminModal';
 
 interface Event {
   id: string;
@@ -25,6 +26,7 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState<{isOpen: boolean, eventId: string | null}>({ isOpen: false, eventId: null });
   const [newEventTitle, setNewEventTitle] = useState('');
   const [creating, setCreating] = useState(false);
@@ -106,10 +108,19 @@ const Dashboard: React.FC = () => {
             <h1 className="font-serif text-4xl md:text-5xl font-semibold text-[#0F172A] mt-1">
               Welcome, {user?.name || 'Host'}
             </h1>
-            <p className="text-[#475569] text-sm mt-1">
-              Manage your interactive quizzes, live polls, and audience sessions
-            </p>
+            <p className="text-[#475569] text-sm max-w-xl leading-relaxed">
+            Manage your interactive quizzes, live polls, and audience engagement seamlessly.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <button
+              onClick={() => setIsAdminModalOpen(true)}
+              className="flex items-center gap-2 bg-[#F0F9FF] hover:bg-[#E0F2FE] text-[#06B6D4] px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors border border-[#E0F2FE]"
+            >
+              <UserPlus className="w-4 h-4" />
+              Add Sub-Admin
+            </button>
           </div>
+        </div>
 
           <div className="flex items-center gap-3">
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FFFFFF] border border-[#E0F2FE] text-xs font-medium text-[#334155] shadow-xs">
@@ -311,6 +322,11 @@ const Dashboard: React.FC = () => {
         onConfirm={executeDelete}
         onCancel={() => setDeleteModal({ isOpen: false, eventId: null })}
         isDestructive={true}
+      />
+
+      <CreateAdminModal
+        isOpen={isAdminModalOpen}
+        onClose={() => setIsAdminModalOpen(false)}
       />
     </div>
   );

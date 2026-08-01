@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
@@ -130,12 +130,7 @@ const Login: React.FC = () => {
             </button>
           </form>
 
-          <p className="mt-8 text-center text-xs text-[#475569]">
-            Don't have a host account?{' '}
-            <Link to="/register" className="font-semibold text-[#0F172A] underline hover:text-[#06B6D4] transition-colors">
-              Create account
-            </Link>
-          </p>
+
         </motion.div>
       </main>
 

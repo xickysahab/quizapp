@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
-import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import EventDetails from './pages/EventDetails';
 import HostLive from './pages/HostLive';
@@ -27,7 +26,6 @@ function AppRoutes() {
 
       {/* Host Auth Routes */}
       <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
 
       {/* Host Protected Routes */}
       <Route 

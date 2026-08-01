@@ -18,22 +18,6 @@ export const createEvent = async (req: AuthRequest, res: Response): Promise<void
       return;
     }
 
-    // Ensure host user exists in DB before creating event
-    try {
-      const existingHost = await prisma.user.findUnique({ where: { id: hostId } });
-      if (!existingHost) {
-        await prisma.user.create({
-          data: {
-            id: hostId,
-            name: 'Admin Host',
-            email: req.user?.email || 'admin@admin.com',
-            password: 'admin',
-          },
-        });
-      }
-    } catch (e) {
-      console.warn('Could not check/create host user in DB:', e);
-    }
 
     // Generate unique room code
     let roomCode = generateRoomCode();
@@ -72,7 +56,6 @@ export const getHostEvents = async (req: AuthRequest, res: Response): Promise<vo
     }
 
     const events = await prisma.event.findMany({
-      where: { hostId },
       include: {
         _count: {
           select: { questions: true, participants: true },
@@ -125,11 +108,6 @@ export const deleteEvent = async (req: AuthRequest, res: Response): Promise<void
 
     if (!event) {
       res.status(404).json({ message: 'Event not found' });
-      return;
-    }
-
-    if (event.hostId !== hostId) {
-      res.status(403).json({ message: 'Forbidden. You do not own this event.' });
       return;
     }
 
