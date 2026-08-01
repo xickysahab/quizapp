@@ -51,7 +51,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
   };
 
   return (
-    <div className="fixed inset-0 bg-[#EA580C]/50 backdrop-blur-md flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div className="fixed inset-0 bg-[#0F172A]/40 backdrop-blur-md flex items-center justify-center p-4 z-50 overflow-y-auto">
       <motion.div
         initial={{ opacity: 0, scale: 0.96, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
