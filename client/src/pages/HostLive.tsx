@@ -44,8 +44,8 @@ const HostLive: React.FC = () => {
         setParticipantCount((prev) => prev + 1);
       });
 
-      socket.on('host:newResponse', () => {
-        setResponsesCount((prev) => prev + 1);
+      socket.on('host:newResponseBatch', (data: { count: number }) => {
+        setResponsesCount((prev) => prev + data.count);
       });
     } catch (error) {
       console.error('Failed to fetch event', error);
@@ -58,7 +58,7 @@ const HostLive: React.FC = () => {
   useEffect(() => {
     return () => {
       socket.off('host:participantJoined');
-      socket.off('host:newResponse');
+      socket.off('host:newResponseBatch');
       socket.disconnect();
     };
   }, []);

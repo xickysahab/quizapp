@@ -2,6 +2,19 @@ import { Server, Socket } from 'socket.io';
 import prisma from '../config/prisma';
 
 export const initializeSocket = (io: Server) => {
+  // Map to store aggregated vote counts per eventId
+  const voteCounts = new Map<string, number>();
+
+  // Interval to flush aggregated votes to hosts every 1 second
+  setInterval(() => {
+    voteCounts.forEach((count, eventId) => {
+      if (count > 0) {
+        io.to(`host-${eventId}`).emit('host:newResponseBatch', { count });
+        voteCounts.set(eventId, 0); // Reset count after emitting
+      }
+    });
+  }, 1000);
+
   io.on('connection', (socket: Socket) => {
     console.log(`🔌 New client connected: ${socket.id}`);
 
@@ -77,10 +90,11 @@ export const initializeSocket = (io: Server) => {
       console.log(`🛑 Event ${eventId} ended.`);
     });
 
-    // Participant submits an answer (Notify host real-time)
+    // Participant submits an answer (Notify host real-time via batched event)
     socket.on('participant:submitAnswer', (eventId: string) => {
-      // Just notify host to re-fetch or increment count
-      io.to(`host-${eventId}`).emit('host:newResponse');
+      // Increment the vote count for this event instead of emitting immediately
+      const currentCount = voteCounts.get(eventId) || 0;
+      voteCounts.set(eventId, currentCount + 1);
     });
 
     socket.on('disconnect', () => {

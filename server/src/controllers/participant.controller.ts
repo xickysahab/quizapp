@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '../config/prisma';
+import { responseBatcher } from '../utils/responseBatcher';
 
 export const joinEvent = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -75,27 +76,15 @@ export const submitResponse = async (req: Request, res: Response): Promise<void>
 
     const isCorrect = question.correctOption === Number(selectedOption);
 
-    // Upsert response so participants can change their answer
-    const response = await prisma.response.upsert({
-      where: {
-        questionId_participantId: {
-          questionId,
-          participantId,
-        },
-      },
-      update: {
-        selectedOption: Number(selectedOption),
-        isCorrect,
-      },
-      create: {
-        participantId,
-        questionId,
-        selectedOption: Number(selectedOption),
-        isCorrect,
-      },
+    // Add to in-memory batch instead of hitting DB immediately
+    responseBatcher.addResponse({
+      questionId,
+      participantId,
+      selectedOption: Number(selectedOption),
+      isCorrect,
     });
 
-    res.status(200).json({ message: 'Response submitted successfully', response });
+    res.status(200).json({ message: 'Response queued successfully', batched: true });
   } catch (error) {
     console.error('Submit response error:', error);
     res.status(500).json({ message: 'Internal server error' });
