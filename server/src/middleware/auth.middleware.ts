@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/auth';
+import { findUser } from '../utils/eventAccess';
 
 export interface AuthRequest extends Request {
   user?: {
@@ -22,11 +23,6 @@ export const authenticateHost = (req: AuthRequest, res: Response, next: NextFunc
     return;
   }
 
-  if (token === 'admin_fallback_jwt_token') {
-    req.user = { userId: 'admin-host-id', email: 'admin@admin.com' };
-    return next();
-  }
-
   const decoded = verifyToken(token);
 
   if (!decoded) {
@@ -35,5 +31,14 @@ export const authenticateHost = (req: AuthRequest, res: Response, next: NextFunc
   }
 
   req.user = decoded;
+  next();
+};
+
+export const requireAdmin = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  const user = await findUser(req.user?.userId);
+  if (!user || user.role !== 'ADMIN') {
+    res.status(403).json({ message: 'Forbidden: Admin access required.' });
+    return;
+  }
   next();
 };

@@ -5,12 +5,12 @@ import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { ArrowRight, Lock, Mail } from 'lucide-react';
-import brandLogo from '../assets/Sahaj spirit.jpeg';
+import brandLogo from '../assets/sahaj-spirit.jpeg';
 import { motion } from 'framer-motion';
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('admin@admin.com');
-  const [password, setPassword] = useState('sahajometer@admin');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -27,15 +27,7 @@ const Login: React.FC = () => {
       login(response.data.user, response.data.token);
       navigate('/dashboard');
     } catch (err: any) {
-      // Fallback: If backend returns an error or is unreachable, allow hardcoded admin login
-      if (email === 'admin@admin.com' && password === 'sahajometer@admin') {
-        const fallbackUser = { id: 'admin-host-id', name: 'Admin Host', email: 'admin@admin.com', role: 'ADMIN' };
-        const fallbackToken = 'admin_fallback_jwt_token';
-        login(fallbackUser, fallbackToken);
-        navigate('/dashboard');
-      } else {
-        setError(err.response?.data?.message || 'Login failed. Please verify credentials.');
-      }
+      setError(err.response?.data?.message || 'Login failed. Please verify credentials.');
     } finally {
       setLoading(false);
     }
@@ -68,11 +60,6 @@ const Login: React.FC = () => {
             <p className="text-sm text-[#475569] mt-1">
               Sign in to manage live quizzes & audience polls
             </p>
-          </div>
-
-          {/* Admin Credentials Info Pill */}
-          <div className="bg-[#F0F9FF] border border-[#E0F2FE] text-[#06B6D4] px-4 py-2.5 rounded-2xl text-xs text-center font-medium mb-6">
-            Default Host Credentials pre-filled for instant demo access
           </div>
 
           {error && (

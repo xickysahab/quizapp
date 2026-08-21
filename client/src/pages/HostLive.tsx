@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Play, Square, ChevronRight, ChevronLeft, Users, BarChart3, Radio, Award, LogOut, QrCode, X } from 'lucide-react';
+import { Play, Square, ChevronRight, ChevronLeft, Users, BarChart3, Radio, Award, LogOut, QrCode, X, Clock } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
-import brandLogo from '../assets/Sahaj spirit.jpeg';
+import brandLogo from '../assets/sahaj-spirit.jpeg';
 import { SAHAJOMETER_PRESET } from '../constants/presets';
-import { socket } from '../socket/socket';
+import { socket, connectSocket } from '../socket/socket';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 import ConfirmModal from '../components/ConfirmModal';
@@ -24,44 +24,101 @@ const HostLive: React.FC = () => {
   const [showFinalSummary, setShowFinalSummary] = useState(false);
   const [summaryData, setSummaryData] = useState<any>(null);
   const [showQR, setShowQR] = useState(false);
+  const [questionStartedAt, setQuestionStartedAt] = useState<number | null>(null);
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
+
+    const fetchEventDetails = async () => {
+      try {
+        const response = await api.get(`/events/${id}`);
+        if (cancelled) return;
+        const loaded = response.data.event;
+        setEvent(loaded);
+        setParticipantCount(loaded._count?.participants || 0);
+
+        if (loaded.isLive && loaded.currentQuestionId) {
+          const idx = loaded.questions.findIndex((q: { id: string }) => q.id === loaded.currentQuestionId);
+          if (idx >= 0) setCurrentQuestionIndex(idx);
+        }
+      } catch (error) {
+        console.error('Failed to fetch event', error);
+        navigate('/dashboard');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
     fetchEventDetails();
-  }, [id]);
-
-  const fetchEventDetails = async () => {
-    try {
-      const response = await api.get(`/events/${id}`);
-      setEvent(response.data.event);
-      setParticipantCount(response.data.event._count?.participants || 0);
-
-      // Connect socket
-      socket.connect();
-      socket.emit('host:join', id);
-
-      // Setup socket listeners
-      socket.on('host:participantJoined', () => {
-        setParticipantCount((prev) => prev + 1);
-      });
-
-      socket.on('host:newResponseBatch', (data: { count: number }) => {
-        setResponsesCount((prev) => prev + data.count);
-      });
-    } catch (error) {
-      console.error('Failed to fetch event', error);
-      navigate('/dashboard');
-    } finally {
-      setLoading(false);
-    }
-  };
+    return () => {
+      cancelled = true;
+    };
+  }, [id, navigate]);
 
   useEffect(() => {
+    if (!id) return;
+
+    connectSocket();
+    socket.emit('host:join', id);
+
+    const onSync = (data: {
+      participantCount: number;
+      responseCount: number;
+      startedAt: number | null;
+      currentQuestionId: string | null;
+    }) => {
+      setParticipantCount(data.participantCount);
+      setResponsesCount(data.responseCount);
+      if (data.startedAt) setQuestionStartedAt(data.startedAt);
+    };
+
+    const onParticipantCount = (data: { count: number }) => {
+      setParticipantCount(data.count);
+    };
+
+    const onResponseCount = (data: { count: number }) => {
+      setResponsesCount(data.count);
+    };
+
+    const onQuestionStarted = (data: { startedAt: number }) => {
+      setQuestionStartedAt(data.startedAt);
+      setResponsesCount(0);
+    };
+
+    socket.on('host:sync', onSync);
+    socket.on('host:participantCount', onParticipantCount);
+    socket.on('host:responseCount', onResponseCount);
+    socket.on('host:questionStarted', onQuestionStarted);
+
     return () => {
-      socket.off('host:participantJoined');
-      socket.off('host:newResponseBatch');
+      socket.off('host:sync', onSync);
+      socket.off('host:participantCount', onParticipantCount);
+      socket.off('host:responseCount', onResponseCount);
+      socket.off('host:questionStarted', onQuestionStarted);
       socket.disconnect();
     };
-  }, []);
+  }, [id]);
+
+  const activeQuestion = event && currentQuestionIndex >= 0 ? event.questions[currentQuestionIndex] : null;
+
+  useEffect(() => {
+    if (!activeQuestion?.timeLimit || currentQuestionIndex < 0) {
+      setTimeLeft(null);
+      return;
+    }
+    const start = questionStartedAt ?? Date.now();
+    const tick = () => {
+      const remaining = Math.max(
+        0,
+        activeQuestion.timeLimit - Math.floor((Date.now() - start) / 1000)
+      );
+      setTimeLeft(remaining);
+    };
+    tick();
+    const interval = setInterval(tick, 250);
+    return () => clearInterval(interval);
+  }, [activeQuestion?.id, activeQuestion?.timeLimit, questionStartedAt, currentQuestionIndex]);
 
   const handleNextQuestion = () => {
     if (!event) return;
@@ -69,7 +126,8 @@ const HostLive: React.FC = () => {
     if (nextIndex < event.questions.length) {
       setCurrentQuestionIndex(nextIndex);
       setResponsesCount(0);
-      socket.emit('host:nextQuestion', id, event.questions[nextIndex]);
+      setQuestionStartedAt(Date.now());
+      socket.emit('host:nextQuestion', id, event.questions[nextIndex].id);
     }
   };
 
@@ -78,7 +136,8 @@ const HostLive: React.FC = () => {
     const prevIndex = currentQuestionIndex - 1;
     setCurrentQuestionIndex(prevIndex);
     setResponsesCount(0);
-    socket.emit('host:nextQuestion', id, event.questions[prevIndex]);
+    setQuestionStartedAt(Date.now());
+    socket.emit('host:nextQuestion', id, event.questions[prevIndex].id);
   };
 
   const handleFinishAndViewSummary = async () => {
@@ -86,7 +145,10 @@ const HostLive: React.FC = () => {
   };
 
   const executeConclude = async () => {
-    socket.emit('host:endQuiz', id);
+    await new Promise<void>((resolve) => {
+      socket.emit('host:endQuiz', id, () => resolve());
+      setTimeout(resolve, 2500);
+    });
 
     try {
       const res = await api.get(`/analytics/events/${id}/summary`);
@@ -107,7 +169,9 @@ const HostLive: React.FC = () => {
   };
 
   const executeExit = () => {
-    if (!showFinalSummary) socket.emit('host:endQuiz', id);
+    if (!showFinalSummary) {
+      socket.emit('host:endQuiz', id);
+    }
     navigate(`/dashboard`);
   };
 
@@ -133,7 +197,6 @@ const HostLive: React.FC = () => {
     );
   }
 
-  const activeQuestion = currentQuestionIndex >= 0 ? event.questions[currentQuestionIndex] : null;
   const isFinished = currentQuestionIndex >= event.questions.length - 1;
 
   return (
@@ -423,22 +486,34 @@ const HostLive: React.FC = () => {
                   Question {currentQuestionIndex + 1} of {event.questions.length}
                 </span>
 
-                <div className="flex items-center gap-2 bg-[#F0F9FF] px-4 py-2 rounded-full border border-[#E0F2FE] text-xs font-medium text-[#0F172A]">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                  <span>
-                    {responsesCount} / {participantCount} Submissions
-                  </span>
+                <div className="flex items-center gap-3">
+                  {timeLeft !== null && (
+                    <div className={`flex items-center gap-1.5 px-3 py-2 rounded-full border text-xs font-semibold ${
+                      timeLeft === 0
+                        ? 'bg-rose-50 border-rose-200 text-rose-600'
+                        : 'bg-[#FFF7ED] border-[#FFEDD5] text-[#EA580C]'
+                    }`}>
+                      <Clock className="w-3.5 h-3.5" />
+                      <span>{timeLeft === 0 ? 'Time up' : `${timeLeft}s`}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2 bg-[#F0F9FF] px-4 py-2 rounded-full border border-[#E0F2FE] text-xs font-medium text-[#0F172A]">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>
+                      {responsesCount} / {participantCount} Submissions
+                    </span>
+                  </div>
                 </div>
               </div>
 
               {/* Title */}
               <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#0F172A] leading-tight">
-                {activeQuestion.text}
+                {activeQuestion?.text}
               </h2>
 
               {/* Options Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                {activeQuestion.options.map((opt: string, idx: number) => (
+                {activeQuestion?.options.map((opt: string, idx: number) => (
                   <div
                     key={idx}
                     className="bg-[#FFFFFF] border border-[#E0F2FE] rounded-2xl p-5 flex items-center gap-4 transition-all hover:border-[#06B6D4] hover:bg-[#F0F9FF] shadow-sm"

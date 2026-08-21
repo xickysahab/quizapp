@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Loader2, CheckCircle2, Award, ArrowLeft } from 'lucide-react';
+import { Loader2, CheckCircle2, Award, ArrowLeft, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
-import brandLogo from '../assets/Sahaj spirit.jpeg';
-import { socket } from '../socket/socket';
+import brandLogo from '../assets/sahaj-spirit.jpeg';
+import { socket, connectSocket } from '../socket/socket';
 import api from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -18,6 +18,8 @@ const LiveQuiz: React.FC = () => {
   const [activeQuestion, setActiveQuestion] = useState<any>(null);
   const [currentSelection, setCurrentSelection] = useState<number | null>(null);
   const [quizEnded, setQuizEnded] = useState(false);
+  const [questionStartedAt, setQuestionStartedAt] = useState<number | null>(null);
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
   useEffect(() => {
     const pName = localStorage.getItem('participantName');
@@ -33,30 +35,61 @@ const LiveQuiz: React.FC = () => {
     setParticipantId(pId);
     setEventId(eId);
 
-    // Connect Socket
-    socket.connect();
+    connectSocket();
     socket.emit('participant:join', eId, pId);
 
-    // Socket Listeners
-    socket.on('participant:questionActive', ({ question, selectedOption }) => {
-      setCurrentSelection(selectedOption !== undefined ? selectedOption : null);
+    const onQuestionActive = ({
+      question,
+      selectedOption,
+      startedAt,
+    }: {
+      question: any;
+      selectedOption?: number | null;
+      startedAt?: number | null;
+    }) => {
+      setCurrentSelection(selectedOption !== undefined && selectedOption !== null ? selectedOption : null);
       setActiveQuestion(question);
-    });
+      setQuestionStartedAt(startedAt ?? Date.now());
+      setTimeLeft(question?.timeLimit && question.timeLimit > 0 ? question.timeLimit : null);
+    };
 
-    socket.on('participant:quizEnded', () => {
+    const onQuizEnded = () => {
       setQuizEnded(true);
       setActiveQuestion(null);
-    });
+    };
+
+    socket.on('participant:questionActive', onQuestionActive);
+    socket.on('participant:quizEnded', onQuizEnded);
 
     return () => {
-      socket.off('participant:questionActive');
-      socket.off('participant:quizEnded');
+      socket.off('participant:questionActive', onQuestionActive);
+      socket.off('participant:quizEnded', onQuizEnded);
       socket.disconnect();
     };
   }, [navigate]);
 
+  useEffect(() => {
+    if (!activeQuestion?.timeLimit) {
+      setTimeLeft(null);
+      return;
+    }
+    const start = questionStartedAt ?? Date.now();
+    const tick = () => {
+      const remaining = Math.max(
+        0,
+        activeQuestion.timeLimit - Math.floor((Date.now() - start) / 1000)
+      );
+      setTimeLeft(remaining);
+    };
+    tick();
+    const interval = setInterval(tick, 250);
+    return () => clearInterval(interval);
+  }, [activeQuestion?.id, activeQuestion?.timeLimit, questionStartedAt]);
+
+  const timeExpired = timeLeft === 0;
+
   const submitAnswer = async (index: number) => {
-    if (!activeQuestion) return;
+    if (!activeQuestion || timeExpired) return;
 
     setCurrentSelection(index);
 
@@ -66,7 +99,7 @@ const LiveQuiz: React.FC = () => {
         questionId: activeQuestion.id,
         selectedOption: index,
       });
-      socket.emit('participant:submitAnswer', eventId);
+      socket.emit('participant:submitAnswer', eventId, participantId);
     } catch (error) {
       console.error('Failed to submit response', error);
       toast.error('Unable to save response. The question may have been closed by the host.');
@@ -162,13 +195,25 @@ const LiveQuiz: React.FC = () => {
               exit={{ opacity: 0, y: -15 }}
               className="bg-[#FFFFFF] rounded-3xl p-8 md:p-10 shadow-lux-lg border border-[#E0F2FE] space-y-6"
             >
-              <div>
-                <span className="text-[11px] font-semibold tracking-[0.2em] text-[#06B6D4] uppercase">
-                  Active Question
-                </span>
-                <h2 className="font-serif text-3xl font-bold text-[#0F172A] mt-1 leading-snug">
-                  {activeQuestion.text}
-                </h2>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <span className="text-[11px] font-semibold tracking-[0.2em] text-[#06B6D4] uppercase">
+                    Active Question
+                  </span>
+                  <h2 className="font-serif text-3xl font-bold text-[#0F172A] mt-1 leading-snug">
+                    {activeQuestion.text}
+                  </h2>
+                </div>
+                {timeLeft !== null && (
+                  <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold shrink-0 ${
+                    timeExpired
+                      ? 'bg-rose-50 border-rose-200 text-rose-600'
+                      : 'bg-[#FFF7ED] border-[#FFEDD5] text-[#EA580C]'
+                  }`}>
+                    <Clock className="w-3.5 h-3.5" />
+                    <span>{timeExpired ? 'Time up' : `${timeLeft}s`}</span>
+                  </div>
+                )}
               </div>
 
               {/* Options List */}
@@ -179,11 +224,12 @@ const LiveQuiz: React.FC = () => {
                     <button
                       key={idx}
                       onClick={() => submitAnswer(idx)}
+                      disabled={timeExpired}
                       className={`w-full p-4.5 rounded-2xl text-left font-medium text-base transition-all flex items-center justify-between border ${
                         isSelected
                           ? 'bg-[#ECFEFF] border-[#06B6D4] text-[#0F172A] shadow-sm font-semibold'
                           : 'bg-[#FFFFFF] border-[#E0F2FE] text-[#334155] hover:border-[#D8CCC0] hover:bg-[#F0F9FF]'
-                      }`}
+                      } ${timeExpired ? 'opacity-70 cursor-not-allowed' : ''}`}
                     >
                       <div className="flex items-center gap-3.5">
                         <span
@@ -204,7 +250,7 @@ const LiveQuiz: React.FC = () => {
                 })}
               </div>
 
-              {currentSelection !== null && (
+              {currentSelection !== null && !timeExpired && (
                 <div className="pt-2 text-center">
                   <span className="inline-flex items-center gap-2 text-xs font-semibold text-[#06B6D4] bg-[#ECFEFF] px-4 py-2 rounded-full border border-[#E0F2FE]">
                     <CheckCircle2 className="w-3.5 h-3.5" />

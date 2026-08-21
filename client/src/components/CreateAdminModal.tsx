@@ -26,7 +26,7 @@ const CreateAdminModal: React.FC<CreateAdminModalProps> = ({ isOpen, onClose }) 
     try {
       // Create new admin using the protected /register endpoint
       await api.post('/auth/register', { name, email, password });
-      toast.success('New Admin Created successfully!');
+      toast.success('New host created successfully');
       
       // Reset and close
       setName('');
@@ -63,7 +63,7 @@ const CreateAdminModal: React.FC<CreateAdminModalProps> = ({ isOpen, onClose }) 
                 <div className="w-10 h-10 rounded-xl bg-[#E0F2FE] flex items-center justify-center text-[#06B6D4]">
                   <UserPlus className="w-5 h-5" />
                 </div>
-                <h2 className="font-serif text-2xl font-bold text-[#0F172A]">Add Admin</h2>
+                <h2 className="font-serif text-2xl font-bold text-[#0F172A]">Add Host</h2>
               </div>
               <button
                 onClick={onClose}
@@ -130,7 +130,7 @@ const CreateAdminModal: React.FC<CreateAdminModalProps> = ({ isOpen, onClose }) 
                 disabled={loading}
                 className="w-full mt-6 bg-[#F97316] hover:bg-[#EA580C] text-white font-semibold py-3 rounded-xl transition-all shadow-md disabled:opacity-50"
               >
-                {loading ? 'Creating...' : 'Create Admin'}
+                {loading ? 'Creating...' : 'Create Host'}
               </button>
             </form>
           </motion.div>

@@ -2,6 +2,20 @@ import { Response } from 'express';
 import prisma from '../config/prisma';
 import { AuthRequest } from '../middleware/auth.middleware';
 import { logActivity } from '../utils/logger';
+import { canManageEvent, findUser } from '../utils/eventAccess';
+
+async function getOwnedQuestion(userId: string | undefined, questionId: string) {
+  const user = await findUser(userId);
+  if (!user) return null;
+
+  const question = await prisma.question.findUnique({
+    where: { id: questionId },
+    include: { event: true },
+  });
+
+  if (!question || !canManageEvent(user, question.event)) return null;
+  return { user, question };
+}
 
 export const addQuestion = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -12,14 +26,18 @@ export const addQuestion = async (req: AuthRequest, res: Response): Promise<void
       return;
     }
 
-    // Check if event exists and belongs to host
+    const user = await findUser(req.user?.userId);
+    if (!user) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
+
     const event = await prisma.event.findUnique({ where: { id: eventId } });
-    if (!event || event.hostId !== req.user?.userId) {
+    if (!event || !canManageEvent(user, event)) {
       res.status(403).json({ message: 'Forbidden. You do not own this event.' });
       return;
     }
 
-    // Get current question count to set order
     const count = await prisma.question.count({ where: { eventId } });
 
     const question = await prisma.question.create({
@@ -47,15 +65,13 @@ export const updateQuestion = async (req: AuthRequest, res: Response): Promise<v
     const id = req.params.id as string;
     const { text, options, correctOption, timeLimit } = req.body;
 
-    const existingQuestion = await prisma.question.findUnique({
-      where: { id },
-      include: { event: true },
-    });
-
-    if (!existingQuestion || existingQuestion.event.hostId !== req.user?.userId) {
+    const owned = await getOwnedQuestion(req.user?.userId, id);
+    if (!owned) {
       res.status(403).json({ message: 'Forbidden. Question not found or unauthorized.' });
       return;
     }
+
+    const { question: existingQuestion } = owned;
 
     const question = await prisma.question.update({
       where: { id },
@@ -80,17 +96,29 @@ export const deleteQuestion = async (req: AuthRequest, res: Response): Promise<v
   try {
     const id = req.params.id as string;
 
-    const existingQuestion = await prisma.question.findUnique({
-      where: { id },
-      include: { event: true },
-    });
-
-    if (!existingQuestion || existingQuestion.event.hostId !== req.user?.userId) {
+    const owned = await getOwnedQuestion(req.user?.userId, id);
+    if (!owned) {
       res.status(403).json({ message: 'Forbidden. Question not found or unauthorized.' });
       return;
     }
 
-    await prisma.question.delete({ where: { id } });
+    const { question: existingQuestion } = owned;
+
+    await prisma.$transaction(async (tx) => {
+      await tx.question.delete({ where: { id } });
+      const remaining = await tx.question.findMany({
+        where: { eventId: existingQuestion.eventId },
+        orderBy: { order: 'asc' },
+      });
+      await Promise.all(
+        remaining.map((q, index) =>
+          tx.question.update({
+            where: { id: q.id },
+            data: { order: index + 1 },
+          })
+        )
+      );
+    });
 
     await logActivity(req.user?.userId, 'DELETE_QUESTION', 'Question', id, { eventId: existingQuestion.eventId, text: existingQuestion.text });
 

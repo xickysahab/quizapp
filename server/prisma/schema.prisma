@@ -11,7 +11,7 @@ model User {
   email     String   @unique
   password  String
   name        String
-  role        String        @default("ADMIN")
+  role        String        @default("HOST")
   events      Event[]
   activityLogs ActivityLog[]
   createdAt DateTime @default(now())
@@ -26,6 +26,7 @@ model Event {
   host              User          @relation(fields: [hostId], references: [id])
   isLive            Boolean       @default(false)
   currentQuestionId String?
+  currentQuestion   Question?     @relation("ActiveQuestion", fields: [currentQuestionId], references: [id], onDelete: SetNull)
   concludeConfig    Json?
   questions         Question[]
   participants      Participant[]
@@ -43,6 +44,7 @@ model Question {
   order         Int
   timeLimit     Int?
   responses     Response[]
+  activeForEvents Event[]  @relation("ActiveQuestion")
 }
 
 model Participant {

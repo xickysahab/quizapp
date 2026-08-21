@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LogOut, LayoutDashboard, Menu, X, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import brandLogo from '../assets/Sahaj spirit.jpeg';
+import brandLogo from '../assets/sahaj-spirit.jpeg';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -61,10 +61,10 @@ const Navbar: React.FC = () => {
           >
             Join Quiz
           </Link>
-          <a href="#features" className="transition-colors hover:text-[#0F172A] text-[#475569]">
+          <a href="/#features" className="transition-colors hover:text-[#0F172A] text-[#475569]">
             Experience
           </a>
-          <a href="#how-it-works" className="transition-colors hover:text-[#0F172A] text-[#475569]">
+          <a href="/#how-it-works" className="transition-colors hover:text-[#0F172A] text-[#475569]">
             Workflow
           </a>
         </nav>
@@ -128,14 +128,14 @@ const Navbar: React.FC = () => {
                 Join Quiz
               </Link>
               <a
-                href="#features"
+                href="/#features"
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-lg font-medium text-[#475569] py-2 border-b border-[#F0F9FF]"
               >
                 Experience
               </a>
               <a
-                href="#how-it-works"
+                href="/#how-it-works"
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-lg font-medium text-[#475569] py-2 border-b border-[#F0F9FF]"
               >

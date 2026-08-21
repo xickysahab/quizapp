@@ -37,7 +37,7 @@ const ActivityLogs: React.FC = () => {
     } catch (error: any) {
       console.error('Failed to fetch logs', error);
       if (error.response?.status === 403) {
-        navigate('/host/dashboard'); // Fallback if non-admin tries to access directly
+        navigate('/dashboard');
       }
     } finally {
       setLoading(false);
@@ -73,7 +73,7 @@ const ActivityLogs: React.FC = () => {
       <main className="flex-grow container mx-auto px-4 pt-32 pb-12 md:pb-24 max-w-6xl">
         <div className="flex items-center gap-4 mb-8">
           <button
-            onClick={() => navigate('/host/dashboard')}
+            onClick={() => navigate('/dashboard')}
             className="p-2.5 bg-[#F0F9FF] hover:bg-[#E0F2FE] text-[#06B6D4] rounded-xl transition-all border border-[#E0F2FE]"
           >
             <ArrowLeft className="w-5 h-5" />

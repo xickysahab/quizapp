@@ -3,6 +3,7 @@ import prisma from '../config/prisma';
 import { AuthRequest } from '../middleware/auth.middleware';
 import { generateRoomCode } from '../utils/roomCode';
 import { logActivity } from '../utils/logger';
+import { canManageEvent, findUser } from '../utils/eventAccess';
 
 export const createEvent = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -19,8 +20,12 @@ export const createEvent = async (req: AuthRequest, res: Response): Promise<void
       return;
     }
 
+    const host = await findUser(hostId);
+    if (!host) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
 
-    // Generate unique room code
     let roomCode = generateRoomCode();
     let existingRoom = await prisma.event.findUnique({ where: { roomCode } });
 
@@ -43,9 +48,9 @@ export const createEvent = async (req: AuthRequest, res: Response): Promise<void
       message: 'Event created successfully',
       event,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Create event error:', error);
-    res.status(500).json({ message: 'Internal server error', error: error?.message || String(error) });
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -58,7 +63,14 @@ export const getHostEvents = async (req: AuthRequest, res: Response): Promise<vo
       return;
     }
 
+    const user = await findUser(hostId);
+    if (!user) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
+
     const events = await prisma.event.findMany({
+      where: user.role === 'ADMIN' ? undefined : { hostId },
       include: {
         _count: {
           select: { questions: true, participants: true },
@@ -70,13 +82,18 @@ export const getHostEvents = async (req: AuthRequest, res: Response): Promise<vo
     res.status(200).json({ events });
   } catch (error) {
     console.error('Get host events error:', error);
-    res.status(200).json({ events: [] });
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
 export const getEventById = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const id = req.params.id as string;
+    const user = await findUser(req.user?.userId);
+    if (!user) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
 
     const event = await prisma.event.findUnique({
       where: { id },
@@ -90,7 +107,7 @@ export const getEventById = async (req: AuthRequest, res: Response): Promise<voi
       },
     });
 
-    if (!event) {
+    if (!event || !canManageEvent(user, event)) {
       res.status(404).json({ message: 'Event not found' });
       return;
     }
@@ -105,23 +122,23 @@ export const getEventById = async (req: AuthRequest, res: Response): Promise<voi
 export const deleteEvent = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const id = req.params.id as string;
-    const hostId = req.user?.userId;
-
-    const user = await prisma.user.findUnique({ where: { id: hostId } });
-    if (!user || user.role !== 'ADMIN') {
-      res.status(403).json({ message: 'Forbidden: Only ADMIN users can delete a quiz.' });
+    const user = await findUser(req.user?.userId);
+    if (!user) {
+      res.status(401).json({ message: 'Unauthorized' });
       return;
     }
 
     const event = await prisma.event.findUnique({ where: { id } });
-
-    if (!event) {
+    if (!event || !canManageEvent(user, event)) {
       res.status(404).json({ message: 'Event not found' });
       return;
     }
 
+    await prisma.event.update({
+      where: { id },
+      data: { currentQuestionId: null },
+    });
     await prisma.event.delete({ where: { id } });
-
     await logActivity(req.user?.userId, 'DELETE_EVENT', 'Event', id, { title: event.title });
 
     res.status(200).json({ message: 'Event deleted successfully' });
@@ -135,10 +152,14 @@ export const updateEventConfig = async (req: AuthRequest, res: Response): Promis
   try {
     const id = req.params.id as string;
     const { concludeConfig } = req.body;
+    const user = await findUser(req.user?.userId);
+    if (!user) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
 
     const event = await prisma.event.findUnique({ where: { id } });
-
-    if (!event) {
+    if (!event || !canManageEvent(user, event)) {
       res.status(404).json({ message: 'Event not found' });
       return;
     }
@@ -160,32 +181,22 @@ export const updateEventConfig = async (req: AuthRequest, res: Response): Promis
 export const clearEventData = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const id = req.params.id as string;
-    
-    // Check if user is an ADMIN
-    const user = await prisma.user.findUnique({ where: { id: req.user?.userId } });
-    if (!user || user.role !== 'ADMIN') {
-      res.status(403).json({ message: 'Forbidden: Only ADMIN users can clear data.' });
+    const user = await findUser(req.user?.userId);
+    if (!user) {
+      res.status(401).json({ message: 'Unauthorized' });
       return;
     }
 
     const event = await prisma.event.findUnique({ where: { id } });
-    if (!event) {
+    if (!event || !canManageEvent(user, event)) {
       res.status(404).json({ message: 'Event not found' });
       return;
     }
 
-    if (event.hostId !== user.id) {
-      res.status(403).json({ message: 'Forbidden: You do not own this event.' });
-      return;
-    }
-
-    // Delete participants. Because of onDelete: Cascade in schema, this will automatically delete all Responses.
     await prisma.participant.deleteMany({ where: { eventId: id } });
-
-    // Optionally reset the current question pointer
     await prisma.event.update({
       where: { id },
-      data: { currentQuestionId: null }
+      data: { currentQuestionId: null },
     });
 
     await logActivity(req.user?.userId, 'CLEAR_EVENT_DATA', 'Event', id, { title: event.title });

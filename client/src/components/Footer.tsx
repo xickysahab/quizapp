@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import brandLogo from '../assets/Sahaj spirit.jpeg';
+import brandLogo from '../assets/sahaj-spirit.jpeg';
 
 const Footer: React.FC = () => {
   return (

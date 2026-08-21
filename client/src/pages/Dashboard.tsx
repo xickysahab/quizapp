@@ -112,21 +112,23 @@ const Dashboard: React.FC = () => {
             Manage your interactive quizzes, live polls, and audience engagement seamlessly.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
-            <button
-              onClick={() => setIsAdminModalOpen(true)}
-              className="flex items-center gap-2 bg-[#F0F9FF] hover:bg-[#E0F2FE] text-[#06B6D4] px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors border border-[#E0F2FE]"
-            >
-              <UserPlus className="w-4 h-4" />
-              Add Sub-Admin
-            </button>
             {user?.role === 'ADMIN' && (
-              <button
-                onClick={() => navigate('/admin/logs')}
-                className="flex items-center gap-2 bg-[#FFF7ED] hover:bg-[#FFEDD5] text-[#F97316] px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors border border-[#FFEDD5]"
-              >
-                <FileText className="w-4 h-4" />
-                Audit Logs
-              </button>
+              <>
+                <button
+                  onClick={() => setIsAdminModalOpen(true)}
+                  className="flex items-center gap-2 bg-[#F0F9FF] hover:bg-[#E0F2FE] text-[#06B6D4] px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors border border-[#E0F2FE]"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  Add Sub-Admin
+                </button>
+                <button
+                  onClick={() => navigate('/admin/logs')}
+                  className="flex items-center gap-2 bg-[#FFF7ED] hover:bg-[#FFEDD5] text-[#F97316] px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors border border-[#FFEDD5]"
+                >
+                  <FileText className="w-4 h-4" />
+                  Audit Logs
+                </button>
+              </>
             )}
           </div>
         </div>
