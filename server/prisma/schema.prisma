@@ -27,11 +27,15 @@ model Event {
   isLive            Boolean       @default(false)
   currentQuestionId String?
   currentQuestion   Question?     @relation("ActiveQuestion", fields: [currentQuestionId], references: [id], onDelete: SetNull)
+  // Persisted so time limits survive a server restart (in-memory live state is lost).
+  currentQuestionStartedAt DateTime?
   concludeConfig    Json?
   questions         Question[]
   participants      Participant[]
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
+
+  @@index([hostId])
 }
 
 model Question {
@@ -45,6 +49,8 @@ model Question {
   timeLimit     Int?
   responses     Response[]
   activeForEvents Event[]  @relation("ActiveQuestion")
+
+  @@index([eventId, order])
 }
 
 model Participant {
@@ -52,9 +58,15 @@ model Participant {
   eventId   String
   event     Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
   name      String
+  // Bearer secret handed to the participant on join; proves they own this row.
+  // Optional so rows created before this field existed can still rejoin by name.
+  joinToken String?    @unique
   socketId  String?
   responses Response[]
   joinedAt  DateTime   @default(now())
+
+  @@unique([eventId, name])
+  @@index([eventId])
 }
 
 model Response {
@@ -68,6 +80,7 @@ model Response {
   respondedAt    DateTime    @default(now())
 
   @@unique([questionId, participantId])
+  @@index([participantId])
 }
 
 model ActivityLog {
@@ -79,4 +92,7 @@ model ActivityLog {
   resourceId String?
   details    Json?
   createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
 }

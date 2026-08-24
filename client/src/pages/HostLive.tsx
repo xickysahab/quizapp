@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Play, Square, ChevronRight, ChevronLeft, Users, BarChart3, Radio, Award, LogOut, QrCode, X, Clock } from 'lucide-react';
@@ -15,6 +15,9 @@ const HostLive: React.FC = () => {
   const navigate = useNavigate();
 
   const [event, setEvent] = useState<any>(null);
+  // Read by the socket handlers, which are registered once and must not close
+  // over a stale `event`.
+  const eventRef = useRef<any>(null);
   const [loading, setLoading] = useState(true);
   const [confirmModal, setConfirmModal] = useState<{isOpen: boolean, action: 'conclude' | 'exit' | null}>({ isOpen: false, action: null });
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(-1);
@@ -35,8 +38,10 @@ const HostLive: React.FC = () => {
         const response = await api.get(`/events/${id}`);
         if (cancelled) return;
         const loaded = response.data.event;
+        eventRef.current = loaded;
         setEvent(loaded);
-        setParticipantCount(loaded._count?.participants || 0);
+        // The header now reports live connections, which only the socket knows,
+        // so the lifetime participant count from the API is not seeded here.
 
         if (loaded.isLive && loaded.currentQuestionId) {
           const idx = loaded.questions.findIndex((q: { id: string }) => q.id === loaded.currentQuestionId);
@@ -60,7 +65,14 @@ const HostLive: React.FC = () => {
     if (!id) return;
 
     connectSocket();
-    socket.emit('host:join', id);
+
+    // The host is put back into the `host-<eventId>` room on every (re)connect;
+    // without this a brief network drop freezes the counters for good.
+    const joinRoom = () => {
+      socket.emit('host:join', id);
+    };
+    if (socket.connected) joinRoom();
+    socket.on('connect', joinRoom);
 
     const onSync = (data: {
       participantCount: number;
@@ -71,6 +83,16 @@ const HostLive: React.FC = () => {
       setParticipantCount(data.participantCount);
       setResponsesCount(data.responseCount);
       if (data.startedAt) setQuestionStartedAt(data.startedAt);
+
+      // Reconnecting mid-quiz: put the stage back on the question the server
+      // still considers active.
+      if (data.currentQuestionId) {
+        const questions = eventRef.current?.questions;
+        if (Array.isArray(questions)) {
+          const idx = questions.findIndex((q: { id: string }) => q.id === data.currentQuestionId);
+          if (idx >= 0) setCurrentQuestionIndex(idx);
+        }
+      }
     };
 
     const onParticipantCount = (data: { count: number }) => {
@@ -92,6 +114,7 @@ const HostLive: React.FC = () => {
     socket.on('host:questionStarted', onQuestionStarted);
 
     return () => {
+      socket.off('connect', joinRoom);
       socket.off('host:sync', onSync);
       socket.off('host:participantCount', onParticipantCount);
       socket.off('host:responseCount', onResponseCount);
@@ -214,7 +237,7 @@ const HostLive: React.FC = () => {
             <div className="flex items-center gap-3 text-xs text-[#475569]">
               <span className="flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5 text-[#06B6D4]" />
-                <span>{participantCount} Joined</span>
+                <span>{participantCount} Connected</span>
               </span>
               <span>•</span>
               <span className="flex items-center gap-1.5">
