@@ -2,6 +2,9 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
+  // Under a heavy answer burst a request can queue for a long time. Failing at 20s
+  // frees the browser connection instead of leaving it hanging indefinitely.
+  timeout: 20000,
 });
 
 api.interceptors.request.use(

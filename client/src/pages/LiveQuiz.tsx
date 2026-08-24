@@ -14,6 +14,7 @@ const LiveQuiz: React.FC = () => {
   const [participantName, setParticipantName] = useState<string | null>(null);
   const [participantId, setParticipantId] = useState<string | null>(null);
   const [eventId, setEventId] = useState<string | null>(null);
+  const [joinToken, setJoinToken] = useState<string | null>(null);
 
   const [activeQuestion, setActiveQuestion] = useState<any>(null);
   const [currentSelection, setCurrentSelection] = useState<number | null>(null);
@@ -25,6 +26,7 @@ const LiveQuiz: React.FC = () => {
     const pName = localStorage.getItem('participantName');
     const pId = localStorage.getItem('participantId');
     const eId = localStorage.getItem('eventId');
+    const pToken = localStorage.getItem('participantToken');
 
     if (!pName || !pId || !eId) {
       navigate('/');
@@ -34,9 +36,18 @@ const LiveQuiz: React.FC = () => {
     setParticipantName(pName);
     setParticipantId(pId);
     setEventId(eId);
+    setJoinToken(pToken);
 
     connectSocket();
-    socket.emit('participant:join', eId, pId);
+
+    // Server-side room membership does not survive a dropped connection, so the
+    // join has to be replayed on every (re)connect or this participant silently
+    // stops receiving questions.
+    const joinRoom = () => {
+      socket.emit('participant:join', eId, pId, pToken ?? undefined);
+    };
+    if (socket.connected) joinRoom();
+    socket.on('connect', joinRoom);
 
     const onQuestionActive = ({
       question,
@@ -58,12 +69,24 @@ const LiveQuiz: React.FC = () => {
       setActiveQuestion(null);
     };
 
+    const onRejected = ({ message }: { message?: string }) => {
+      toast.error(message || 'This session is no longer valid. Please join again.');
+      localStorage.removeItem('participantId');
+      localStorage.removeItem('participantName');
+      localStorage.removeItem('eventId');
+      localStorage.removeItem('participantToken');
+      navigate('/');
+    };
+
     socket.on('participant:questionActive', onQuestionActive);
     socket.on('participant:quizEnded', onQuizEnded);
+    socket.on('participant:rejected', onRejected);
 
     return () => {
+      socket.off('connect', joinRoom);
       socket.off('participant:questionActive', onQuestionActive);
       socket.off('participant:quizEnded', onQuizEnded);
+      socket.off('participant:rejected', onRejected);
       socket.disconnect();
     };
   }, [navigate]);
@@ -98,8 +121,9 @@ const LiveQuiz: React.FC = () => {
         participantId,
         questionId: activeQuestion.id,
         selectedOption: index,
+        joinToken: joinToken ?? undefined,
       });
-      socket.emit('participant:submitAnswer', eventId, participantId);
+      socket.emit('participant:submitAnswer', eventId, participantId, joinToken ?? undefined);
     } catch (error) {
       console.error('Failed to submit response', error);
       toast.error('Unable to save response. The question may have been closed by the host.');

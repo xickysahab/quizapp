@@ -79,6 +79,29 @@ class ResponseBatcher {
       this.isFlushing = false;
     }
   }
+
+  public get pendingCount(): number {
+    return this.queue.size;
+  }
+
+  /**
+   * Stop the periodic timer and drain whatever is queued. Called on shutdown so
+   * answers submitted in the last flush window are not lost with the process.
+   */
+  public async stop(): Promise<void> {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+
+    await this.flush();
+
+    if (this.queue.size > 0) {
+      console.error(
+        `Shutdown flush failed: ${this.queue.size} response(s) could not be written to the database.`
+      );
+    }
+  }
 }
 
 export const responseBatcher = new ResponseBatcher();

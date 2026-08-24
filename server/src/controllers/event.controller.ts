@@ -4,6 +4,7 @@ import { AuthRequest } from '../middleware/auth.middleware';
 import { generateRoomCode } from '../utils/roomCode';
 import { logActivity } from '../utils/logger';
 import { canManageEvent, findUser } from '../utils/eventAccess';
+import { endLiveEvent } from '../utils/liveState';
 
 export const createEvent = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -139,6 +140,7 @@ export const deleteEvent = async (req: AuthRequest, res: Response): Promise<void
       data: { currentQuestionId: null },
     });
     await prisma.event.delete({ where: { id } });
+    await endLiveEvent(id);
     await logActivity(req.user?.userId, 'DELETE_EVENT', 'Event', id, { title: event.title });
 
     res.status(200).json({ message: 'Event deleted successfully' });
@@ -196,8 +198,9 @@ export const clearEventData = async (req: AuthRequest, res: Response): Promise<v
     await prisma.participant.deleteMany({ where: { eventId: id } });
     await prisma.event.update({
       where: { id },
-      data: { currentQuestionId: null },
+      data: { isLive: false, currentQuestionId: null, currentQuestionStartedAt: null },
     });
+    await endLiveEvent(id);
 
     await logActivity(req.user?.userId, 'CLEAR_EVENT_DATA', 'Event', id, { title: event.title });
 

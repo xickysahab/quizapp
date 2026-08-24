@@ -3,6 +3,7 @@ import prisma from '../config/prisma';
 import { hashPassword, comparePassword, generateToken } from '../utils/auth';
 import { AuthRequest } from '../middleware/auth.middleware';
 import { findUser } from '../utils/eventAccess';
+import { logActivity } from '../utils/logger';
 
 export const register = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -61,6 +62,16 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     const userCount = await prisma.user.count();
     if (userCount === 0) {
+      // Convenience for local setup only. In production the same branch would let
+      // whoever reaches the empty deployment first claim ADMIN, so it is closed and
+      // ensureBootstrapAdmin (awaited before the port opens) is the only way in.
+      if (process.env.NODE_ENV === 'production') {
+        res.status(503).json({
+          message: 'No admin account exists. Set ADMIN_EMAIL and ADMIN_PASSWORD and restart the server.',
+        });
+        return;
+      }
+
       const user = await prisma.user.create({
         data: {
           name: 'Admin',
@@ -70,6 +81,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         },
       });
       const token = generateToken(user.id, user.email);
+      await logActivity(user.id, 'LOGIN', 'User', user.id, { email: user.email, bootstrap: true });
       res.status(200).json({
         message: 'First admin created',
         token,
@@ -96,6 +108,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     const token = generateToken(user.id, user.email);
+
+    await logActivity(user.id, 'LOGIN', 'User', user.id, { email: user.email });
 
     res.status(200).json({
       message: 'Login successful',

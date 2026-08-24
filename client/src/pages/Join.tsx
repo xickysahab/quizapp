@@ -36,12 +36,17 @@ const Join: React.FC = () => {
       const response = await api.post('/participants/join', {
         roomCode: roomCode.trim().toUpperCase(),
         name: name.trim(),
+        joinToken: localStorage.getItem('participantToken') ?? undefined,
       });
 
-      // Save participant session in localStorage
+      // Save participant session in localStorage. The join token is what proves
+      // this browser owns the participant row on later requests.
       localStorage.setItem('participantId', response.data.participant.id);
       localStorage.setItem('participantName', response.data.participant.name);
       localStorage.setItem('eventId', response.data.event.id);
+      if (response.data.participant.joinToken) {
+        localStorage.setItem('participantToken', response.data.participant.joinToken);
+      }
 
       // Navigate to live quiz waiting room
       navigate(`/live/${roomCode.trim().toUpperCase()}`);

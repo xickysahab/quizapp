@@ -5,6 +5,33 @@ import { Parser } from 'json2csv';
 import { canManageEvent, findUser } from '../utils/eventAccess';
 import { responseBatcher } from '../utils/responseBatcher';
 
+/**
+ * Whole-number percentages that always add up to 100 (when anything was
+ * answered). Plain rounding leaves the total at 99 or 101, which looks broken on
+ * the results screen.
+ */
+function toPercentages(counts: number[], total: number): number[] {
+  if (total <= 0) return counts.map(() => 0);
+
+  const exact = counts.map((count) => (count / total) * 100);
+  const result = exact.map((value) => Math.floor(value));
+  let remaining = 100 - result.reduce((sum, value) => sum + value, 0);
+
+  const byLargestRemainder = exact
+    .map((value, index) => ({ index, fraction: value - Math.floor(value) }))
+    .sort((a, b) => b.fraction - a.fraction);
+
+  for (const { index } of byLargestRemainder) {
+    if (remaining <= 0) break;
+    const current = result[index];
+    if (current === undefined) continue;
+    result[index] = current + 1;
+    remaining -= 1;
+  }
+
+  return result;
+}
+
 export const getQuestionAnalytics = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const questionId = req.params.id as string;
@@ -38,9 +65,7 @@ export const getQuestionAnalytics = async (req: AuthRequest, res: Response): Pro
       }
     });
 
-    const percentages = optionCounts.map((count) =>
-      totalResponses === 0 ? 0 : Math.round((count / totalResponses) * 100)
-    );
+    const percentages = toPercentages(optionCounts, totalResponses);
 
     res.status(200).json({
       totalResponses,
@@ -92,7 +117,10 @@ export const exportEventAnalytics = async (req: AuthRequest, res: Response): Pro
 
       event.questions.forEach((q, index) => {
         const response = p.responses.find((r) => r.questionId === q.id);
-        row[`Q${index + 1} (${q.text})`] = response ? q.options[response.selectedOption] : 'No Answer';
+        // options[] can come up empty if the question was edited after answers
+        // landed, so fall back rather than writing "undefined" into the CSV.
+        const chosen = response ? q.options[response.selectedOption] : undefined;
+        row[`Q${index + 1} (${q.text})`] = chosen ?? 'No Answer';
       });
 
       return row;
@@ -144,9 +172,7 @@ export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response):
     const maxOptions = event.questions.reduce((max, q) => Math.max(max, q.options.length), 0);
     const optionCount = maxOptions || 0;
     let collectiveTotalResponses = 0;
-    const collectiveOptionCounts = Array(optionCount).fill(0);
-    const sumOfPercentages = Array(optionCount).fill(0);
-    let questionsWithResponses = 0;
+    const collectiveOptionCounts: number[] = Array(optionCount).fill(0);
 
     const summary = event.questions.map((question) => {
       const totalResponses = question.responses.length;
@@ -163,20 +189,7 @@ export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response):
         }
       });
 
-      const percentages = optionCounts.map((count) =>
-        totalResponses === 0 ? 0 : Math.round((count / totalResponses) * 100)
-      );
-
-      if (totalResponses > 0) {
-        questionsWithResponses++;
-        for (let i = 0; i < percentages.length; i++) {
-          const prevSum = sumOfPercentages[i];
-          const currPct = percentages[i];
-          if (i < optionCount && prevSum !== undefined && currPct !== undefined) {
-            sumOfPercentages[i] = prevSum + currPct;
-          }
-        }
-      }
+      const percentages = toPercentages(optionCounts, totalResponses);
 
       return {
         id: question.id,
@@ -189,18 +202,9 @@ export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response):
       };
     });
 
-    let collectivePercentages = sumOfPercentages.map((sum) =>
-      questionsWithResponses === 0 ? 0 : Math.round(sum / questionsWithResponses)
-    );
-
-    const totalMeanPercentage = collectivePercentages.reduce((a, b) => a + b, 0);
-    if (totalMeanPercentage > 0 && totalMeanPercentage !== 100) {
-      const maxIdx = collectivePercentages.indexOf(Math.max(...collectivePercentages));
-      const diff = 100 - totalMeanPercentage;
-      if (maxIdx !== -1 && collectivePercentages[maxIdx] !== undefined) {
-        collectivePercentages[maxIdx] += diff;
-      }
-    }
+    // Share of all answers cast, not the average of each question's percentages:
+    // the latter gives a 5-response question the same weight as a 500-response one.
+    const collectivePercentages = toPercentages(collectiveOptionCounts, collectiveTotalResponses);
 
     res.status(200).json({
       eventId: event.id,

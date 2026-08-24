@@ -12,6 +12,12 @@ dist/
 .env.local
 .env.*.local
 
+# Stray compiled output from ad-hoc scripts at the server root
+server/*.js
+server/*.js.map
+server/*.d.ts
+server/*.d.ts.map
+
 # Logs
 npm-debug.log*
 yarn-debug.log*
