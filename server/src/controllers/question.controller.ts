@@ -2,19 +2,16 @@ import { Response } from 'express';
 import prisma from '../config/prisma';
 import { AuthRequest } from '../middleware/auth.middleware';
 import { logActivity } from '../utils/logger';
-import { canManageEvent, findUser } from '../utils/eventAccess';
+import { canManage } from '../utils/eventAccess';
 
 async function getOwnedQuestion(userId: string | undefined, questionId: string) {
-  const user = await findUser(userId);
-  if (!user) return null;
-
   const question = await prisma.question.findUnique({
     where: { id: questionId },
     include: { event: true },
   });
 
-  if (!question || !canManageEvent(user, question.event)) return null;
-  return { user, question };
+  if (!question || !(await canManage(userId, question.event))) return null;
+  return { question };
 }
 
 export const addQuestion = async (req: AuthRequest, res: Response): Promise<void> => {
@@ -26,14 +23,8 @@ export const addQuestion = async (req: AuthRequest, res: Response): Promise<void
       return;
     }
 
-    const user = await findUser(req.user?.userId);
-    if (!user) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
-
     const event = await prisma.event.findUnique({ where: { id: eventId } });
-    if (!event || !canManageEvent(user, event)) {
+    if (!event || !(await canManage(req.user?.userId, event))) {
       res.status(403).json({ message: 'Forbidden. You do not own this event.' });
       return;
     }

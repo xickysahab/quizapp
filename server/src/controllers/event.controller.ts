@@ -3,7 +3,7 @@ import prisma from '../config/prisma';
 import { AuthRequest } from '../middleware/auth.middleware';
 import { generateRoomCode } from '../utils/roomCode';
 import { logActivity } from '../utils/logger';
-import { canManageEvent, findUser } from '../utils/eventAccess';
+import { canManage, findUser } from '../utils/eventAccess';
 import { endLiveEvent } from '../utils/liveState';
 
 export const createEvent = async (req: AuthRequest, res: Response): Promise<void> => {
@@ -90,11 +90,6 @@ export const getHostEvents = async (req: AuthRequest, res: Response): Promise<vo
 export const getEventById = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const id = req.params.id as string;
-    const user = await findUser(req.user?.userId);
-    if (!user) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
 
     const event = await prisma.event.findUnique({
       where: { id },
@@ -108,7 +103,7 @@ export const getEventById = async (req: AuthRequest, res: Response): Promise<voi
       },
     });
 
-    if (!event || !canManageEvent(user, event)) {
+    if (!event || !(await canManage(req.user?.userId, event))) {
       res.status(404).json({ message: 'Event not found' });
       return;
     }
@@ -123,14 +118,8 @@ export const getEventById = async (req: AuthRequest, res: Response): Promise<voi
 export const deleteEvent = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const id = req.params.id as string;
-    const user = await findUser(req.user?.userId);
-    if (!user) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
-
     const event = await prisma.event.findUnique({ where: { id } });
-    if (!event || !canManageEvent(user, event)) {
+    if (!event || !(await canManage(req.user?.userId, event))) {
       res.status(404).json({ message: 'Event not found' });
       return;
     }
@@ -154,14 +143,8 @@ export const updateEventConfig = async (req: AuthRequest, res: Response): Promis
   try {
     const id = req.params.id as string;
     const { concludeConfig } = req.body;
-    const user = await findUser(req.user?.userId);
-    if (!user) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
-
     const event = await prisma.event.findUnique({ where: { id } });
-    if (!event || !canManageEvent(user, event)) {
+    if (!event || !(await canManage(req.user?.userId, event))) {
       res.status(404).json({ message: 'Event not found' });
       return;
     }
@@ -183,14 +166,8 @@ export const updateEventConfig = async (req: AuthRequest, res: Response): Promis
 export const clearEventData = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const id = req.params.id as string;
-    const user = await findUser(req.user?.userId);
-    if (!user) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
-
     const event = await prisma.event.findUnique({ where: { id } });
-    if (!event || !canManageEvent(user, event)) {
+    if (!event || !(await canManage(req.user?.userId, event))) {
       res.status(404).json({ message: 'Event not found' });
       return;
     }
