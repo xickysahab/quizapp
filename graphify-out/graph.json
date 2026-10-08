@@ -17217,7 +17217,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "client/src/pages/LiveQuiz.tsx",
-      "source_location": "L267",
+      "source_location": "L275",
       "weight": 1.0
     },
     {
@@ -36012,5 +36012,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "9645f732aab8088fce1b6405ac16bac878b0284b"
+  "built_at_commit": "462c18c1cbc71f70a3027c891808176d8f5aeef9"
 }
