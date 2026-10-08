@@ -1,16 +1,16 @@
 # Graph Report - Sahajometer  (2026-10-08)
 
 ## Corpus Check
-- 127 files · ~64,398 words
+- 127 files · ~64,313 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1445 nodes · 1681 edges · 104 communities (92 shown, 9 thin omitted)
+- 1444 nodes · 1679 edges · 103 communities (91 shown, 9 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 22 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `68cadae6`
+- Built from commit: `9645f732`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -56,7 +56,6 @@
 - ESM and CommonJS Support
 - Constructor Options
 - Schema Changes
-- participant.controller.ts
 - dependencies
 - Transactions
 - Workflow
@@ -134,17 +133,17 @@
   server/src/middleware/auth.middleware.ts → server/src/utils/eventAccess.ts
 - `ProtectedRoute()` --calls--> `useAuth()`  [EXTRACTED]
   client/src/App.tsx → client/src/context/AuthContext.tsx
-- `rateLimit()` --calls--> `getRedis()`  [EXTRACTED]
-  server/src/utils/rateLimit.ts → server/src/config/redis.ts
-- `register()` --calls--> `findUser()`  [EXTRACTED]
-  server/src/controllers/auth.controller.ts → server/src/utils/eventAccess.ts
-- `login()` --calls--> `logActivity()`  [EXTRACTED]
-  server/src/controllers/auth.controller.ts → server/src/utils/logger.ts
+- `getQuestionAnalytics()` --calls--> `canManage()`  [EXTRACTED]
+  server/src/controllers/analytics.controller.ts → server/src/utils/eventAccess.ts
+- `exportEventAnalytics()` --calls--> `canManage()`  [EXTRACTED]
+  server/src/controllers/analytics.controller.ts → server/src/utils/eventAccess.ts
+- `getEventSummaryAnalytics()` --calls--> `canManage()`  [EXTRACTED]
+  server/src/controllers/analytics.controller.ts → server/src/utils/eventAccess.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (104 total, 9 thin omitted)
+## Communities (103 total, 9 thin omitted)
 
 ### Community 0 - "App.tsx"
 Cohesion: 0.10
@@ -251,12 +250,12 @@ Cohesion: 0.11
 Nodes (18): After schema changes, Command, Common Patterns, Create and apply migration, Create without applying, Examples, Follow-up Commands, Full workflow (+10 more)
 
 ### Community 26 - "src/index.ts"
-Cohesion: 0.14
-Nodes (17): clients, closeRedis(), createRedisClient(), getRedis(), options, redisEnabled, ensureBootstrapAdmin(), app (+9 more)
+Cohesion: 0.11
+Nodes (23): clients, closeRedis(), createRedisClient(), getRedis(), options, redisEnabled, ensureBootstrapAdmin(), app (+15 more)
 
 ### Community 27 - "socket/index.ts"
-Cohesion: 0.22
-Nodes (17): AuthedSocket, authenticateParticipant(), HostCounters, initializeSocket(), requireEventHost(), toPublicQuestion(), dropConnection(), getConnectedCount() (+9 more)
+Cohesion: 0.16
+Nodes (23): authenticateParticipant(), generateJoinToken(), joinEvent(), submitResponse(), AuthedSocket, authenticateParticipant(), HostCounters, initializeSocket() (+15 more)
 
 ### Community 28 - "prisma db seed"
 Cohesion: 0.11
@@ -310,10 +309,6 @@ Nodes (15): accelerateUrl (For Accelerate users), adapter (Required for the SQL 
 Cohesion: 0.12
 Nodes (15): 1. Provider name, 2. Output is required, 3. engineType changed, 4. moduleFormat is explicit when needed, After Schema Changes, Datasource Block, Example Output Paths, Generated Entrypoints (+7 more)
 
-### Community 41 - "participant.controller.ts"
-Cohesion: 0.20
-Nodes (13): authenticateParticipant(), generateJoinToken(), isUniqueViolation(), joinEvent(), submitResponse(), joinLimiter, router, isSubmitAllowed() (+5 more)
-
 ### Community 42 - "dependencies"
 Cohesion: 0.13
 Nodes (15): axios, dependencies, axios, qrcode.react, react, react-hot-toast, react-router-dom, socket.io-client (+7 more)
@@ -343,8 +338,8 @@ Cohesion: 0.29
 Nodes (9): adapter, pool, prisma, addQuestion(), deleteQuestion(), getOwnedQuestion(), updateQuestion(), logActivity() (+1 more)
 
 ### Community 49 - "analytics.controller.ts"
-Cohesion: 0.35
-Nodes (8): RFC-4180, exportEventAnalytics(), getEventSummaryAnalytics(), getQuestionAnalytics(), toPercentages(), toCsv(), canManage(), canManageEvent()
+Cohesion: 0.33
+Nodes (7): RFC-4180, exportEventAnalytics(), getEventSummaryAnalytics(), getQuestionAnalytics(), toPercentages(), router, toCsv()
 
 ### Community 50 - "prisma db execute"
 Cohesion: 0.15
@@ -384,7 +379,7 @@ Nodes (11): 1. Schema Configuration, 2. Config Configuration, 3. Environment Var
 
 ### Community 59 - "event.controller.ts"
 Cohesion: 0.35
-Nodes (9): clearEventData(), createEvent(), deleteEvent(), getEventById(), getHostEvents(), updateEventConfig(), findUser(), endLiveEvent() (+1 more)
+Nodes (10): clearEventData(), createEvent(), deleteEvent(), getEventById(), getHostEvents(), updateEventConfig(), canManage(), findUser() (+2 more)
 
 ### Community 60 - "SQL Server Setup"
 Cohesion: 0.18
@@ -523,7 +518,7 @@ Nodes (3): Expanding the Oxlint configuration, React Compiler, React + TypeScrip
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `RedisBackend` connect `RedisBackend` to `socket/index.ts`?**
-  _High betweenness centrality (0.003) - this node is a cross-community bridge._
+  _High betweenness centrality (0.002) - this node is a cross-community bridge._
 - **Why does `LiveStateBackend` connect `RedisBackend` to `socket/index.ts`?**
   _High betweenness centrality (0.002) - this node is a cross-community bridge._
 - **Why does `dependencies` connect `dependencies` to `@prisma/client`, `socket.io`, `server/package.json`?**

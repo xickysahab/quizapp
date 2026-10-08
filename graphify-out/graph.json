@@ -147,6 +147,32 @@
       "source_location": "L155"
     },
     {
+      "id": "server_src_utils_ratelimit_bucket",
+      "label": "Bucket",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "src/index.ts",
+      "file_type": "code",
+      "norm_label": "bucket",
+      "source_file": "server/src/utils/rateLimit.ts",
+      "source_location": "L12"
+    },
+    {
+      "id": "server_src_utils_ratelimit_ratelimitoptions",
+      "label": "RateLimitOptions",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "src/index.ts",
+      "file_type": "code",
+      "norm_label": "ratelimitoptions",
+      "source_file": "server/src/utils/rateLimit.ts",
+      "source_location": "L4"
+    },
+    {
       "id": "server_src_socket_index_authedsocket",
       "label": "AuthedSocket",
       "_callable": true,
@@ -210,32 +236,6 @@
       "norm_label": "authrequest",
       "source_file": "server/src/middleware/auth.middleware.ts",
       "source_location": "L5"
-    },
-    {
-      "id": "server_src_utils_ratelimit_bucket",
-      "label": "Bucket",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "bucket",
-      "source_file": "server/src/utils/rateLimit.ts",
-      "source_location": "L12"
-    },
-    {
-      "id": "server_src_utils_ratelimit_ratelimitoptions",
-      "label": "RateLimitOptions",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "ratelimitoptions",
-      "source_file": "server/src/utils/rateLimit.ts",
-      "source_location": "L4"
     },
     {
       "id": "server_src_utils_responsebatcher_pendingresponse",
@@ -1020,6 +1020,90 @@
       "source_location": "L89"
     },
     {
+      "id": "server_src_utils_ratelimit_clientkey",
+      "label": "clientKey()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "src/index.ts",
+      "file_type": "code",
+      "norm_label": "clientkey()",
+      "source_file": "server/src/utils/rateLimit.ts",
+      "source_location": "L16"
+    },
+    {
+      "id": "server_src_utils_ratelimit_ratelimit",
+      "label": "rateLimit()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "src/index.ts",
+      "file_type": "code",
+      "norm_label": "ratelimit()",
+      "source_file": "server/src/utils/rateLimit.ts",
+      "source_location": "L32"
+    },
+    {
+      "id": "server_src_utils_ratelimit_reject",
+      "label": "reject()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "src/index.ts",
+      "file_type": "code",
+      "norm_label": "reject()",
+      "source_file": "server/src/utils/rateLimit.ts",
+      "source_location": "L20"
+    },
+    {
+      "id": "server_src_controllers_participant_controller_authenticateparticipant",
+      "label": "authenticateParticipant()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "socket/index.ts",
+      "file_type": "code",
+      "norm_label": "authenticateparticipant()",
+      "source_file": "server/src/controllers/participant.controller.ts",
+      "source_location": "L14"
+    },
+    {
+      "id": "server_src_controllers_participant_controller_generatejointoken",
+      "label": "generateJoinToken()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "socket/index.ts",
+      "file_type": "code",
+      "norm_label": "generatejointoken()",
+      "source_file": "server/src/controllers/participant.controller.ts",
+      "source_location": "L21"
+    },
+    {
+      "id": "server_src_controllers_participant_controller_joinevent",
+      "label": "joinEvent()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "socket/index.ts",
+      "file_type": "code",
+      "norm_label": "joinevent()",
+      "source_file": "server/src/controllers/participant.controller.ts",
+      "source_location": "L25"
+    },
+    {
+      "id": "server_src_controllers_participant_controller_submitresponse",
+      "label": "submitResponse()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "socket/index.ts",
+      "file_type": "code",
+      "norm_label": "submitresponse()",
+      "source_file": "server/src/controllers/participant.controller.ts",
+      "source_location": "L112"
+    },
+    {
       "id": "server_src_socket_index_authenticateparticipant",
       "label": "authenticateParticipant()",
       "_callable": true,
@@ -1068,6 +1152,18 @@
       "source_location": "L19"
     },
     {
+      "id": "server_src_utils_eventaccess_canmanageevent",
+      "label": "canManageEvent()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "socket/index.ts",
+      "file_type": "code",
+      "norm_label": "canmanageevent()",
+      "source_file": "server/src/utils/eventAccess.ts",
+      "source_location": "L8"
+    },
+    {
       "id": "server_src_utils_livestate_dropconnection",
       "label": "dropConnection()",
       "_callable": true,
@@ -1114,6 +1210,18 @@
       "norm_label": "getrespondercount()",
       "source_file": "server/src/utils/liveState.ts",
       "source_location": "L323"
+    },
+    {
+      "id": "server_src_utils_livestate_issubmitallowed",
+      "label": "isSubmitAllowed()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "socket/index.ts",
+      "file_type": "code",
+      "norm_label": "issubmitallowed()",
+      "source_file": "server/src/utils/liveState.ts",
+      "source_location": "L342"
     },
     {
       "id": "server_src_utils_livestate_recordresponder",
@@ -1284,114 +1392,6 @@
       "source_location": "L32"
     },
     {
-      "id": "server_src_controllers_participant_controller_authenticateparticipant",
-      "label": "authenticateParticipant()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "authenticateparticipant()",
-      "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L23"
-    },
-    {
-      "id": "server_src_controllers_participant_controller_generatejointoken",
-      "label": "generateJoinToken()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "generatejointoken()",
-      "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L10"
-    },
-    {
-      "id": "server_src_controllers_participant_controller_isuniqueviolation",
-      "label": "isUniqueViolation()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "isuniqueviolation()",
-      "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L14"
-    },
-    {
-      "id": "server_src_controllers_participant_controller_joinevent",
-      "label": "joinEvent()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "joinevent()",
-      "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L30"
-    },
-    {
-      "id": "server_src_controllers_participant_controller_submitresponse",
-      "label": "submitResponse()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "submitresponse()",
-      "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L126"
-    },
-    {
-      "id": "server_src_utils_livestate_issubmitallowed",
-      "label": "isSubmitAllowed()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "issubmitallowed()",
-      "source_file": "server/src/utils/liveState.ts",
-      "source_location": "L342"
-    },
-    {
-      "id": "server_src_utils_ratelimit_clientkey",
-      "label": "clientKey()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "clientkey()",
-      "source_file": "server/src/utils/rateLimit.ts",
-      "source_location": "L16"
-    },
-    {
-      "id": "server_src_utils_ratelimit_ratelimit",
-      "label": "rateLimit()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "ratelimit()",
-      "source_file": "server/src/utils/rateLimit.ts",
-      "source_location": "L32"
-    },
-    {
-      "id": "server_src_utils_ratelimit_reject",
-      "label": "reject()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "reject()",
-      "source_file": "server/src/utils/rateLimit.ts",
-      "source_location": "L20"
-    },
-    {
       "id": "server_src_controllers_question_controller_addquestion",
       "label": "addQuestion()",
       "_callable": true,
@@ -1512,30 +1512,6 @@
       "source_location": "L2"
     },
     {
-      "id": "server_src_utils_eventaccess_canmanage",
-      "label": "canManage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 49,
-      "community_name": "analytics.controller.ts",
-      "file_type": "code",
-      "norm_label": "canmanage()",
-      "source_file": "server/src/utils/eventAccess.ts",
-      "source_location": "L16"
-    },
-    {
-      "id": "server_src_utils_eventaccess_canmanageevent",
-      "label": "canManageEvent()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 49,
-      "community_name": "analytics.controller.ts",
-      "file_type": "code",
-      "norm_label": "canmanageevent()",
-      "source_file": "server/src/utils/eventAccess.ts",
-      "source_location": "L8"
-    },
-    {
       "id": "server_src_controllers_event_controller_cleareventdata",
       "label": "clearEventData()",
       "_callable": true,
@@ -1606,6 +1582,18 @@
       "norm_label": "updateeventconfig()",
       "source_file": "server/src/controllers/event.controller.ts",
       "source_location": "L142"
+    },
+    {
+      "id": "server_src_utils_eventaccess_canmanage",
+      "label": "canManage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "event.controller.ts",
+      "file_type": "code",
+      "norm_label": "canmanage()",
+      "source_file": "server/src/utils/eventAccess.ts",
+      "source_location": "L16"
     },
     {
       "id": "server_src_utils_eventaccess_finduser",
@@ -6338,17 +6326,6 @@
       "source_location": "L38"
     },
     {
-      "id": "server_src_routes_analytics_routes_router",
-      "label": "router",
-      "_origin": "ast",
-      "community": 26,
-      "community_name": "src/index.ts",
-      "file_type": "code",
-      "norm_label": "router",
-      "source_file": "server/src/routes/analytics.routes.ts",
-      "source_location": "L5"
-    },
-    {
       "id": "server_src_routes_auth_routes_router",
       "label": "router",
       "_origin": "ast",
@@ -6382,6 +6359,39 @@
       "source_location": "L5"
     },
     {
+      "id": "server_src_routes_participant_routes",
+      "label": "participant.routes.ts",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "src/index.ts",
+      "file_type": "code",
+      "norm_label": "participant.routes.ts",
+      "source_file": "server/src/routes/participant.routes.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "server_src_routes_participant_routes_joinlimiter",
+      "label": "joinLimiter",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "src/index.ts",
+      "file_type": "code",
+      "norm_label": "joinlimiter",
+      "source_file": "server/src/routes/participant.routes.ts",
+      "source_location": "L10"
+    },
+    {
+      "id": "server_src_routes_participant_routes_router",
+      "label": "router",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "src/index.ts",
+      "file_type": "code",
+      "norm_label": "router",
+      "source_file": "server/src/routes/participant.routes.ts",
+      "source_location": "L5"
+    },
+    {
       "id": "server_src_routes_question_routes_router",
       "label": "router",
       "_origin": "ast",
@@ -6391,6 +6401,28 @@
       "norm_label": "router",
       "source_file": "server/src/routes/question.routes.ts",
       "source_location": "L5"
+    },
+    {
+      "id": "server_src_utils_ratelimit",
+      "label": "rateLimit.ts",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "src/index.ts",
+      "file_type": "code",
+      "norm_label": "ratelimit.ts",
+      "source_file": "server/src/utils/rateLimit.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "server_src_controllers_participant_controller",
+      "label": "participant.controller.ts",
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "socket/index.ts",
+      "file_type": "code",
+      "norm_label": "participant.controller.ts",
+      "source_file": "server/src/controllers/participant.controller.ts",
+      "source_location": "L1"
     },
     {
       "id": "server_src_socket_index",
@@ -9623,61 +9655,6 @@
       "source_location": "L59"
     },
     {
-      "id": "server_src_controllers_participant_controller",
-      "label": "participant.controller.ts",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "participant.controller.ts",
-      "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "server_src_routes_participant_routes",
-      "label": "participant.routes.ts",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "participant.routes.ts",
-      "source_file": "server/src/routes/participant.routes.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "server_src_routes_participant_routes_joinlimiter",
-      "label": "joinLimiter",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "joinlimiter",
-      "source_file": "server/src/routes/participant.routes.ts",
-      "source_location": "L10"
-    },
-    {
-      "id": "server_src_routes_participant_routes_router",
-      "label": "router",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "router",
-      "source_file": "server/src/routes/participant.routes.ts",
-      "source_location": "L5"
-    },
-    {
-      "id": "server_src_utils_ratelimit",
-      "label": "rateLimit.ts",
-      "_origin": "ast",
-      "community": 41,
-      "community_name": "participant.controller.ts",
-      "file_type": "code",
-      "norm_label": "ratelimit.ts",
-      "source_file": "server/src/utils/rateLimit.ts",
-      "source_location": "L1"
-    },
-    {
       "id": "client_package_dependencies",
       "label": "dependencies",
       "_origin": "ast",
@@ -10838,6 +10815,17 @@
       "source_location": "L1"
     },
     {
+      "id": "server_src_routes_analytics_routes_router",
+      "label": "router",
+      "_origin": "ast",
+      "community": 49,
+      "community_name": "analytics.controller.ts",
+      "file_type": "code",
+      "norm_label": "router",
+      "source_file": "server/src/routes/analytics.routes.ts",
+      "source_location": "L5"
+    },
+    {
       "id": "server_src_utils_csv",
       "label": "csv.ts",
       "_origin": "ast",
@@ -10846,17 +10834,6 @@
       "file_type": "code",
       "norm_label": "csv.ts",
       "source_file": "server/src/utils/csv.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "server_src_utils_eventaccess",
-      "label": "eventAccess.ts",
-      "_origin": "ast",
-      "community": 49,
-      "community_name": "analytics.controller.ts",
-      "file_type": "code",
-      "norm_label": "eventaccess.ts",
-      "source_file": "server/src/utils/eventAccess.ts",
       "source_location": "L1"
     },
     {
@@ -12551,6 +12528,17 @@
       "file_type": "code",
       "norm_label": "event.routes.ts",
       "source_file": "server/src/routes/event.routes.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "server_src_utils_eventaccess",
+      "label": "eventAccess.ts",
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "event.controller.ts",
+      "file_type": "code",
+      "norm_label": "eventaccess.ts",
+      "source_file": "server/src/utils/eventAccess.ts",
       "source_location": "L1"
     },
     {
@@ -17582,18 +17570,6 @@
     },
     {
       "source": "server_src_controllers_participant_controller_joinevent",
-      "target": "server_src_controllers_participant_controller_isuniqueviolation",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L114",
-      "weight": 1.0
-    },
-    {
-      "source": "server_src_controllers_participant_controller_joinevent",
       "target": "server_src_controllers_participant_controller_generatejointoken",
       "relation": "calls",
       "_origin": "ast",
@@ -17601,7 +17577,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L78",
+      "source_location": "L89",
       "weight": 1.0
     },
     {
@@ -17613,7 +17589,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L142",
+      "source_location": "L128",
       "weight": 1.0
     },
     {
@@ -17625,7 +17601,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L171",
+      "source_location": "L157",
       "weight": 1.0
     },
     {
@@ -17637,7 +17613,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L189",
+      "source_location": "L175",
       "weight": 1.0
     },
     {
@@ -34298,35 +34274,13 @@
     },
     {
       "source": "server_src_controllers_participant_controller",
-      "target": "server_src_controllers_participant_controller_generatejointoken",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L10",
-      "weight": 1.0
-    },
-    {
-      "source": "server_src_controllers_participant_controller",
       "target": "server_src_controllers_participant_controller_submitresponse",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L126",
-      "weight": 1.0
-    },
-    {
-      "source": "server_src_controllers_participant_controller",
-      "target": "server_src_controllers_participant_controller_isuniqueviolation",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L14",
+      "source_location": "L112",
       "weight": 1.0
     },
     {
@@ -34337,7 +34291,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L23",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "server_src_controllers_participant_controller",
+      "target": "server_src_controllers_participant_controller_generatejointoken",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "server/src/controllers/participant.controller.ts",
+      "source_location": "L21",
       "weight": 1.0
     },
     {
@@ -34348,7 +34313,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "server/src/controllers/participant.controller.ts",
-      "source_location": "L30",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -36047,5 +36012,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "68cadae6418c7142f3fa2e38475d47cccab001ed"
+  "built_at_commit": "9645f732aab8088fce1b6405ac16bac878b0284b"
 }

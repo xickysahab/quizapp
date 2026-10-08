@@ -76,6 +76,14 @@ const LiveQuiz: React.FC = () => {
     };
 
     const onQuizEnded = () => {
+      toast('Host has ended the quiz.', {
+        icon: '🛑',
+        style: {
+          borderRadius: '10px',
+          background: '#fff',
+          color: '#0F172A',
+        },
+      });
       setQuizEnded(true);
       setActiveQuestion(null);
     };
@@ -158,7 +166,7 @@ const LiveQuiz: React.FC = () => {
               Session Concluded
             </span>
             <h1 className="font-serif text-4xl font-bold text-[#0F172A] mt-1">
-              Quiz Completed!
+              Host has ended the quiz
             </h1>
             <p className="text-sm text-[#475569] mt-2">
               Thank you for participating, <span className="font-semibold text-[#0F172A]">{participantName}</span>. Your responses were recorded.
