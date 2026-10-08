@@ -11,7 +11,7 @@ interface QuestionFormProps {
 
 const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialData }) => {
   const [text, setText] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageBase64, setImageBase64] = useState('');
   const [description, setDescription] = useState('');
   const [options, setOptions] = useState(['', '', '', '']);
   const [correctOption, setCorrectOption] = useState<number | null>(null);
@@ -21,7 +21,16 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
   useEffect(() => {
     if (initialData) {
       setText(initialData.text);
-      setImageUrl(initialData.imageUrl || '');
+      let initialImg = '';
+      if (initialData.image) {
+         if (typeof initialData.image === 'string') initialImg = initialData.image;
+         else if (initialData.image.type === 'Buffer' && initialData.image.data) {
+           initialImg = new TextDecoder().decode(new Uint8Array(initialData.image.data));
+         }
+      } else if (initialData.imageUrl) {
+         initialImg = initialData.imageUrl;
+      }
+      setImageBase64(initialImg);
       setDescription(initialData.description || '');
       setOptions(initialData.options.length ? initialData.options : ['', '', '', '']);
       setCorrectOption(initialData.correctOption !== undefined ? initialData.correctOption : null);
@@ -44,7 +53,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
 
     setLoading(true);
     try {
-      await onSubmit({ text, imageUrl, description, options, correctOption, timeLimit });
+      await onSubmit({ text, imageBase64, description, options, correctOption, timeLimit });
       onClose();
     } catch (error) {
       console.error('Submit error:', error);
@@ -55,16 +64,16 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
   };
 
   return (
-    <div className="fixed inset-0 bg-[#0F172A]/40 backdrop-blur-md flex items-center justify-center p-4 z-50 overflow-y-auto">
+    <div className="fixed inset-0 bg-[#0F172A]/40 backdrop-blur-md flex justify-center p-4 z-50 overflow-y-auto">
       <motion.div
         initial={{ opacity: 0, scale: 0.96, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 15 }}
         transition={{ duration: 0.25, ease: 'easeOut' }}
-        className="bg-[#FFFFFF] rounded-3xl max-w-2xl w-full p-8 shadow-lux-lg border border-[#E0F2FE] relative my-8"
+        className="bg-[#FFFFFF] rounded-3xl max-w-2xl w-full p-8 shadow-lux-lg border border-[#E0F2FE] relative m-auto max-h-[95vh] flex flex-col"
       >
         {/* Header */}
-        <div className="flex justify-between items-center pb-5 mb-6 border-b border-[#E0F2FE]">
+        <div className="flex justify-between items-center pb-4 mb-4 border-b border-[#E0F2FE] shrink-0">
           <div>
             <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#06B6D4]">
               Question Builder
@@ -81,6 +90,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
           </button>
         </div>
 
+        <div className="overflow-y-auto pr-2 pb-2">
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Question Text */}
           <div>
@@ -99,19 +109,35 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
             </div>
           </div>
 
-          {/* Image URL */}
+          {/* Image Upload */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] mb-2">
-              Image URL (Optional)
+              Image Upload (Optional)
             </label>
             <div className="relative">
               <input
-                type="url"
-                placeholder="https://example.com/image.png"
-                className="w-full px-5 py-3.5 rounded-2xl border border-[#E0F2FE] bg-[#FFFFFF] text-[#0F172A] text-base placeholder:text-[#94A3B8] focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] outline-none transition-all shadow-sm"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setImageBase64(reader.result as string);
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+                className="w-full px-5 py-3.5 rounded-2xl border border-[#E0F2FE] bg-[#FFFFFF] text-[#0F172A] text-base focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] outline-none transition-all shadow-sm"
               />
+              {imageBase64 && (
+                <div className="mt-4 flex flex-col items-start gap-2">
+                  <img src={imageBase64} alt="Preview" className="max-h-32 object-contain rounded-xl shadow-sm border border-[#E0F2FE]" />
+                  <button type="button" onClick={() => setImageBase64('')} className="text-xs font-semibold text-rose-500 hover:text-rose-600 transition-colors">
+                    Remove Image
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -221,6 +247,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
             </button>
           </div>
         </form>
+        </div>
       </motion.div>
     </div>
   );
