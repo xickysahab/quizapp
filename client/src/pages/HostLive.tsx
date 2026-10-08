@@ -280,8 +280,8 @@ const HostLive: React.FC = () => {
       </header>
 
       {/* Stage Main View */}
-      <main className="flex-1 overflow-y-auto p-4 md:p-6 text-center w-full flex items-center justify-center">
-        <div className="max-w-4xl mx-auto w-full h-full flex items-center justify-center">
+      <main className="flex-1 overflow-y-auto p-4 md:p-8 w-full flex flex-col">
+        <div className="max-w-5xl mx-auto w-full my-auto">
           {showFinalSummary && summaryData ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.98 }}
@@ -547,41 +547,46 @@ const HostLive: React.FC = () => {
                 </div>
               </div>
 
-              {/* Title & Info */}
-              <div className="flex items-start gap-4">
-                <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#0F172A] leading-tight">
-                  {activeQuestion?.text}
-                </h2>
-                {activeQuestion?.description && (
-                  <button
-                    onClick={() => setShowInfoModal(true)}
-                    className="p-2 bg-[#F0F9FF] hover:bg-[#E0F2FE] text-[#06B6D4] rounded-full transition-colors flex-shrink-0 mt-2"
-                  >
-                    <Info className="w-6 h-6" />
-                  </button>
-                )}
-              </div>
-
-              {/* Image */}
-              {activeQuestion?.image && (
-                <div className="mt-6 flex justify-center">
-                  <img src={getImageSrc(activeQuestion.image)} alt="Question Context" className="max-h-64 object-contain rounded-2xl shadow-sm border border-[#E0F2FE]" />
-                </div>
-              )}
-
-              {/* Options Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                {activeQuestion?.options.map((opt: string, idx: number) => (
-                  <div
-                    key={idx}
-                    className="bg-[#FFFFFF] border border-[#E0F2FE] rounded-2xl p-5 flex items-center gap-4 transition-all hover:border-[#06B6D4] hover:bg-[#F0F9FF] shadow-sm"
-                  >
-                    <span className="w-10 h-10 rounded-xl bg-[#ECFEFF] text-[#06B6D4] font-serif text-lg font-bold flex items-center justify-center border border-[#E0F2FE]">
-                      {['A', 'B', 'C', 'D'][idx]}
-                    </span>
-                    <span className="text-lg font-medium text-[#0F172A]">{opt}</span>
+              <div className={`flex flex-col ${activeQuestion?.image ? 'lg:flex-row lg:items-stretch gap-8 lg:gap-12' : 'gap-6'}`}>
+                {/* Left Side: Question & Image */}
+                <div className={`flex flex-col gap-6 text-left ${activeQuestion?.image ? 'lg:w-1/2' : 'w-full'}`}>
+                  {/* Title & Info */}
+                  <div className="flex items-start gap-4">
+                    <h2 className={`font-serif ${activeQuestion?.image ? 'text-3xl md:text-4xl' : 'text-4xl md:text-5xl'} font-bold text-[#0F172A] leading-tight`}>
+                      {activeQuestion?.text}
+                    </h2>
+                    {activeQuestion?.description && (
+                      <button
+                        onClick={() => setShowInfoModal(true)}
+                        className="p-2 bg-[#F0F9FF] hover:bg-[#E0F2FE] text-[#06B6D4] rounded-full transition-colors flex-shrink-0 mt-2"
+                      >
+                        <Info className="w-6 h-6" />
+                      </button>
+                    )}
                   </div>
-                ))}
+
+                  {/* Image */}
+                  {activeQuestion?.image && (
+                    <div className="flex-1 flex justify-center items-center bg-[#F8FAFC] rounded-3xl border border-[#E0F2FE] p-4 overflow-hidden relative min-h-[250px]">
+                      <img src={getImageSrc(activeQuestion.image)} alt="Question Context" className="max-h-[35vh] lg:max-h-[50vh] object-contain rounded-2xl shadow-sm w-full" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Right Side / Bottom: Options Cards */}
+                <div className={`grid grid-cols-1 ${activeQuestion?.image ? 'lg:w-1/2 flex flex-col justify-center gap-4' : 'md:grid-cols-2 gap-4'}`}>
+                  {activeQuestion?.options.map((opt: string, idx: number) => (
+                    <div
+                      key={idx}
+                      className={`bg-[#FFFFFF] border border-[#E0F2FE] rounded-2xl p-5 flex items-center gap-4 transition-all hover:border-[#06B6D4] hover:bg-[#F0F9FF] shadow-sm text-left ${activeQuestion?.image ? 'flex-1' : ''}`}
+                    >
+                      <span className="w-10 h-10 rounded-xl bg-[#ECFEFF] text-[#06B6D4] font-serif text-lg font-bold flex items-center justify-center flex-shrink-0 border border-[#E0F2FE]">
+                        {['A', 'B', 'C', 'D'][idx]}
+                      </span>
+                      <span className="text-lg font-medium text-[#0F172A]">{opt}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </motion.div>
           )}

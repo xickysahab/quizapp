@@ -194,7 +194,7 @@ const LiveQuiz: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFFFFF] text-[#0F172A] flex flex-col items-center justify-center p-6 font-sans relative selection:bg-[#E0F2FE] bg-ambient-glow">
+    <div className="min-h-screen bg-[#FFFFFF] text-[#0F172A] flex flex-col items-center p-6 font-sans relative selection:bg-[#E0F2FE] bg-ambient-glow">
       {/* Participant Top Header */}
       <div className="fixed top-6 left-6 right-6 max-w-xl mx-auto flex items-center justify-between px-6 py-3 rounded-2xl bg-[#FFFFFF]/80 backdrop-blur-md border border-[#E0F2FE] shadow-lux z-20">
         <div className="flex items-center gap-2">
@@ -211,7 +211,7 @@ const LiveQuiz: React.FC = () => {
         </div>
       </div>
 
-      <main className="max-w-xl w-full pt-16">
+      <main className="max-w-xl w-full my-auto pt-24 pb-8">
         <AnimatePresence mode="wait">
           {!activeQuestion ? (
             <motion.div
@@ -277,8 +277,8 @@ const LiveQuiz: React.FC = () => {
 
               {/* Image */}
               {activeQuestion?.image && (
-                <div className="mt-4 flex justify-center">
-                  <img src={getImageSrc(activeQuestion.image)} alt="Question Context" className="max-h-56 object-contain rounded-2xl shadow-sm border border-[#E0F2FE]" />
+                <div className="mt-3 flex justify-center">
+                  <img src={getImageSrc(activeQuestion.image)} alt="Question Context" className="max-h-40 object-contain rounded-2xl shadow-sm border border-[#E0F2FE]" />
                 </div>
               )}
 
