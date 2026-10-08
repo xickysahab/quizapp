@@ -73,7 +73,7 @@ app.use((_req, res, next) => {
   next();
 });
 
-app.use(express.json());
+app.use(express.json({ limit: '20mb' }));
 
 app.use('/auth', authRoutes);
 app.use('/events', eventRoutes);
