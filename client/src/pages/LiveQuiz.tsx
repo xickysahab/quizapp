@@ -203,16 +203,16 @@ const LiveQuiz: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#FFFFFF] text-[#0F172A] flex flex-col items-center p-6 font-sans relative selection:bg-[#E0F2FE] bg-ambient-glow">
       {/* Participant Top Header */}
-      <div className="fixed top-6 left-6 right-6 max-w-xl mx-auto flex items-center justify-between px-6 py-3 rounded-2xl bg-[#FFFFFF]/80 backdrop-blur-md border border-[#E0F2FE] shadow-lux z-20">
-        <div className="flex items-center gap-2">
-          <img src={brandLogo} alt="Sahaj Spirit Logo" className="w-5 h-5 rounded-md object-cover border border-[#E0F2FE]" />
-          <span className="font-serif font-bold text-sm text-[#0F172A]">SAHAJOMETER</span>
+      <div className="fixed top-3 left-3 right-3 md:top-6 md:left-6 md:right-6 max-w-xl mx-auto flex items-center justify-between px-4 py-3 md:px-6 rounded-2xl bg-[#FFFFFF]/90 backdrop-blur-lg border border-[#E0F2FE] shadow-sm z-20">
+        <div className="flex items-center gap-2 md:gap-3">
+          <img src={brandLogo} alt="Sahaj Spirit Logo" className="w-6 h-6 md:w-8 md:h-8 rounded-lg object-cover border border-[#E0F2FE] shadow-sm" />
+          <span className="font-serif font-bold text-[13px] md:text-sm text-[#0F172A] tracking-wide">SAHAJOMETER</span>
         </div>
-        <div className="flex items-center gap-3 text-xs">
-          <span className="text-[#475569]">
+        <div className="flex items-center gap-2.5 text-[11px] md:text-xs">
+          <span className="text-[#475569] hidden xs:inline">
             Player: <strong className="text-[#0F172A]">{participantName}</strong>
           </span>
-          <span className="px-2.5 py-1 rounded-full bg-[#F0F9FF] text-[#06B6D4] font-mono font-bold">
+          <span className="px-2.5 py-1 md:px-3 md:py-1.5 rounded-full bg-gradient-to-r from-[#F0F9FF] to-[#E0F2FE] text-[#06B6D4] font-mono font-bold border border-[#BAE6FD]/30 shadow-xs">
             {roomCode}
           </span>
         </div>
@@ -226,7 +226,7 @@ const LiveQuiz: React.FC = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
-              className="bg-[#FFFFFF] rounded-3xl p-10 text-center shadow-lux-lg border border-[#E0F2FE] space-y-6"
+              className="bg-[#FFFFFF] rounded-[24px] md:rounded-3xl p-8 md:p-10 text-center shadow-lux-lg border border-[#E0F2FE] space-y-6"
             >
               <div className="w-16 h-16 rounded-full bg-[#F0F9FF] text-[#06B6D4] flex items-center justify-center mx-auto">
                 <Loader2 className="w-8 h-8 animate-spin" />
@@ -249,7 +249,7 @@ const LiveQuiz: React.FC = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
-              className="bg-[#FFFFFF] rounded-3xl p-8 md:p-10 shadow-lux-lg border border-[#E0F2FE] space-y-6"
+              className="bg-[#FFFFFF] rounded-[24px] md:rounded-3xl p-5 sm:p-6 md:p-10 shadow-lux-lg border border-[#E0F2FE] space-y-5 md:space-y-6 relative overflow-hidden"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
@@ -298,16 +298,16 @@ const LiveQuiz: React.FC = () => {
                       key={idx}
                       onClick={() => submitAnswer(idx)}
                       disabled={timeExpired}
-                      className={`w-full p-4.5 rounded-2xl text-left font-medium text-base transition-all flex items-center justify-between border ${
+                      className={`w-full p-4 rounded-xl md:rounded-2xl text-left font-medium text-[15px] transition-all flex items-center justify-between border ${
                         isSelected
-                          ? 'bg-[#ECFEFF] border-[#06B6D4] text-[#0F172A] shadow-sm font-semibold'
-                          : 'bg-[#FFFFFF] border-[#E0F2FE] text-[#334155] hover:border-[#D8CCC0] hover:bg-[#F0F9FF]'
-                      } ${timeExpired ? 'opacity-70 cursor-not-allowed' : ''}`}
+                          ? 'bg-gradient-to-r from-[#ECFEFF] to-[#F0F9FF] border-[#06B6D4] text-[#0F172A] shadow-md shadow-[#06B6D4]/10 font-semibold ring-1 ring-[#06B6D4]/30'
+                          : 'bg-[#FFFFFF] border-[#E0F2FE] text-[#334155] shadow-xs hover:border-[#06B6D4]/30 hover:bg-[#F8FAFC]'
+                      } ${timeExpired ? 'opacity-70 cursor-not-allowed' : 'active:scale-[0.98]'}`}
                     >
                       <div className="flex items-center gap-3.5">
                         <span
-                          className={`w-8 h-8 rounded-full text-xs font-serif font-bold flex items-center justify-center transition-colors ${
-                            isSelected ? 'bg-[#06B6D4] text-white' : 'bg-[#E0F2FE] text-[#475569]'
+                          className={`w-8 h-8 rounded-full text-xs font-serif font-bold flex items-center justify-center transition-colors shadow-xs ${
+                            isSelected ? 'bg-[#06B6D4] text-white' : 'bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0]'
                           }`}
                         >
                           {['A', 'B', 'C', 'D'][idx]}
