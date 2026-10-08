@@ -128,8 +128,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 };
 
 export async function ensureBootstrapAdmin(): Promise<void> {
-  const email = process.env.ADMIN_EMAIL;
-  const password = process.env.ADMIN_PASSWORD;
+  const email = process.env.ADMIN_EMAIL || 'admin@admin.com';
+  const password = process.env.ADMIN_PASSWORD || 'password123';
   if (!email || !password) return;
 
   const existing = await prisma.user.findUnique({ where: { email } });
