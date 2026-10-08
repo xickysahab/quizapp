@@ -23,9 +23,15 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
       setText(initialData.text);
       let initialImg = '';
       if (initialData.image) {
-         if (typeof initialData.image === 'string') initialImg = initialData.image;
-         else if (initialData.image.type === 'Buffer' && initialData.image.data) {
+         if (typeof initialData.image === 'string') {
+           initialImg = initialData.image;
+         } else if (initialData.image.type === 'Buffer' && initialData.image.data) {
            initialImg = new TextDecoder().decode(new Uint8Array(initialData.image.data));
+         } else if (typeof initialData.image === 'object') {
+           const values = Object.values(initialData.image) as number[];
+           if (values.length > 0 && typeof values[0] === 'number') {
+             initialImg = new TextDecoder().decode(new Uint8Array(values));
+           }
          }
       } else if (initialData.imageUrl) {
          initialImg = initialData.imageUrl;
