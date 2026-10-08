@@ -16,6 +16,12 @@ const getImageSrc = (img: any) => {
   if (img.type === 'Buffer' && img.data) {
     return new TextDecoder().decode(new Uint8Array(img.data));
   }
+  if (typeof img === 'object') {
+    const values = Object.values(img) as number[];
+    if (values.length > 0 && typeof values[0] === 'number') {
+      return new TextDecoder().decode(new Uint8Array(values));
+    }
+  }
   return '';
 };
 
