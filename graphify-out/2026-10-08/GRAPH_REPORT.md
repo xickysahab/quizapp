@@ -1,16 +1,16 @@
 # Graph Report - Sahajometer  (2026-10-08)
 
 ## Corpus Check
-- 127 files · ~64,398 words
+- 127 files · ~64,334 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1445 nodes · 1680 edges · 104 communities (92 shown, 9 thin omitted)
+- 1444 nodes · 1678 edges · 103 communities (91 shown, 9 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 22 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `68cadae6`
+- Built from commit: `462c18c1`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -56,14 +56,13 @@
 - ESM and CommonJS Support
 - Constructor Options
 - Schema Changes
-- prisma.ts
 - dependencies
 - Transactions
 - Workflow
 - Prisma Compute Framework Readiness
 - MongoDB Setup
 - Core Workflows
-- question.controller.ts
+- prisma.ts
 - analytics.controller.ts
 - prisma db execute
 - Prisma Platform CLI App Deploy
@@ -132,22 +131,22 @@
 ## Surprising Connections (you probably didn't know these)
 - `requireAdmin()` --calls--> `findUser()`  [EXTRACTED]
   server/src/middleware/auth.middleware.ts → server/src/utils/eventAccess.ts
-- `getOwnedQuestion()` --calls--> `canManage()`  [EXTRACTED]
-  server/src/controllers/question.controller.ts → server/src/utils/eventAccess.ts
-- `addQuestion()` --calls--> `canManage()`  [EXTRACTED]
-  server/src/controllers/question.controller.ts → server/src/utils/eventAccess.ts
 - `ProtectedRoute()` --calls--> `useAuth()`  [EXTRACTED]
   client/src/App.tsx → client/src/context/AuthContext.tsx
 - `ensureBootstrapAdmin()` --calls--> `hashPassword()`  [EXTRACTED]
   server/src/controllers/auth.controller.ts → server/src/utils/auth.ts
+- `initializeSocket()` --calls--> `verifyToken()`  [EXTRACTED]
+  server/src/socket/index.ts → server/src/utils/auth.ts
+- `initializeSocket()` --calls--> `endLiveEvent()`  [EXTRACTED]
+  server/src/socket/index.ts → server/src/utils/liveState.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (104 total, 9 thin omitted)
+## Communities (103 total, 9 thin omitted)
 
 ### Community 0 - "App.tsx"
-Cohesion: 0.10
+Cohesion: 0.09
 Nodes (35): App(), ProtectedRoute(), ConcludeSettingsModal(), ConcludeSettingsModalProps, defaultOptions, ConfirmModal(), ConfirmModalProps, CreateAdminModal() (+27 more)
 
 ### Community 1 - "RedisBackend"
@@ -252,11 +251,11 @@ Nodes (18): After schema changes, Command, Common Patterns, Create and apply mig
 
 ### Community 26 - "src/index.ts"
 Cohesion: 0.11
-Nodes (22): clients, closeRedis(), createRedisClient(), getRedis(), options, redisEnabled, ensureBootstrapAdmin(), app (+14 more)
+Nodes (23): clients, closeRedis(), createRedisClient(), getRedis(), options, redisEnabled, ensureBootstrapAdmin(), app (+15 more)
 
 ### Community 27 - "socket/index.ts"
-Cohesion: 0.22
-Nodes (17): AuthedSocket, authenticateParticipant(), HostCounters, initializeSocket(), requireEventHost(), toPublicQuestion(), dropConnection(), getConnectedCount() (+9 more)
+Cohesion: 0.16
+Nodes (23): authenticateParticipant(), generateJoinToken(), joinEvent(), submitResponse(), AuthedSocket, authenticateParticipant(), HostCounters, initializeSocket() (+15 more)
 
 ### Community 28 - "prisma db seed"
 Cohesion: 0.11
@@ -310,10 +309,6 @@ Nodes (15): accelerateUrl (For Accelerate users), adapter (Required for the SQL 
 Cohesion: 0.12
 Nodes (15): 1. Provider name, 2. Output is required, 3. engineType changed, 4. moduleFormat is explicit when needed, After Schema Changes, Datasource Block, Example Output Paths, Generated Entrypoints (+7 more)
 
-### Community 41 - "prisma.ts"
-Cohesion: 0.20
-Nodes (12): adapter, pool, prisma, authenticateParticipant(), generateJoinToken(), isUniqueViolation(), joinEvent(), submitResponse() (+4 more)
-
 ### Community 42 - "dependencies"
 Cohesion: 0.13
 Nodes (15): axios, dependencies, axios, qrcode.react, react, react-hot-toast, react-router-dom, socket.io-client (+7 more)
@@ -338,13 +333,13 @@ Nodes (13): 1. Schema Configuration, 2. Environment Variable, Common Issues, Cur
 Cohesion: 0.14
 Nodes (13): 1. Console-first workflow, 2. Quick provisioning with create-db, 2b. Persistent databases with the Platform CLI, 3. Link an existing local project, 4. Programmatic provisioning with Management API, 5. Type-safe integration with Management API SDK, Core Workflows, How to Use (+5 more)
 
-### Community 48 - "question.controller.ts"
-Cohesion: 0.57
-Nodes (5): addQuestion(), deleteQuestion(), getOwnedQuestion(), updateQuestion(), logActivity()
+### Community 48 - "prisma.ts"
+Cohesion: 0.29
+Nodes (9): adapter, pool, prisma, addQuestion(), deleteQuestion(), getOwnedQuestion(), updateQuestion(), logActivity() (+1 more)
 
 ### Community 49 - "analytics.controller.ts"
-Cohesion: 0.35
-Nodes (8): RFC-4180, exportEventAnalytics(), getEventSummaryAnalytics(), getQuestionAnalytics(), toPercentages(), toCsv(), canManage(), canManageEvent()
+Cohesion: 0.33
+Nodes (7): RFC-4180, exportEventAnalytics(), getEventSummaryAnalytics(), getQuestionAnalytics(), toPercentages(), router, toCsv()
 
 ### Community 50 - "prisma db execute"
 Cohesion: 0.15
@@ -384,7 +379,7 @@ Nodes (11): 1. Schema Configuration, 2. Config Configuration, 3. Environment Var
 
 ### Community 59 - "event.controller.ts"
 Cohesion: 0.35
-Nodes (9): clearEventData(), createEvent(), deleteEvent(), getEventById(), getHostEvents(), updateEventConfig(), findUser(), endLiveEvent() (+1 more)
+Nodes (10): clearEventData(), createEvent(), deleteEvent(), getEventById(), getHostEvents(), updateEventConfig(), canManage(), findUser() (+2 more)
 
 ### Community 60 - "SQL Server Setup"
 Cohesion: 0.18
@@ -524,14 +519,14 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Troubleshooting Prisma Compute` connect `Troubleshooting Prisma Compute` to `prisma-compute/SKILL.md`?**
   _High betweenness centrality (0.003) - this node is a cross-community bridge._
-- **Why does `LiveStateBackend` connect `RedisBackend` to `socket/index.ts`?**
+- **Why does `Prisma Compute Framework Readiness` connect `Prisma Compute Framework Readiness` to `prisma-compute/SKILL.md`?**
   _High betweenness centrality (0.003) - this node is a cross-community bridge._
 - **Why does `Prisma Compute` connect `Prisma Compute` to `prisma-compute/SKILL.md`?**
   _High betweenness centrality (0.002) - this node is a cross-community bridge._
 - **What connects `ConcludeSettingsModalProps`, `ConfirmModalProps`, `CreateAdminModalProps` to the rest of the system?**
   _923 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `App.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.09562289562289562 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09494949494949495 - nodes in this community are weakly interconnected._
 - **Should `RedisBackend` be split into smaller, more focused modules?**
   _Cohesion score 0.08108108108108109 - nodes in this community are weakly interconnected._
 - **Should `Prisma 7 Driver Adapter Implementation Guide` be split into smaller, more focused modules?**

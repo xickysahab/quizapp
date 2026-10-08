@@ -102,9 +102,9 @@
     "semantic_hash": ""
   },
   "client/src/pages/LiveQuiz.tsx": {
-    "mtime": 1791435663.9416046,
-    "seen": 1791435715.716894,
-    "ast_hash": "de3126d5d966556b9cf1919aa59a83d6",
+    "mtime": 1791449503.4827917,
+    "seen": 1791449504.714059,
+    "ast_hash": "5d9bed5ec6fce5ae08d3b04a3af54bce",
     "semantic_hash": ""
   },
   "client/src/pages/Login.tsx": {
@@ -216,9 +216,9 @@
     "semantic_hash": ""
   },
   "server/src/controllers/participant.controller.ts": {
-    "mtime": 1791435663.8724256,
-    "seen": 1791435715.716904,
-    "ast_hash": "e8d07477d2e03a3b1c822cbeb1245fc4",
+    "mtime": 1791449285.9709861,
+    "seen": 1791449286.958036,
+    "ast_hash": "0211138afbc5881586714e85a734c1a9",
     "semantic_hash": ""
   },
   "server/src/controllers/question.controller.ts": {
