@@ -19094,6 +19094,18 @@
     },
     {
       "source": "client_src_pages_hostlive",
+      "target": "client_src_components_confirmmodal_confirmmodal",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "client/src/pages/HostLive.tsx",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "client_src_pages_hostlive",
       "target": "client_src_constants_presets_sahajometer_preset",
       "relation": "imports",
       "_origin": "ast",
@@ -19126,6 +19138,18 @@
       "context": "import",
       "source_file": "client/src/pages/HostLive.tsx",
       "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "client_src_pages_hostlive",
+      "target": "client_src_services_api_api",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "client/src/pages/HostLive.tsx",
+      "source_location": "L9",
       "weight": 1.0
     },
     {
@@ -19186,6 +19210,18 @@
       "context": "import",
       "source_file": "client/src/pages/LiveQuiz.tsx",
       "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "client_src_pages_livequiz",
+      "target": "client_src_services_api_api",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "client/src/pages/LiveQuiz.tsx",
+      "source_location": "L7",
       "weight": 1.0
     },
     {
@@ -35999,5 +36035,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "57ac3589e857f28dcd5862aa6a11d0c1260f174d"
+  "built_at_commit": "68cadae6418c7142f3fa2e38475d47cccab001ed"
 }

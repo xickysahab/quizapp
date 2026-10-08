@@ -4,16 +4,7 @@ import prisma from '../config/prisma';
 import { responseBatcher } from '../utils/responseBatcher';
 import { isSubmitAllowed, recordResponder } from '../utils/liveState';
 
-const NAME_TAKEN_MESSAGE =
-  'That name is already taken in this room. Please pick a slightly different one.';
 
-function generateJoinToken(): string {
-  return crypto.randomBytes(32).toString('hex');
-}
-
-function isUniqueViolation(error: unknown): boolean {
-  return (error as { code?: string } | null)?.code === 'P2002';
-}
 
 /**
  * Resolve the participant for a request and check the join token issued at join
@@ -25,6 +16,10 @@ async function authenticateParticipant(participantId: string, joinToken: unknown
   if (!participant) return null;
   if (participant.joinToken && participant.joinToken !== joinToken) return null;
   return participant;
+}
+
+function generateJoinToken(): string {
+  return crypto.randomBytes(32).toString('hex');
 }
 
 export const joinEvent = async (req: Request, res: Response): Promise<void> => {
@@ -59,35 +54,31 @@ export const joinEvent = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const existing = await prisma.participant.findUnique({
-      where: { eventId_name: { eventId: event.id, name: trimmedName } },
-    });
+    if (joinToken) {
+      const existing = await prisma.participant.findUnique({
+        where: { joinToken: String(joinToken) },
+      });
 
-    if (existing) {
-      // Without this check anyone could type someone else's name and inherit
-      // their identity and answers.
-      if (existing.joinToken && existing.joinToken !== joinToken) {
-        res.status(409).json({ message: NAME_TAKEN_MESSAGE });
+      if (existing && existing.eventId === event.id) {
+        if (existing.name !== trimmedName) {
+           await prisma.participant.update({
+             where: { id: existing.id },
+             data: { name: trimmedName }
+           });
+           existing.name = trimmedName;
+        }
+
+        res.status(200).json({
+          message: 'Rejoined event successfully',
+          participant: {
+            id: existing.id,
+            name: existing.name,
+            joinToken: existing.joinToken,
+          },
+          event,
+        });
         return;
       }
-
-      const participant = existing.joinToken
-        ? existing
-        : await prisma.participant.update({
-            where: { id: existing.id },
-            data: { joinToken: generateJoinToken() },
-          });
-
-      res.status(200).json({
-        message: 'Rejoined event successfully',
-        participant: {
-          id: participant.id,
-          name: participant.name,
-          joinToken: participant.joinToken,
-        },
-        event,
-      });
-      return;
     }
 
     try {
@@ -109,13 +100,8 @@ export const joinEvent = async (req: Request, res: Response): Promise<void> => {
         event,
       });
     } catch (error) {
-      // Two people submitting the same name at the same moment: the unique index
-      // decides, and the loser is asked to choose another name.
-      if (isUniqueViolation(error)) {
-        res.status(409).json({ message: NAME_TAKEN_MESSAGE });
-        return;
-      }
-      throw error;
+      console.error('Create participant error:', error);
+      res.status(500).json({ message: 'Internal server error' });
     }
   } catch (error) {
     console.error('Join event error:', error);

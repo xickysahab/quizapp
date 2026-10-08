@@ -1,16 +1,16 @@
 # Graph Report - Sahajometer  (2026-10-08)
 
 ## Corpus Check
-- 127 files · ~64,388 words
+- 127 files · ~64,398 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1445 nodes · 1677 edges · 104 communities (92 shown, 9 thin omitted)
+- 1445 nodes · 1680 edges · 104 communities (92 shown, 9 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 22 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `57ac3589`
+- Built from commit: `68cadae6`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -132,14 +132,14 @@
 ## Surprising Connections (you probably didn't know these)
 - `requireAdmin()` --calls--> `findUser()`  [EXTRACTED]
   server/src/middleware/auth.middleware.ts → server/src/utils/eventAccess.ts
+- `getOwnedQuestion()` --calls--> `canManage()`  [EXTRACTED]
+  server/src/controllers/question.controller.ts → server/src/utils/eventAccess.ts
+- `addQuestion()` --calls--> `canManage()`  [EXTRACTED]
+  server/src/controllers/question.controller.ts → server/src/utils/eventAccess.ts
 - `ProtectedRoute()` --calls--> `useAuth()`  [EXTRACTED]
   client/src/App.tsx → client/src/context/AuthContext.tsx
 - `ensureBootstrapAdmin()` --calls--> `hashPassword()`  [EXTRACTED]
   server/src/controllers/auth.controller.ts → server/src/utils/auth.ts
-- `initializeSocket()` --calls--> `verifyToken()`  [EXTRACTED]
-  server/src/socket/index.ts → server/src/utils/auth.ts
-- `initializeSocket()` --calls--> `endLiveEvent()`  [EXTRACTED]
-  server/src/socket/index.ts → server/src/utils/liveState.ts
 
 ## Import Cycles
 - None detected.
@@ -147,7 +147,7 @@
 ## Communities (104 total, 9 thin omitted)
 
 ### Community 0 - "App.tsx"
-Cohesion: 0.09
+Cohesion: 0.10
 Nodes (35): App(), ProtectedRoute(), ConcludeSettingsModal(), ConcludeSettingsModalProps, defaultOptions, ConfirmModal(), ConfirmModalProps, CreateAdminModal() (+27 more)
 
 ### Community 1 - "RedisBackend"
@@ -515,7 +515,7 @@ Cohesion: 0.50
 Nodes (3): Expanding the Oxlint configuration, React Compiler, React + TypeScript + Vite
 
 ## Knowledge Gaps
-- **923 isolated node(s):** `QuestionFormProps`, `ConcludeSettingsModalProps`, `ConfirmModalProps`, `CreateAdminModalProps`, `AuthContextType` (+918 more)
+- **923 isolated node(s):** `ConcludeSettingsModalProps`, `ConfirmModalProps`, `CreateAdminModalProps`, `QuestionFormProps`, `AuthContextType` (+918 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1012 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -523,15 +523,15 @@ Nodes (3): Expanding the Oxlint configuration, React Compiler, React + TypeScrip
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Troubleshooting Prisma Compute` connect `Troubleshooting Prisma Compute` to `prisma-compute/SKILL.md`?**
-  _High betweenness centrality (0.004) - this node is a cross-community bridge._
+  _High betweenness centrality (0.003) - this node is a cross-community bridge._
 - **Why does `LiveStateBackend` connect `RedisBackend` to `socket/index.ts`?**
   _High betweenness centrality (0.003) - this node is a cross-community bridge._
 - **Why does `Prisma Compute` connect `Prisma Compute` to `prisma-compute/SKILL.md`?**
   _High betweenness centrality (0.002) - this node is a cross-community bridge._
-- **What connects `QuestionFormProps`, `ConcludeSettingsModalProps`, `ConfirmModalProps` to the rest of the system?**
+- **What connects `ConcludeSettingsModalProps`, `ConfirmModalProps`, `CreateAdminModalProps` to the rest of the system?**
   _923 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `App.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.0936026936026936 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09562289562289562 - nodes in this community are weakly interconnected._
 - **Should `RedisBackend` be split into smaller, more focused modules?**
   _Cohesion score 0.08108108108108109 - nodes in this community are weakly interconnected._
 - **Should `Prisma 7 Driver Adapter Implementation Guide` be split into smaller, more focused modules?**
