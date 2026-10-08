@@ -12,9 +12,14 @@ import {
   recordResponder,
   rehydrateLiveQuestion,
   startLiveQuestion,
-  toPublicQuestion,
   trackConnection,
 } from '../utils/liveState';
+
+/** Strip the answer before anything goes out to participants. */
+function toPublicQuestion<T extends { correctOption?: number | null }>(question: T): Omit<T, 'correctOption'> {
+  const { correctOption: _correctOption, ...rest } = question;
+  return rest;
+}
 
 type AuthedSocket = Socket & {
   data: {

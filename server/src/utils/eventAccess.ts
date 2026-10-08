@@ -11,3 +11,12 @@ export function canManageEvent(
 ): boolean {
   return user.role === 'ADMIN' || event.hostId === user.id;
 }
+
+/** True when this user may manage the event. Collapses the load-user + check pair. */
+export async function canManage(
+  userId: string | undefined,
+  event: { hostId: string }
+): Promise<boolean> {
+  const user = await findUser(userId);
+  return !!user && canManageEvent(user, event);
+}

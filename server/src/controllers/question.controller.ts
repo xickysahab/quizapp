@@ -2,38 +2,29 @@ import { Response } from 'express';
 import prisma from '../config/prisma';
 import { AuthRequest } from '../middleware/auth.middleware';
 import { logActivity } from '../utils/logger';
-import { canManageEvent, findUser } from '../utils/eventAccess';
+import { canManage } from '../utils/eventAccess';
 
 async function getOwnedQuestion(userId: string | undefined, questionId: string) {
-  const user = await findUser(userId);
-  if (!user) return null;
-
   const question = await prisma.question.findUnique({
     where: { id: questionId },
     include: { event: true },
   });
 
-  if (!question || !canManageEvent(user, question.event)) return null;
-  return { user, question };
+  if (!question || !(await canManage(userId, question.event))) return null;
+  return { question };
 }
 
 export const addQuestion = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { eventId, text, options, correctOption, timeLimit } = req.body;
+    const { eventId, text, imageUrl, description, options, correctOption, timeLimit } = req.body;
 
     if (!eventId || !text || !Array.isArray(options) || options.length < 2) {
       res.status(400).json({ message: 'Event ID, question text, and at least 2 options are required.' });
       return;
     }
 
-    const user = await findUser(req.user?.userId);
-    if (!user) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
-
     const event = await prisma.event.findUnique({ where: { id: eventId } });
-    if (!event || !canManageEvent(user, event)) {
+    if (!event || !(await canManage(req.user?.userId, event))) {
       res.status(403).json({ message: 'Forbidden. You do not own this event.' });
       return;
     }
@@ -44,6 +35,8 @@ export const addQuestion = async (req: AuthRequest, res: Response): Promise<void
       data: {
         eventId,
         text,
+        imageUrl: imageUrl || null,
+        description: description || null,
         options,
         correctOption: correctOption !== undefined && correctOption !== null ? Number(correctOption) : null,
         order: count + 1,
@@ -63,7 +56,7 @@ export const addQuestion = async (req: AuthRequest, res: Response): Promise<void
 export const updateQuestion = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const id = req.params.id as string;
-    const { text, options, correctOption, timeLimit } = req.body;
+    const { text, imageUrl, description, options, correctOption, timeLimit } = req.body;
 
     const owned = await getOwnedQuestion(req.user?.userId, id);
     if (!owned) {
@@ -77,6 +70,8 @@ export const updateQuestion = async (req: AuthRequest, res: Response): Promise<v
       where: { id },
       data: {
         text: text || existingQuestion.text,
+        imageUrl: imageUrl !== undefined ? (imageUrl || null) : existingQuestion.imageUrl,
+        description: description !== undefined ? (description || null) : existingQuestion.description,
         options: options || existingQuestion.options,
         correctOption: correctOption !== undefined ? (correctOption === null ? null : Number(correctOption)) : existingQuestion.correctOption,
         timeLimit: timeLimit !== undefined ? (timeLimit === null || timeLimit === 0 ? null : Number(timeLimit)) : existingQuestion.timeLimit,

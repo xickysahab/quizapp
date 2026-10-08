@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Play, Square, ChevronRight, ChevronLeft, Users, BarChart3, Radio, Award, LogOut, QrCode, X, Clock } from 'lucide-react';
+import { Play, Square, ChevronRight, ChevronLeft, Users, BarChart3, Radio, Award, LogOut, QrCode, X, Clock, Info } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import brandLogo from '../assets/sahaj-spirit.jpeg';
 import { SAHAJOMETER_PRESET } from '../constants/presets';
@@ -23,6 +23,7 @@ const HostLive: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(-1);
   const [participantCount, setParticipantCount] = useState(0);
   const [responsesCount, setResponsesCount] = useState(0);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   const [showFinalSummary, setShowFinalSummary] = useState(false);
   const [summaryData, setSummaryData] = useState<any>(null);
@@ -149,6 +150,7 @@ const HostLive: React.FC = () => {
     if (nextIndex < event.questions.length) {
       setCurrentQuestionIndex(nextIndex);
       setResponsesCount(0);
+      setShowInfoModal(false);
       setQuestionStartedAt(Date.now());
       socket.emit('host:nextQuestion', id, event.questions[nextIndex].id);
     }
@@ -159,6 +161,7 @@ const HostLive: React.FC = () => {
     const prevIndex = currentQuestionIndex - 1;
     setCurrentQuestionIndex(prevIndex);
     setResponsesCount(0);
+    setShowInfoModal(false);
     setQuestionStartedAt(Date.now());
     socket.emit('host:nextQuestion', id, event.questions[prevIndex].id);
   };
@@ -529,10 +532,27 @@ const HostLive: React.FC = () => {
                 </div>
               </div>
 
-              {/* Title */}
-              <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#0F172A] leading-tight">
-                {activeQuestion?.text}
-              </h2>
+              {/* Title & Info */}
+              <div className="flex items-start gap-4">
+                <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#0F172A] leading-tight">
+                  {activeQuestion?.text}
+                </h2>
+                {activeQuestion?.description && (
+                  <button
+                    onClick={() => setShowInfoModal(true)}
+                    className="p-2 bg-[#F0F9FF] hover:bg-[#E0F2FE] text-[#06B6D4] rounded-full transition-colors flex-shrink-0 mt-2"
+                  >
+                    <Info className="w-6 h-6" />
+                  </button>
+                )}
+              </div>
+
+              {/* Image */}
+              {activeQuestion?.imageUrl && (
+                <div className="mt-6 flex justify-center">
+                  <img src={activeQuestion.imageUrl} alt="Question Context" className="max-h-64 object-contain rounded-2xl shadow-sm border border-[#E0F2FE]" />
+                </div>
+              )}
 
               {/* Options Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
@@ -611,6 +631,39 @@ const HostLive: React.FC = () => {
         onCancel={() => setConfirmModal({ isOpen: false, action: null })}
         isDestructive={confirmModal.action === 'exit'}
       />
+
+      {showInfoModal && (
+        <div className="fixed inset-0 bg-[#0F172A]/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="bg-white rounded-3xl p-8 max-w-lg w-full shadow-xl relative"
+          >
+            <button
+              onClick={() => setShowInfoModal(false)}
+              className="absolute top-4 right-4 p-2 text-[#94A3B8] hover:text-[#0F172A] transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-[#ECFEFF] flex items-center justify-center text-[#06B6D4]">
+                <Info className="w-5 h-5" />
+              </div>
+              <h3 className="font-serif text-2xl font-bold text-[#0F172A]">Additional Information</h3>
+            </div>
+            <p className="text-[#475569] leading-relaxed text-lg whitespace-pre-wrap">
+              {activeQuestion?.description}
+            </p>
+            <button
+              onClick={() => setShowInfoModal(false)}
+              className="mt-8 w-full py-3 bg-[#06B6D4] hover:bg-[#0891B2] text-white rounded-xl font-semibold transition-colors"
+            >
+              Close
+            </button>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };

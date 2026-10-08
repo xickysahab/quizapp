@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Loader2, CheckCircle2, Award, ArrowLeft, Clock } from 'lucide-react';
+import { Loader2, CheckCircle2, Award, ArrowLeft, Clock, Info, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import brandLogo from '../assets/sahaj-spirit.jpeg';
 import { socket, connectSocket } from '../socket/socket';
@@ -21,6 +21,7 @@ const LiveQuiz: React.FC = () => {
   const [quizEnded, setQuizEnded] = useState(false);
   const [questionStartedAt, setQuestionStartedAt] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     const pName = localStorage.getItem('participantName');
@@ -62,6 +63,7 @@ const LiveQuiz: React.FC = () => {
       setActiveQuestion(question);
       setQuestionStartedAt(startedAt ?? Date.now());
       setTimeLeft(question?.timeLimit && question.timeLimit > 0 ? question.timeLimit : null);
+      setShowInfoModal(false);
     };
 
     const onQuizEnded = () => {
@@ -220,13 +222,23 @@ const LiveQuiz: React.FC = () => {
               className="bg-[#FFFFFF] rounded-3xl p-8 md:p-10 shadow-lux-lg border border-[#E0F2FE] space-y-6"
             >
               <div className="flex items-start justify-between gap-4">
-                <div>
+                <div className="flex-1">
                   <span className="text-[11px] font-semibold tracking-[0.2em] text-[#06B6D4] uppercase">
                     Active Question
                   </span>
-                  <h2 className="font-serif text-3xl font-bold text-[#0F172A] mt-1 leading-snug">
-                    {activeQuestion.text}
-                  </h2>
+                  <div className="flex items-start gap-3 mt-1">
+                    <h2 className="font-serif text-3xl font-bold text-[#0F172A] leading-snug">
+                      {activeQuestion.text}
+                    </h2>
+                    {activeQuestion.description && (
+                      <button
+                        onClick={() => setShowInfoModal(true)}
+                        className="p-1.5 bg-[#F0F9FF] hover:bg-[#E0F2FE] text-[#06B6D4] rounded-full transition-colors flex-shrink-0 mt-1"
+                      >
+                        <Info className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
                 </div>
                 {timeLeft !== null && (
                   <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold shrink-0 ${
@@ -239,6 +251,13 @@ const LiveQuiz: React.FC = () => {
                   </div>
                 )}
               </div>
+
+              {/* Image */}
+              {activeQuestion?.imageUrl && (
+                <div className="mt-4 flex justify-center">
+                  <img src={activeQuestion.imageUrl} alt="Question Context" className="max-h-56 object-contain rounded-2xl shadow-sm border border-[#E0F2FE]" />
+                </div>
+              )}
 
               {/* Options List */}
               <div className="space-y-3.5 pt-2">
@@ -286,6 +305,39 @@ const LiveQuiz: React.FC = () => {
           )}
         </AnimatePresence>
       </main>
+
+      {showInfoModal && (
+        <div className="fixed inset-0 bg-[#0F172A]/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="bg-white rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-xl relative"
+          >
+            <button
+              onClick={() => setShowInfoModal(false)}
+              className="absolute top-4 right-4 p-2 text-[#94A3B8] hover:text-[#0F172A] transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-[#ECFEFF] flex items-center justify-center text-[#06B6D4]">
+                <Info className="w-5 h-5" />
+              </div>
+              <h3 className="font-serif text-2xl font-bold text-[#0F172A]">Information</h3>
+            </div>
+            <p className="text-[#475569] leading-relaxed text-base md:text-lg whitespace-pre-wrap">
+              {activeQuestion?.description}
+            </p>
+            <button
+              onClick={() => setShowInfoModal(false)}
+              className="mt-8 w-full py-3 bg-[#06B6D4] hover:bg-[#0891B2] text-white rounded-xl font-semibold transition-colors"
+            >
+              Close
+            </button>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };

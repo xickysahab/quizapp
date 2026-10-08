@@ -371,8 +371,3 @@ export async function isSubmitAllowed(
   }
   return { ok: true };
 }
-
-export function toPublicQuestion<T extends { correctOption?: number | null }>(question: T): Omit<T, 'correctOption'> {
-  const { correctOption: _correctOption, ...rest } = question;
-  return rest;
-}

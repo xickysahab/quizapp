@@ -11,6 +11,8 @@ interface QuestionFormProps {
 
 const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialData }) => {
   const [text, setText] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [description, setDescription] = useState('');
   const [options, setOptions] = useState(['', '', '', '']);
   const [correctOption, setCorrectOption] = useState<number | null>(null);
   const [timeLimit, setTimeLimit] = useState<number>(30);
@@ -19,6 +21,8 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
   useEffect(() => {
     if (initialData) {
       setText(initialData.text);
+      setImageUrl(initialData.imageUrl || '');
+      setDescription(initialData.description || '');
       setOptions(initialData.options.length ? initialData.options : ['', '', '', '']);
       setCorrectOption(initialData.correctOption !== undefined ? initialData.correctOption : null);
       setTimeLimit(initialData.timeLimit || 0);
@@ -40,7 +44,7 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
 
     setLoading(true);
     try {
-      await onSubmit({ text, options, correctOption, timeLimit });
+      await onSubmit({ text, imageUrl, description, options, correctOption, timeLimit });
       onClose();
     } catch (error) {
       console.error('Submit error:', error);
@@ -91,6 +95,38 @@ const QuestionForm: React.FC<QuestionFormProps> = ({ onClose, onSubmit, initialD
                 className="w-full px-5 py-3.5 rounded-2xl border border-[#E0F2FE] bg-[#FFFFFF] text-[#0F172A] text-base placeholder:text-[#94A3B8] focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] outline-none transition-all shadow-sm"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Image URL */}
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] mb-2">
+              Image URL (Optional)
+            </label>
+            <div className="relative">
+              <input
+                type="url"
+                placeholder="https://example.com/image.png"
+                className="w-full px-5 py-3.5 rounded-2xl border border-[#E0F2FE] bg-[#FFFFFF] text-[#0F172A] text-base placeholder:text-[#94A3B8] focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] outline-none transition-all shadow-sm"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] mb-2">
+              Description (Optional)
+            </label>
+            <div className="relative">
+              <textarea
+                rows={2}
+                placeholder="Additional context shown in modal during quiz..."
+                className="w-full px-5 py-3.5 rounded-2xl border border-[#E0F2FE] bg-[#FFFFFF] text-[#0F172A] text-base placeholder:text-[#94A3B8] focus:ring-2 focus:ring-[#06B6D4]/20 focus:border-[#06B6D4] outline-none transition-all shadow-sm resize-none"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </div>
           </div>

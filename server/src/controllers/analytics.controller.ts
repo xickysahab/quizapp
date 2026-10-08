@@ -1,9 +1,9 @@
 import { Response } from 'express';
 import prisma from '../config/prisma';
 import { AuthRequest } from '../middleware/auth.middleware';
-import { Parser } from 'json2csv';
-import { canManageEvent, findUser } from '../utils/eventAccess';
+import { canManage } from '../utils/eventAccess';
 import { responseBatcher } from '../utils/responseBatcher';
+import { toCsv } from '../utils/csv';
 
 /**
  * Whole-number percentages that always add up to 100 (when anything was
@@ -35,11 +35,6 @@ function toPercentages(counts: number[], total: number): number[] {
 export const getQuestionAnalytics = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const questionId = req.params.id as string;
-    const user = await findUser(req.user?.userId);
-    if (!user) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
 
     await responseBatcher.flush();
 
@@ -51,7 +46,7 @@ export const getQuestionAnalytics = async (req: AuthRequest, res: Response): Pro
       },
     });
 
-    if (!question || !canManageEvent(user, question.event)) {
+    if (!question || !(await canManage(req.user?.userId, question.event))) {
       res.status(403).json({ message: 'Forbidden or not found' });
       return;
     }
@@ -81,12 +76,6 @@ export const getQuestionAnalytics = async (req: AuthRequest, res: Response): Pro
 export const exportEventAnalytics = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const eventId = req.params.id as string;
-    const user = await findUser(req.user?.userId);
-    if (!user) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
-
     await responseBatcher.flush();
 
     const event = await prisma.event.findUnique({
@@ -103,7 +92,7 @@ export const exportEventAnalytics = async (req: AuthRequest, res: Response): Pro
       },
     });
 
-    if (!event || !canManageEvent(user, event)) {
+    if (!event || !(await canManage(req.user?.userId, event))) {
       res.status(403).json({ message: 'Forbidden or not found' });
       return;
     }
@@ -131,8 +120,7 @@ export const exportEventAnalytics = async (req: AuthRequest, res: Response): Pro
       return;
     }
 
-    const parser = new Parser();
-    const csv = parser.parse(csvData);
+    const csv = toCsv(csvData);
 
     res.header('Content-Type', 'text/csv');
     res.attachment(`${event.title.replace(/\s+/g, '_')}_Analytics.csv`);
@@ -146,12 +134,6 @@ export const exportEventAnalytics = async (req: AuthRequest, res: Response): Pro
 export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const eventId = req.params.id as string;
-    const user = await findUser(req.user?.userId);
-    if (!user) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
-
     await responseBatcher.flush();
 
     const event = await prisma.event.findUnique({
@@ -164,7 +146,7 @@ export const getEventSummaryAnalytics = async (req: AuthRequest, res: Response):
       },
     });
 
-    if (!event || !canManageEvent(user, event)) {
+    if (!event || !(await canManage(req.user?.userId, event))) {
       res.status(403).json({ message: 'Forbidden or not found' });
       return;
     }
