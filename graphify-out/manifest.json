@@ -150,9 +150,9 @@
     "semantic_hash": ""
   },
   "client/vite.config.ts": {
-    "mtime": 1787500837.6461966,
-    "seen": 1788459801.865066,
-    "ast_hash": "d281d66c4390899f561fa3db9b8e9eac",
+    "mtime": 1791434741.9402955,
+    "seen": 1791434771.0409112,
+    "ast_hash": "0ce213065f22e6a3c37eee8cd6c95b55",
     "semantic_hash": ""
   },
   "server/checks.ts": {

@@ -10,6 +10,15 @@ import api from '../services/api';
 import toast from 'react-hot-toast';
 import ConfirmModal from '../components/ConfirmModal';
 
+const getImageSrc = (img: any) => {
+  if (!img) return '';
+  if (typeof img === 'string') return img;
+  if (img.type === 'Buffer' && img.data) {
+    return new TextDecoder().decode(new Uint8Array(img.data));
+  }
+  return '';
+};
+
 const HostLive: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -548,9 +557,9 @@ const HostLive: React.FC = () => {
               </div>
 
               {/* Image */}
-              {activeQuestion?.imageUrl && (
+              {activeQuestion?.image && (
                 <div className="mt-6 flex justify-center">
-                  <img src={activeQuestion.imageUrl} alt="Question Context" className="max-h-64 object-contain rounded-2xl shadow-sm border border-[#E0F2FE]" />
+                  <img src={getImageSrc(activeQuestion.image)} alt="Question Context" className="max-h-64 object-contain rounded-2xl shadow-sm border border-[#E0F2FE]" />
                 </div>
               )}
 

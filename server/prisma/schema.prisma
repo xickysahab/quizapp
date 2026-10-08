@@ -43,7 +43,7 @@ model Question {
   eventId       String
   event         Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
   text          String
-  imageUrl      String?
+  image         Bytes?
   description   String?
   options       String[]
   correctOption Int?
