@@ -26,7 +26,7 @@ const getImageSrc = (img: any) => {
   } catch (e) {
     console.error('Error decoding image:', e);
   }
-  return '';
+  return 'DEBUG:' + typeof img + ':' + (img instanceof ArrayBuffer) + ':' + (img?.type) + ':' + Object.keys(img || {}).slice(0, 3).join(',');
 };
 
 const LiveQuiz: React.FC = () => {
@@ -285,7 +285,7 @@ const LiveQuiz: React.FC = () => {
               {/* Image */}
               {activeQuestion?.image && (
                 <div className="mt-3 flex justify-center">
-                  <img src={getImageSrc(activeQuestion.image)} alt="Question Context" className="max-h-40 object-contain rounded-2xl shadow-sm border border-[#E0F2FE]" />
+                  <img src={getImageSrc(activeQuestion.image)} alt={getImageSrc(activeQuestion.image).substring(0, 50)} className="max-h-40 object-contain rounded-2xl shadow-sm border border-[#E0F2FE]" />
                 </div>
               )}
 
