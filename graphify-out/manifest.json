@@ -198,9 +198,9 @@
     "semantic_hash": ""
   },
   "server/src/controllers/auth.controller.ts": {
-    "mtime": 1791435663.8719995,
-    "seen": 1791435715.716903,
-    "ast_hash": "45612bfa7ce0a95defd90ae487050ac1",
+    "mtime": 1791435985.888573,
+    "seen": 1791436546.878627,
+    "ast_hash": "846197baa4825636b85eb2a19aace77c",
     "semantic_hash": ""
   },
   "server/src/controllers/event.controller.ts": {
@@ -222,8 +222,8 @@
     "semantic_hash": ""
   },
   "server/src/controllers/question.controller.ts": {
-    "mtime": 1791435663.8726556,
-    "seen": 1791435715.7169049,
+    "mtime": 1791436545.8311858,
+    "seen": 1791436546.87863,
     "ast_hash": "f64860a6a679059f7ec8cf28c46e7901",
     "semantic_hash": ""
   },
