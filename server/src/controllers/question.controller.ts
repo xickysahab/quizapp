@@ -16,7 +16,7 @@ async function getOwnedQuestion(userId: string | undefined, questionId: string) 
 
 export const addQuestion = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { eventId, text, imageUrl, description, options, correctOption, timeLimit } = req.body;
+    const { eventId, text, imageBase64, description, options, correctOption, timeLimit } = req.body;
 
     if (!eventId || !text || !Array.isArray(options) || options.length < 2) {
       res.status(400).json({ message: 'Event ID, question text, and at least 2 options are required.' });
@@ -35,7 +35,7 @@ export const addQuestion = async (req: AuthRequest, res: Response): Promise<void
       data: {
         eventId,
         text,
-        imageUrl: imageUrl || null,
+        image: imageBase64 ? Buffer.from(imageBase64, 'utf-8') : null,
         description: description || null,
         options,
         correctOption: correctOption !== undefined && correctOption !== null ? Number(correctOption) : null,
@@ -56,7 +56,7 @@ export const addQuestion = async (req: AuthRequest, res: Response): Promise<void
 export const updateQuestion = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const id = req.params.id as string;
-    const { text, imageUrl, description, options, correctOption, timeLimit } = req.body;
+    const { text, imageBase64, description, options, correctOption, timeLimit } = req.body;
 
     const owned = await getOwnedQuestion(req.user?.userId, id);
     if (!owned) {
@@ -70,7 +70,7 @@ export const updateQuestion = async (req: AuthRequest, res: Response): Promise<v
       where: { id },
       data: {
         text: text || existingQuestion.text,
-        imageUrl: imageUrl !== undefined ? (imageUrl || null) : existingQuestion.imageUrl,
+        image: imageBase64 !== undefined ? (imageBase64 ? Buffer.from(imageBase64, 'utf-8') : null) : existingQuestion.image,
         description: description !== undefined ? (description || null) : existingQuestion.description,
         options: options || existingQuestion.options,
         correctOption: correctOption !== undefined ? (correctOption === null ? null : Number(correctOption)) : existingQuestion.correctOption,
