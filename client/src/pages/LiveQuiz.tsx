@@ -9,15 +9,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const getImageSrc = (img: any) => {
   if (!img) return '';
-  if (typeof img === 'string') return img;
-  if (img.type === 'Buffer' && img.data) {
-    return new TextDecoder().decode(new Uint8Array(img.data));
-  }
-  if (typeof img === 'object') {
-    const values = Object.values(img) as number[];
-    if (values.length > 0 && typeof values[0] === 'number') {
-      return new TextDecoder().decode(new Uint8Array(values));
+  try {
+    if (typeof img === 'string') return img;
+    if (img instanceof ArrayBuffer || (img.buffer && img.buffer instanceof ArrayBuffer)) {
+      return new TextDecoder().decode(new Uint8Array(img));
     }
+    if (img.type === 'Buffer' && img.data) {
+      return new TextDecoder().decode(new Uint8Array(img.data));
+    }
+    if (typeof img === 'object') {
+      const values = Object.values(img) as number[];
+      if (values.length > 0 && typeof values[0] === 'number') {
+        return new TextDecoder().decode(new Uint8Array(values));
+      }
+    }
+  } catch (e) {
+    console.error('Error decoding image:', e);
   }
   return '';
 };
