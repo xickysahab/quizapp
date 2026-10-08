@@ -67,7 +67,6 @@ model Participant {
   responses Response[]
   joinedAt  DateTime   @default(now())
 
-  @@unique([eventId, name])
   @@index([eventId])
 }
 
